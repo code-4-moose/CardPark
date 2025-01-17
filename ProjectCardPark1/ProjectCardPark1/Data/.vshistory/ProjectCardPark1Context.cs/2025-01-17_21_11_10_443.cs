@@ -25,8 +25,8 @@ namespace ProjectCardPark1.Data
             builder.ApplyConfiguration(new RatingSeed());
 
             builder.ApplyConfiguration(new RoleSeed());
+            builder.ApplyConfiguration(new UserLoginSeed());
             builder.ApplyConfiguration(new UserSeed());
-            builder.ApplyConfiguration(new UserRoleSeed());
         }
     }
 }

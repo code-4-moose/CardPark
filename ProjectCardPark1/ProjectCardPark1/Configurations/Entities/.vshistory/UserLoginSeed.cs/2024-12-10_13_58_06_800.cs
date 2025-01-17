@@ -1,16 +1,16 @@
-﻿using ProjectCardPark1.Data;
+﻿using ProjectCardPark.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-namespace ProjectCardPark1.Configurations.Entities
+namespace ProjectCardPark.Configurations.Entities
 {
-    public class UserLoginSeed : IEntityTypeConfiguration<ProjectCardPark1User>
+    public class UserSeed : IEntityTypeConfiguration<ProjectCardParkUser>
     {
-        public void Configure(EntityTypeBuilder<ProjectCardPark1User> builder)
+        public void Configure(EntityTypeBuilder<ProjectCardParkUser> builder)
         {
-            var hasher = new PasswordHasher<ProjectCardPark1User>();
+            var hasher = new PasswordHasher<ProjectCardParkUser>();
             builder.HasData(
-            new ProjectCardPark1User
+            new ProjectCardParkUser
             {
                 Id = "3781efa7-66dc-47f0-860f-e506d04102e4",
                 Email = "admin@localhost.com",

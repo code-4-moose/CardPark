@@ -23,10 +23,7 @@ namespace ProjectCardPark1.Data
             builder.ApplyConfiguration(new CategorySeed());
             builder.ApplyConfiguration(new ListingSeed());
             builder.ApplyConfiguration(new RatingSeed());
-
-            builder.ApplyConfiguration(new RoleSeed());
             builder.ApplyConfiguration(new UserSeed());
-            builder.ApplyConfiguration(new UserRoleSeed());
         }
     }
 }

@@ -45,7 +45,6 @@ namespace ProjectCardPark1.Configurations.Entities
                 },
                 new User
                 {
-                    Id = 4,
                     UserId = 4,
                     Name = "Beautify Card!",
                     Address = "Beautify Card!",

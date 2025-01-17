@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace ProjectCardPark1.Configurations.Entities
 {
-    public class UserLoginSeed : IEntityTypeConfiguration<ProjectCardPark1User>
+    public class UserRoleSeed : IEntityTypeConfiguration<ProjectCardPark1User>
     {
         public void Configure(EntityTypeBuilder<ProjectCardPark1User> builder)
         {

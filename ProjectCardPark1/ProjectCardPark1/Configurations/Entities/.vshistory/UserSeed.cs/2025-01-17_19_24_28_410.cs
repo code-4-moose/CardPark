@@ -7,6 +7,16 @@ namespace ProjectCardPark1.Configurations.Entities
 {
     public class UserSeed : IEntityTypeConfiguration<User>
     {
+        //public int UserId { get; set; } // PK  
+        //public string? Name { get; set; }
+        //public string? Address { get; set; }
+        //public int Contact { get; set; }
+        //public double Stars { get; set; }
+        //public int RatingId { get; set; } // FK
+        //public ICollection<Rating> Rating { get; set; } // Nav Prop  0..Many
+        //public int ListingId { get; set; } // FK
+        //public ICollection<Listing> Listing { get; set; } // Nav Prop
+
         public void Configure(EntityTypeBuilder<User> builder)
         {
             builder.HasData(
@@ -22,8 +32,7 @@ namespace ProjectCardPark1.Configurations.Entities
                     ListingId = 1
                 },
                 new User
-                {
-                    Id = 2,
+                {Id = 2,
                     UserId = 2,
                     Name = "Beautify Card!",
                     Address = "Beautify Card!",
@@ -33,8 +42,7 @@ namespace ProjectCardPark1.Configurations.Entities
                     ListingId = 2
                 },
                 new User
-                {
-                    Id = 3,
+                {Id = 3,
                     UserId = 3,
                     Name = "Beautify Card!",
                     Address = "Beautify Card!",
@@ -44,8 +52,7 @@ namespace ProjectCardPark1.Configurations.Entities
                     ListingId = 3
                 },
                 new User
-                {
-                    Id = 4,
+                {Id = 4,
                     UserId = 4,
                     Name = "Beautify Card!",
                     Address = "Beautify Card!",

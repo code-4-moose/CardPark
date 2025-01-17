@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 
-namespace ProjectCardPark1.Configurations.Entities
+namespace ProjectKard.Configurations.Entities
 {
     public class UserSeed : IEntityTypeConfiguration<User>
     {
@@ -12,7 +12,6 @@ namespace ProjectCardPark1.Configurations.Entities
             builder.HasData(
                 new User
                 {
-                    Id = 1,
                     UserId = 1,
                     Name = "Beautify Card!",
                     Address = "Beautify Card!",
@@ -23,7 +22,6 @@ namespace ProjectCardPark1.Configurations.Entities
                 },
                 new User
                 {
-                    Id = 2,
                     UserId = 2,
                     Name = "Beautify Card!",
                     Address = "Beautify Card!",
@@ -34,7 +32,6 @@ namespace ProjectCardPark1.Configurations.Entities
                 },
                 new User
                 {
-                    Id = 3,
                     UserId = 3,
                     Name = "Beautify Card!",
                     Address = "Beautify Card!",
@@ -45,7 +42,6 @@ namespace ProjectCardPark1.Configurations.Entities
                 },
                 new User
                 {
-                    Id = 4,
                     UserId = 4,
                     Name = "Beautify Card!",
                     Address = "Beautify Card!",

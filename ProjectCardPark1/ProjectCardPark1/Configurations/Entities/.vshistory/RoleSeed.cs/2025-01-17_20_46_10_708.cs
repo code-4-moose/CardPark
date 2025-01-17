@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
 namespace ProjectCardPark1.Configurations.Entities
 {
     public class RoleSeed : IEntityTypeConfiguration<IdentityRole>
