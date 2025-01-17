@@ -34,7 +34,7 @@ builder.Services.AddAuthentication(options =>
     .AddIdentityCookies();
 
 builder.Services.AddIdentityCore<ProjectCardPark1User>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ProjectCardPark1Context>()
+    .AddEntityFrameworkStores<IdentityContext>()
     .AddSignInManager()
     .AddDefaultTokenProviders();
 
