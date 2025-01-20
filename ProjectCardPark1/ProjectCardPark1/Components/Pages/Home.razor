@@ -1,7 +1,119 @@
 ﻿@page "/"
 
+<link rel="stylesheet" href="/card_listing.css" />
+
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
 
-Welcome to your new app.
+
+<div class="banner">
+    <div class="slider" style="--quantity: 6">
+        <div class="item" style="--position: 1"><img src="ImageSpinner/hololive_1.png" alt=""></div>
+        <div class="item" style="--position: 2"><img src="ImageSpinner/pokemon_1.png" alt=""></div>
+        <div class="item" style="--position: 3"><img src="ImageSpinner/vanguard_1.png" alt=""></div>
+        <div class="item" style="--position: 4"><img src="ImageSpinner/hololive_2.png" alt=""></div>
+        <div class="item" style="--position: 5"><img src="ImageSpinner/pokemon_2.png" alt=""></div>
+        <div class="item" style="--position: 6"><img src="ImageSpinner/vanguard_2.png" alt=""></div>
+
+    </div>
+
+    <div class="content">
+        <h1>
+            CARD PARK
+        </h1>
+    </div>
+
+</div>
+
+<div class="Most_Recent">
+    <h1> Most Recent</h1>
+
+    <div class="card-listings">
+        <div class="card">
+            <div class="card-img">
+                <img src="ImageSpinner/hololive_1.png" alt="Alternate Text" />
+                <i class="fa-solid fa-magnifying-glass-plus"></i>
+            </div>
+            <div class="card-info">
+                <p class="text-title">Suisei Card </p>
+                <p class="text-body">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec placerat tristique felis, in convallis nunc suscipit nec. Aliquam id neque sodales, dignissim massa gravida, dignissim massa. Cras et ornare lectus. Vivamus eu eleifend nulla, quis cursus magna. Etiam nec hendrerit elit, sit amet tempor arcu. Mauris quis purus ut odio sagittis convallis id nec metus. Nam vulputate orci eu arcu imperdiet auctor. Nulla facilisi. Praesent neque lorem, vehicula eu faucibus in, luctus suscipit massa.</p>
+            </div>
+            <div class="card-footer">
+                <span class="text-title">$20.00</span>
+                <div class="card-button"><i class="fa-solid fa-cart-shopping"></i></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-img">
+                <img src="ImageSpinner/hololive_1.png" alt="Alternate Text" />
+                <i class="fa-solid fa-magnifying-glass-plus"></i>
+            </div>
+            <div class="card-info">
+                <p class="text-title">Suisei Card </p>
+                <p class="text-body">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec placerat tristique felis, in convallis nunc suscipit nec. Aliquam id neque sodales, dignissim massa gravida, dignissim massa. Cras et ornare lectus. Vivamus eu eleifend nulla, quis cursus magna. Etiam nec hendrerit elit, sit amet tempor arcu. Mauris quis purus ut odio sagittis convallis id nec metus. Nam vulputate orci eu arcu imperdiet auctor. Nulla facilisi. Praesent neque lorem, vehicula eu faucibus in, luctus suscipit massa.</p>
+            </div>
+            <div class="card-footer">
+                <span class="text-title">$20.00</span>
+                <div class="card-button"><i class="fa-solid fa-cart-shopping"></i></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-img">
+                <img src="ImageSpinner/hololive_2.png" alt="Alternate Text" />
+                <i class="fa-solid fa-magnifying-glass-plus"></i>
+            </div>
+            <div class="card-info">
+                <p class="text-title">Suisei Card </p>
+                <p class="text-body">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec placerat tristique felis, in convallis nunc suscipit nec. Aliquam id neque sodales, dignissim massa gravida, dignissim massa. Cras et ornare lectus. Vivamus eu eleifend nulla, quis cursus magna. Etiam nec hendrerit elit, sit amet tempor arcu. Mauris quis purus ut odio sagittis convallis id nec metus. Nam vulputate orci eu arcu imperdiet auctor. Nulla facilisi. Praesent neque lorem, vehicula eu faucibus in, luctus suscipit massa.</p>
+            </div>
+            <div class="card-footer">
+                <span class="text-title">$20.00</span>
+                <div class="card-button"><i class="fa-solid fa-cart-shopping"></i></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-img">
+                <img src="ImageSpinner/vanguard_1.png" alt="Alternate Text" />
+                <i class="fa-solid fa-magnifying-glass-plus"></i>
+            </div>
+            <div class="card-info">
+                <p class="text-title">Suisei Card </p>
+                <p class="text-body">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec placerat tristique felis, in convallis nunc suscipit nec. Aliquam id neque sodales, dignissim massa gravida, dignissim massa. Cras et ornare lectus. Vivamus eu eleifend nulla, quis cursus magna. Etiam nec hendrerit elit, sit amet tempor arcu. Mauris quis purus ut odio sagittis convallis id nec metus. Nam vulputate orci eu arcu imperdiet auctor. Nulla facilisi. Praesent neque lorem, vehicula eu faucibus in, luctus suscipit massa.</p>
+            </div>
+            <div class="card-footer">
+                <span class="text-title">$20.00</span>
+                <div class="card-button"><i class="fa-solid fa-cart-shopping"></i></div>
+            </div>
+        </div>
+
+        <div class="popup-image">
+            <span>&times;</span>
+            <img src="ImageSpinner/hololive_1.png" alt="" />
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<div class="Categories">
+    <h1>CATEGORY</h1>
+</div>
+
+
+<script>
+    document.querySelectorAll('.card-listings .card-img img').forEach(image => {
+        image.onclick = () =>{
+            document.querySelector('.popup-image').style.display = 'block';
+            document.querySelector('.popup-image img').src = image.getAttribute('src');
+        }
+    });
+
+    document.querySelector('.popup-image span').onclick = () => {
+        document.querySelector('.popup-image').style.display = 'none';
+    }
+</script>
