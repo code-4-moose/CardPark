@@ -12,7 +12,6 @@
 
         public int ListingId { get; set; } // FK
         public ICollection<Listing>? Listing { get; set; } // Nav Prop
-        public byte[]? ProfileImage { get; set; }
     }
 
 }

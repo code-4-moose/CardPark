@@ -14,18 +14,6 @@ namespace ProjectCardPark1.Data
         public DbSet<ProjectCardPark1.Domain.Rating> Rating { get; set; } = default!;
         public DbSet<ProjectCardPark1.Domain.User> User { get; set; } = default!;
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            // For LocalDB
-            // optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=CarRentalManagementConsoleapp_DB;Trusted_Connection=True;MultipleActiveResultSets=True;");
-
-            // For SSMS: 
-            optionsBuilder.UseSqlServer(@"Server=LAPTOP-JPNVKAR5\SQLEXPRESS;Database=ProjectCardPark1;Trusted_Connection=True;TrustServerCertificate=True;");
-            // Note
-            // Any changes of database name, u need to do migration again.
-
-        }
-
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
