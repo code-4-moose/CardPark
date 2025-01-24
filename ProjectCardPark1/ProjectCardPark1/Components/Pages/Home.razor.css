@@ -1,0 +1,108 @@
+﻿.banner {
+    margin-top: 50px;
+    width: 100%;
+    height: 105vh;
+    text-align: center;
+    overflow: hidden;
+    position: relative;
+    user-select: none;
+}
+
+.banner .slider {
+    position: absolute;
+    width: 400px;
+    height: 570px;
+    top: 10%;
+    left: 40%;
+    transform-style: preserve-3d;
+    transform: perspective(1000px);
+    animation: autoRun 30s linear infinite;
+    z-index: 1;
+}
+
+@keyframes autoRun {
+    from {
+        transform: perspective(2500px) rotateX(-16deg) rotateY(0deg);
+    }
+
+    to {
+        transform: perspective(2500px) rotateX(-16deg) rotateY(360deg);
+    }
+}
+
+.banner .slider .item {
+    position: absolute;
+    inset: 0 0 0 0;
+    transform: rotateY(calc( (var(--position) - 1) * (360 / var(--quantity)) * 1deg)) translateZ(650px);
+}
+
+.banner .slider .item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.banner .content {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(1480px, 100vw);
+    height: max-content;
+    z-index: 2;
+    user-select: none;
+}
+
+.banner .content h1 {
+    font-family: "Rowdies", sans-serif;
+    font-size: 14em;
+    line-height: 1em;
+    position: relative;
+    background: -webkit-linear-gradient(rgb(42 27 173), rgb(99, 160, 237));
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke: 2px darkgrey;
+    z-index: 2;
+    user-select: none;
+}
+
+.Most_Recent {
+    border-top: 5px solid #006bb7;
+    margin-top: 20px;
+    margin-bottom: 20px;
+
+}
+
+.Most_Recent h1 {
+    margin-left: 20px;
+    font-size: 40px;
+}
+
+.Categories {
+    border-top: 5px solid #006bb7;
+    margin-top: 40px;
+}
+
+.Categories h1 {
+    text-align: center;
+    font-family: "Rowdies", sans-serif;
+    font-size: 7em;
+    line-height: 1em;
+    position: relative;
+    background: -webkit-linear-gradient(rgb(42 27 173), rgb(99, 160, 237));
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke: 2px darkgrey;
+    z-index: 2;
+    user-select: none;
+}
+
+@media (max-width: 1500px) {
+    .banner .content h1 {
+        width: 700px;
+        word-wrap: break-word;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
