@@ -13,7 +13,7 @@ namespace ProjectCardPark1.Configurations.Entities
                 new User
                 {
                     Id = 1,
-                    UserId = 1,
+                    UserId = "1",
                     Name = "Beautify Card!",
                     Address = "Beautify Card!",
                     Contact = 889988123,
@@ -24,7 +24,7 @@ namespace ProjectCardPark1.Configurations.Entities
                 new User
                 {
                     Id = 2,
-                    UserId = 2,
+                    UserId = "2",
                     Name = "Beautify Card!",
                     Address = "Beautify Card!",
                     Contact = 889966000,
@@ -35,7 +35,7 @@ namespace ProjectCardPark1.Configurations.Entities
                 new User
                 {
                     Id = 3,
-                    UserId = 3,
+                    UserId = "3",
                     Name = "Beautify Card!",
                     Address = "Beautify Card!",
                     Contact = 779966111,
@@ -46,7 +46,7 @@ namespace ProjectCardPark1.Configurations.Entities
                 new User
                 {
                     Id = 4,
-                    UserId = 4,
+                    UserId = "4",
                     Name = "Beautify Card!",
                     Address = "Beautify Card!",
                     Contact = 339968881,

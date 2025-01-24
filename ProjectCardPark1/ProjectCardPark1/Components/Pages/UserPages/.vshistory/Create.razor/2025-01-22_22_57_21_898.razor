@@ -1,0 +1,219 @@
+﻿@page "/users/create"
+@using Microsoft.EntityFrameworkCore
+@using ProjectCardPark1.Domain
+@inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
+@inject NavigationManager NavigationManager
+@inject ProjectCardPark1.IService.IUserService userService
+@using ProjectCardPark1.Data
+@using ProjectCardPark1.PageClass
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create User</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="User" OnValidSubmit="AddUser" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert" />
+
+            <!-- UserId Field -->
+            <div class="mb-3">
+                <label for="userid" class="form-label">UserId:</label>
+                <InputNumber id="userid" @bind-Value="User.UserId" class="form-control" />
+                <ValidationMessage For="() => User.UserId" class="text-danger" />
+            </div>
+
+            <!-- Name Field -->
+            <div class="mb-3">
+                <label for="name" class="form-label">Name:</label>
+                <InputText id="name" @bind-Value="User.Name" class="form-control" />
+                <ValidationMessage For="() => User.Name" class="text-danger" />
+            </div>
+
+            <!-- Address Field -->
+            <div class="mb-3">
+                <label for="address" class="form-label">Address:</label>
+                <InputText id="address" @bind-Value="User.Address" class="form-control" />
+                <ValidationMessage For="() => User.Address" class="text-danger" />
+            </div>
+
+            <!-- Contact Field -->
+            <div class="mb-3">
+                <label for="contact" class="form-label">Contact:</label>
+                <InputNumber id="contact" @bind-Value="User.Contact" class="form-control" />
+                <ValidationMessage For="() => User.Contact" class="text-danger" />
+            </div>
+
+            <!-- Stars Field -->
+            <div class="mb-3">
+                <label for="stars" class="form-label">Stars:</label>
+                <InputNumber id="stars" @bind-Value="User.Stars" class="form-control" />
+                <ValidationMessage For="() => User.Stars" class="text-danger" />
+            </div>
+
+            <!-- RatingId Field -->
+            <div class="mb-3">
+                <label for="ratingid" class="form-label">RatingId:</label>
+                <InputNumber id="ratingid" @bind-Value="User.RatingId" class="form-control" />
+                <ValidationMessage For="() => User.RatingId" class="text-danger" />
+            </div>
+
+            <!-- ListingId Field -->
+            <div class="mb-3">
+                <label for="listingid" class="form-label">ListingId:</label>
+                <InputNumber id="listingid" @bind-Value="User.ListingId" class="form-control" />
+                <ValidationMessage For="() => User.ListingId" class="text-danger" />
+            </div>
+
+            <!-- DateCreated Field -->
+            <div class="mb-3">
+                <label for="datecreated" class="form-label">DateCreated:</label>
+                <InputDate id="datecreated" @bind-Value="User.DateCreated" class="form-control" />
+                <ValidationMessage For="() => User.DateCreated" class="text-danger" />
+            </div>
+
+            <!-- DateUpdated Field -->
+            <div class="mb-3">
+                <label for="dateupdated" class="form-label">DateUpdated:</label>
+                <InputDate id="dateupdated" @bind-Value="User.DateUpdated" class="form-control" />
+                <ValidationMessage For="() => User.DateUpdated" class="text-danger" />
+            </div>
+
+            <!-- CreatedBy Field -->
+            <div class="mb-3">
+                <label for="createdby" class="form-label">CreatedBy:</label>
+                <InputText id="createdby" @bind-Value="User.CreatedBy" class="form-control" />
+                <ValidationMessage For="() => User.CreatedBy" class="text-danger" />
+            </div>
+
+            <!-- UpdatedBy Field -->
+            <div class="mb-3">
+                <label for="updatedby" class="form-label">UpdatedBy:</label>
+                <InputText id="updatedby" @bind-Value="User.UpdatedBy" class="form-control" />
+                <ValidationMessage For="() => User.UpdatedBy" class="text-danger" />
+            </div>
+
+            <!-- Profile Image Upload -->
+            <div class="mb-3">
+                <label for="profileimage" class="form-label">Profile Image:</label>
+                <InputFile id="profileimage" OnChange="HandleFileSelection" class="form-control" />
+                <ValidationMessage For="() => User.ProfileImage" class="text-danger" />
+            </div>
+
+            <!-- Image Preview -->
+            <div class="mb-3">
+                <label class="form-label">Image Preview:</label>
+                @if (!string.IsNullOrEmpty(imgSrc))
+                {
+                    <img src="@imgSrc" alt="Profile Image Preview" class="img-thumbnail" style="max-width: 200px; max-height: 200px;" />
+                }
+                else
+                {
+                    <p>No image selected.</p>
+                }
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/users">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private User User { get; set; } = new();
+
+    string imgSrc = ""; // Base64 string for image preview
+    string Message = "";
+    byte[] _fileBytes; // Byte array for the uploaded image
+
+    // Handle file selection for profile image
+    private async Task HandleFileSelection(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file != null)
+        {
+            // Check if the file is a JPG
+            if (file.ContentType != "image/jpeg" && file.ContentType != "image/jpg")
+            {
+                Message = "Only JPG images are allowed.";
+                imgSrc = ""; // Clear the preview
+                _fileBytes = null; // Clear the file bytes
+                return;
+            }
+
+            // Check file size (10 MB max)
+            if (file.Size > 10 * 1024 * 1024)
+            {
+                Message = "File size must be less than 10 MB.";
+                imgSrc = ""; // Clear the preview
+                _fileBytes = null; // Clear the file bytes
+                return;
+            }
+
+            // Read the file into a byte array
+            using (var ms = new MemoryStream())
+            {
+                await file.OpenReadStream().CopyToAsync(ms);
+                _fileBytes = ms.ToArray();
+                imgSrc = $"data:{file.ContentType};base64,{Convert.ToBase64String(_fileBytes)}";
+                Console.WriteLine("Success");
+                Message = ""; // Clear any previous error message
+            }
+        }
+    }
+
+    // Add a new user to the database
+    private async Task AddUser()
+    {
+        Console.WriteLine("AddUser method called!");
+        try
+        {
+            var user = new User
+                {
+                    UserId = User.UserId,
+                    Name = User.Name,
+                    Address = User.Address,
+                    Contact = User.Contact,
+                    Stars = User.Stars,
+                    RatingId = User.RatingId,
+                    ListingId = User.ListingId,
+                    ProfileImage = _fileBytes,
+                    ProfileImageUrl = null,
+                    DateCreated = DateTime.UtcNow,
+                    DateUpdated = DateTime.UtcNow,
+                    CreatedBy = "System",
+                    UpdatedBy = "System"
+                };
+
+            using var context = DbFactory.CreateDbContext();
+            context.User.Add(user);
+            await context.SaveChangesAsync();
+
+            NavigationManager.NavigateTo("/users/details", forceLoad: true);
+
+            _fileBytes = null;
+            imgSrc = ""; // Clear the image preview
+        }
+        catch (Exception ex)
+        {
+            Message = $"An error occurred: {ex.Message}";
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    // Read a saved user from the database
+    public void ReadStudent()
+    {
+        UserPage studentPage = new UserPage(userService);
+        User = studentPage.GetSavedUser();
+
+        imgSrc = User.ProfileImageUrl;
+        Message = "";
+    }
+}

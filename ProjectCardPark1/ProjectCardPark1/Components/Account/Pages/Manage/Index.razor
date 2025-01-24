@@ -1,13 +1,16 @@
 ﻿@page "/Account/Manage"
-
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Identity
 @using ProjectCardPark1.Data
+@using ProjectCardPark1.Service
 
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject UserManager<ProjectCardPark1User> UserManager
 @inject SignInManager<ProjectCardPark1User> SignInManager
 @inject IdentityUserAccessor UserAccessor
 @inject IdentityRedirectManager RedirectManager
+@inject ProjectCardPark1.Service.SharedService SharedService
+
 
 <PageTitle>Profile</PageTitle>
 
@@ -21,7 +24,7 @@
             <ValidationSummary class="text-danger" role="alert" />
             <div class="form-floating mb-3">
                 <input type="text" value="@username" class="form-control" placeholder="Please choose your username." disabled />
-                <label for="username" class="form-label">Username</label>
+                <label for="username" class="form-label">Email</label>
             </div>
             <div class="form-floating mb-3">
                 <InputText @bind-Value="Input.PhoneNumber" class="form-control" placeholder="Please enter your phone number." />
@@ -30,13 +33,21 @@
             </div>
             <button type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
         </EditForm>
+        <p> @getuserId() </p>
+        <button @onclick= "updatePF" class="w-100 btn btn-lg btn-primary">Save</button>
+
     </div>
 </div>
+
+<script src="_content/Solutaris.InfoWARE.ProtectedBrowserStorage/config.js"></script>
+
+<a href="/UpdateImage?msg=@userId"> Go to Page 2 with Dynamic Query String Data</a>
 
 @code {
     private ProjectCardPark1User user = default!;
     private string? username;
     private string? phoneNumber;
+    string? userId;
 
     [CascadingParameter]
     private HttpContext HttpContext { get; set; } = default!;
@@ -46,11 +57,27 @@
 
     protected override async Task OnInitializedAsync()
     {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var claimsPrincipal = authState.User;
+
+
+        user = await UserManager.GetUserAsync(claimsPrincipal);
+
         user = await UserAccessor.GetRequiredUserAsync(HttpContext);
         username = await UserManager.GetUserNameAsync(user);
         phoneNumber = await UserManager.GetPhoneNumberAsync(user);
 
+        userId = UserManager.GetUserId(claimsPrincipal);
+
+        SharedService.ShareUserId = userId;
+
+        localStorage.SetItem("userId", userId);
+
         Input.PhoneNumber ??= phoneNumber;
+    }
+    private void updatePF()
+    {
+        NavigationManager.NavigateTo($"/UpdateImage");
     }
 
     private async Task OnValidSubmitAsync()
@@ -67,7 +94,10 @@
         await SignInManager.RefreshSignInAsync(user);
         RedirectManager.RedirectToCurrentPageWithStatus("Your profile has been updated", HttpContext);
     }
-
+    private string getuserId()
+    {
+        return "USER ID : " + SharedService.ShareUserId;
+    }
     private sealed class InputModel
     {
         [Phone]

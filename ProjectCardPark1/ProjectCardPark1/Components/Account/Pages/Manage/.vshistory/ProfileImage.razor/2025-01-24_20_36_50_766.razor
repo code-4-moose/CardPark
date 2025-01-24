@@ -1,0 +1,134 @@
+﻿@page "/UpdateImage"
+@using Microsoft.EntityFrameworkCore
+@using ProjectCardPark1.Domain
+@inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
+@inject ProjectCardPark1.Service.SharedService SharedService
+@using ProjectCardPark1.Data
+
+<PageTitle>Create</PageTitle>
+
+<h1>Update Profile Image</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        @if (User != null)
+        {
+            <EditForm method="post" Model="User" OnValidSubmit="UpdateProfileImage" FormName="update" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary class="text-danger" role="alert" />
+
+                <!-- Profile Image Upload -->
+                <div class="mb-3">
+                    <label for="profileimage" class="form-label">Profile Image:</label>
+                    <InputFile id="profileimage" OnChange="HandleFileSelection" accept="image/*" class="form-control" />
+                    <ValidationMessage For="() => User.ProfileImage" class="text-danger" />
+                </div>
+
+                <!-- Image Preview -->
+                <div class="col-md-6">
+                    <img src="@imgSrc" width="200" height="200" style="border: 1px solid #000000; margin-top: 10px;" />
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary">Update Profile Image</button>
+            </EditForm>
+        }
+        else
+        {
+            <p>Loading...</p>
+        }
+    </div>
+</div>
+<p> @getuserId() </p>
+
+<script src="_content/BlazorInputFile/BlazorInputFile.js"></script>
+
+<script src="_content/Solutaris.InfoWARE.ProtectedBrowserStorage/config.js"></script>
+@code {
+
+    private string? userid;
+
+    [SupplyParameterFromForm]
+    private User User { get; set; }
+
+    string imgSrc = ""; // Base64 string for image preview
+    byte[] _fileBytes = null; // Byte array for the uploaded image
+
+    private string? UserIdFromQuery;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+        userid = localStorage.GetItem<string>("userId");
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("userId", out var userId))
+        {
+            UserIdFromQuery = userId;
+
+            // Update the SharedService with the userId from the query parameters
+            SharedService.ShareUserId = userId;
+        }
+        else
+        {
+            Console.WriteLine("Error: userId query parameter is missing.");
+        }
+    }
+    private string getuserId()
+    {
+        return "USER ID" + userid;
+    }
+
+    // Handle file selection for profile image
+    private async Task HandleFileSelection(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file != null)
+        {
+            // Read the file into a byte array
+            using (var ms = new MemoryStream())
+            {
+                await file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024).CopyToAsync(ms);
+                _fileBytes = ms.ToArray();
+                imgSrc = $"data:{file.ContentType};base64,{Convert.ToBase64String(_fileBytes)}";
+            }
+        }
+    }
+
+    // Update the profile image and URL for an existing user
+    private async Task UpdateProfileImage()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(User!).State = EntityState.Modified;
+
+        
+        try
+        {
+            // Fetch the existing user from the database
+            var existingUser = await context.User.FirstOrDefaultAsync(u => u.UserId == userid); // Replace `User.Id` with the actual unique identifier for the user
+
+            if (existingUser != null)
+            {
+                if(_fileBytes != null)
+                {
+                    existingUser.ProfileImage = _fileBytes;
+                }
+                // Update only the ProfileImage and ProfileImageUrl fields
+                existingUser.ProfileImage = _fileBytes;
+                existingUser.ProfileImageUrl = imgSrc;
+
+                // Save the changes to the database
+                await context.SaveChangesAsync();
+
+                _fileBytes = null;
+                imgSrc = ""; // Clear the image preview
+            }
+            else
+            {
+                Console.WriteLine("User not found!");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+}

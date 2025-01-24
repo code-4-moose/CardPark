@@ -5,8 +5,20 @@ using ProjectCardPark1.Data;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using ProjectCardPark1.Components.Account;
+using ProjectCardPark1.IService;
+using ProjectCardPark1.Service;
+using ProjectCardPark1.Components.Account.Pages.Manage;
+using Solutaris.InfoWARE.ProtectedBrowserStorage;
+using Solutaris.InfoWARE.ProtectedBrowserStorage.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
+
+string connectionString = builder.Configuration.GetConnectionString("ProjectCardPark1Context");
+
+Global.ConnectionString = connectionString;
+
+builder.Services.AddScoped<IUserService, UserService>();
+
 builder.Services.AddDbContextFactory<ProjectCardPark1Context>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ProjectCardPark1Context") ?? throw new InvalidOperationException("Connection string 'ProjectCardPark1Context' not found.")));
 
@@ -19,6 +31,12 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddCascadingAuthenticationState();
+
+builder.Services.AddServerSideBlazor();
+
+builder.Services.AddIWProtectedBrowserStorage();
+
+builder.Services.AddScoped<SharedService>();
 
 builder.Services.AddScoped<IdentityUserAccessor>();
 

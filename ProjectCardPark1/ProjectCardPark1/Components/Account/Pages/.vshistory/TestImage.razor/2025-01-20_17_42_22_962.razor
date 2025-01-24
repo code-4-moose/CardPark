@@ -1,0 +1,97 @@
+﻿@page "/Image/Setup"
+@rendermode InteractiveServer
+@inject ProjectCardPark1.IService.IUserService userService
+@using ProjectCardPark1.Data
+@using ProjectCardPark1.Domain
+@using ProjectCardPark1.PageClass
+
+<div class="col-md-12">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-2">
+                    <label> Name: </label>
+                </div>
+                <div class="col-md-10">
+                    <input @bind="user.Name" type="text" placeholder="Student Name" style="width:100%;" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <label> Address: </label>
+                </div>
+                <div class="col-md-10">
+                    <input @bind="user.Address" type="text" placeholder="Student Roll" style="width:100%;" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <label> Photo: </label>
+                </div>
+                <div class="col-md-10">
+                    <InputFile OnChange="HandleFileSelection" />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <img src="@imgSrc" width="200" height="200" style="border: 1px solid #000000; margin-top: 10px;" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <button @onclick="SaveStudent" class="btn btn-primary" style="width:100% ;margin-top:10px;"> Save </button>
+            <button @onclick="ReadStudent" class="btn btn-danger" style="width:100% ;margin-top:10px;"> Read </button>
+            <span style="font-weight:bold;font-size:24px;"></span>"
+        </div>
+    </div>
+</div>
+
+<script src="_content/BlazorInputFile/BlazorInputFile.js"></script>
+
+@code {
+    string imgSrc = "";
+    string Message = "";
+    byte[] _fileBytes = null;
+    User user = new User();
+
+    private async Task HandleFileSelection(InputFileChangeEventArgs e)
+    {
+        var file = e.File; // Access the uploaded file
+        if (file != null)
+        {
+            // Read the file contents into a byte array
+            using (var ms = new MemoryStream())
+            {
+                await file.OpenReadStream().CopyToAsync(ms); // Read the file stream
+                _fileBytes = ms.ToArray();
+            }
+
+            // Process the file (e.g., generate a Base64 string for an image)
+            var base64String = Convert.ToBase64String(_fileBytes);
+
+            // Assuming StudentPage.GetImage processes and returns a byte array
+            UserPage studentPage = new UserPage(userService);
+            var photo = studentPage.GetImage(base64String);
+
+            // Convert the processed image back to a Base64 string for display
+            imgSrc = $"data:image/jpg;base64,{Convert.ToBase64String(photo)}";
+        }
+    }
+
+    public void SaveStudent()
+    {
+        UserPage studentPage = new UserPage(userService);
+        Message = studentPage.SaveInformations(_fileBytes, user);
+
+        user = new User();
+        imgSrc = "";
+    }
+
+    public void ReadStudent()
+    {
+        UserPage studentPage = new UserPage(userService);
+        user = studentPage.GetSavedUser();
+        imgSrc = user.ProfileImageUrl;
+        Message = "";
+    }
+}

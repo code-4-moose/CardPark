@@ -2,7 +2,7 @@
 {
     public class User : BaseDomainModel
     {
-        public int UserId { get; set; } // PK  
+        public string? UserId { get; set; } // PK  
         public string? Name { get; set; }
         public string? Address { get; set; }
         public int Contact { get; set; }
@@ -13,6 +13,7 @@
         public int ListingId { get; set; } // FK
         public ICollection<Listing>? Listing { get; set; } // Nav Prop
         public byte[]? ProfileImage { get; set; }
+        public string? ProfileImageUrl { get; set; }
     }
 
 }

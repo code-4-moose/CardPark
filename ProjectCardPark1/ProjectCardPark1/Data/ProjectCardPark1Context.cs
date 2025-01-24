@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using ProjectCardPark1.Configurations.Entities;
 using ProjectCardPark1.Data;
+using ProjectCardPark1.Domain;
 
 namespace ProjectCardPark1.Data
 {
@@ -13,6 +14,7 @@ namespace ProjectCardPark1.Data
         public DbSet<ProjectCardPark1.Domain.Listing> Listing { get; set; } = default!;
         public DbSet<ProjectCardPark1.Domain.Rating> Rating { get; set; } = default!;
         public DbSet<ProjectCardPark1.Domain.User> User { get; set; } = default!;
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -39,6 +41,24 @@ namespace ProjectCardPark1.Data
             builder.ApplyConfiguration(new RoleSeed());
             builder.ApplyConfiguration(new UserSeed());
             builder.ApplyConfiguration(new UserRoleSeed());
+        }
+
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            var entries = ChangeTracker.Entries<User>()
+                .Where(e => e.State == EntityState.Added)
+                .ToList();
+
+            // Save changes to generate the Id
+            var result = await base.SaveChangesAsync(cancellationToken);
+
+            // Save changes again to update UserId
+            if (entries.Any())
+            {
+                await base.SaveChangesAsync(cancellationToken);
+            }
+
+            return result;
         }
     }
 }

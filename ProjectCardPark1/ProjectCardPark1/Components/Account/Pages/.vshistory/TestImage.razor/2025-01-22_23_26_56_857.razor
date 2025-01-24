@@ -1,0 +1,38 @@
+﻿@page "/test-file-upload"
+@inject HttpClient Http
+
+<h3>Test File Upload</h3>
+
+<InputFile OnChange="HandleFileSelection" accept="image/*" maxAllowedSize="10 * 1024 * 1024" />
+
+@if (!string.IsNullOrEmpty(imgSrc))
+{
+    <img src="@imgSrc" alt="Uploaded Image" style="max-width: 200px; max-height: 200px;" />
+}
+
+@code {
+    private string imgSrc = "";
+    private byte[] _fileBytes;
+
+    private async Task HandleFileSelection(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file != null)
+        {
+            try
+            {
+                using (var ms = new MemoryStream())
+                {
+                    await file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024).CopyToAsync(ms);
+                    _fileBytes = ms.ToArray();
+                    imgSrc = $"data:{file.ContentType};base64,{Convert.ToBase64String(_fileBytes)}";
+                    Console.WriteLine("File uploaded successfully.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+    }
+}

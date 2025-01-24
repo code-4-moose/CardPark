@@ -6,7 +6,10 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
 @using ProjectCardPark1.Data
+@using Microsoft.EntityFrameworkCore
+@using ProjectCardPark1.Domain
 
+@inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
 @inject UserManager<ProjectCardPark1User> UserManager
 @inject IUserStore<ProjectCardPark1User> UserStore
 @inject SignInManager<ProjectCardPark1User> SignInManager
@@ -54,14 +57,65 @@
                 <label for="confirm-password">Confirm Password</label>
                 <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
             </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+            <div class="mb-3">
+                <label for="address" class="form-label">Address:</label>
+                <InputText id="address" @bind-Value="User.Address" class="form-control" />
+                <ValidationMessage For="() => User.Address" class="text-danger" />
+            </div>  
+            <div class="mb-3">
+                <label for="contact" class="form-label">Phone Number:</label>
+                <InputNumber id="contact" @bind-Value="User.Contact" class="form-control" />
+                <ValidationMessage For="() => User.Contact" class="text-danger" />
+            </div>
+            <button @onclick = "AddUser" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
         </EditForm>
+        <EditForm method="post" Model="User" OnValidSubmit="AddUser" FormName="create" Enhance>
+            <div class="mb-3 visually-hidden ">
+                <label for="address" class="form-label">Address:</label>
+                <InputText id="address" @bind-Value="User.Address" class="form-control" />
+                <ValidationMessage For="() => User.Address" class="text-danger" />
+            </div>
+            <div class="mb-3 visually-hidden">
+                <label for="contact" class="form-label">Phone Number:</label>
+                <InputNumber id="contact" @bind-Value="User.Contact" class="form-control" />
+                <ValidationMessage For="() => User.Contact" class="text-danger" />
+            </div>
+            <div class="mb-3 visually-hidden">
+                <label for="profileimage" class="form-label">Profile Image:</label>
+                <InputFile id="profileimage" OnChange="HandleFileSelection" accept="image/*" class="form-control" />
+                <ValidationMessage For="() => User.ProfileImage" class="text-danger" />
+            </div>
+        </EditForm>
+        @* <button @onclick = "AddUser" class="w-100 btn btn-lg btn-primary">Register</button> *@
+        @* <EditForm method="post" Model="User" OnValidSubmit="AddUser" FormName="create" Enhance>
+            <div class="mb-3">
+                <label for="address" class="form-label">Address:</label>
+                <InputText id="address" @bind-Value="User.Address" class="form-control" />
+                <ValidationMessage For="() => User.Address" class="text-danger" />
+            </div>
+            <div class="mb-3">
+                <label for="contact" class="form-label">Phone Number:</label>
+                <InputNumber id="contact" @bind-Value="User.Contact" class="form-control" />
+                <ValidationMessage For="() => User.Contact" class="text-danger" />
+            </div>
+            <div class="mb-3">
+                <label for="profileimage" class="form-label">Profile Image:</label>
+                <InputFile id="profileimage" OnChange="HandleFileSelection" accept="image/*" class="form-control" />
+                <ValidationMessage For="() => User.ProfileImage" class="text-danger" />
+            </div>
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+        </EditForm> *@
     </div>
 </div>
 
+<script src="_content/BlazorInputFile/BlazorInputFile.js"></script>
 
 @code {
+
     private IEnumerable<IdentityError>? identityErrors;
+
+    [SupplyParameterFromForm]
+    private User User { get; set; } = new();
 
     [SupplyParameterFromForm]
     private InputModel Input { get; set; } = new();
@@ -69,8 +123,17 @@
     [SupplyParameterFromQuery]
     private string? ReturnUrl { get; set; }
 
+    string imgSrc = ""; // Base64 string for image preview
+    byte[] _fileBytes = null; // Byte array for the uploaded image
+    string? userId;
     private string? Message => identityErrors is null ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
-
+    string? fullname;
+    string? userAddress;
+    int userContact;
+    private async Task HandleCombinedSubmit()
+    {
+        await AddUser();
+    }
     public async Task RegisterUser(EditContext editContext)
     {
         var user = CreateUser();
@@ -81,6 +144,10 @@
 
         user.FirstName = Input.FirstName;
         user.LastName = Input.LastName;
+
+        fullname = user.FirstName + " " + user.LastName;
+        userAddress = User.Address;
+        userContact = User.Contact;
 
         var result = await UserManager.CreateAsync(user, Input.Password);
 
@@ -95,7 +162,6 @@
         {
             await RoleManager.CreateAsync(new IdentityRole("User"));
         }
-
         //add the user to the user role
         await UserManager.AddToRoleAsync(user, "User");
         //add the user id as claim when user registers
@@ -104,9 +170,12 @@
 
         Logger.LogInformation("User created a new account with password.");
 
-        var userId = await UserManager.GetUserIdAsync(user);
+        userId = await UserManager.GetUserIdAsync(user);
+        await AddUser();
         var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+
+
         var callbackUrl = NavigationManager.GetUriWithQueryParameters(
             NavigationManager.ToAbsoluteUri("Account/ConfirmEmail").AbsoluteUri,
             new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code, ["returnUrl"] = ReturnUrl });
@@ -119,7 +188,6 @@
                 "Account/RegisterConfirmation",
                 new() { ["email"] = Input.Email, ["returnUrl"] = ReturnUrl });
         }
-
         await SignInManager.SignInAsync(user, isPersistent: false);
         RedirectManager.RedirectTo(ReturnUrl);
     }
@@ -170,5 +238,52 @@
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; } = "";
+    }
+    private async Task HandleFileSelection(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file != null)
+        {
+            // Read the file into a byte array
+            using (var ms = new MemoryStream())
+            {
+                await file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024).CopyToAsync(ms);
+                _fileBytes = ms.ToArray();
+                imgSrc = $"data:{file.ContentType};base64,{Convert.ToBase64String(_fileBytes)}";
+            }
+        }
+    }
+    private async Task AddUser()
+    {
+        Console.WriteLine("AddUser method called!");
+        try
+        {
+            var user = new User
+                {
+                    UserId = userId,
+                    Name = fullname,
+                    Address = userAddress,
+                    Contact = User.Contact,
+                    Stars = 0,
+                    RatingId = 0,
+                    ListingId = 0,
+                    ProfileImage = _fileBytes,
+                    ProfileImageUrl = imgSrc,
+                    DateCreated = DateTime.Now,
+                    DateUpdated = DateTime.Now,
+                    CreatedBy = "System",
+                    UpdatedBy = "System"
+                };
+
+            using var context = DbFactory.CreateDbContext();
+            context.User.Add(user);
+            await context.SaveChangesAsync();
+
+            _fileBytes = null;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

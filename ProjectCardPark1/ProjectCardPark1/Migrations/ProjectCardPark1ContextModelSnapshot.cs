@@ -287,8 +287,8 @@ namespace ProjectCardPark1.Migrations
                             AdminId = 1,
                             Contact = 12345678,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2025, 1, 20, 15, 48, 54, 523, DateTimeKind.Local).AddTicks(7984),
-                            DateUpdated = new DateTime(2025, 1, 20, 15, 48, 54, 523, DateTimeKind.Local).AddTicks(8005),
+                            DateCreated = new DateTime(2025, 1, 23, 19, 41, 7, 688, DateTimeKind.Local).AddTicks(1107),
+                            DateUpdated = new DateTime(2025, 1, 23, 19, 41, 7, 688, DateTimeKind.Local).AddTicks(1120),
                             Name = "SuperBoss",
                             UpdatedBy = "System"
                         });
@@ -339,8 +339,8 @@ namespace ProjectCardPark1.Migrations
                             CardId = 1,
                             Condition = "New",
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2025, 1, 20, 15, 48, 54, 523, DateTimeKind.Local).AddTicks(8403),
-                            DateUpdated = new DateTime(2025, 1, 20, 15, 48, 54, 523, DateTimeKind.Local).AddTicks(8404),
+                            DateCreated = new DateTime(2025, 1, 23, 19, 41, 7, 688, DateTimeKind.Local).AddTicks(1418),
+                            DateUpdated = new DateTime(2025, 1, 23, 19, 41, 7, 688, DateTimeKind.Local).AddTicks(1418),
                             ListingId = 1,
                             Name = "Pokemon",
                             UpdatedBy = "System"
@@ -351,8 +351,8 @@ namespace ProjectCardPark1.Migrations
                             CardId = 2,
                             Condition = "Old",
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2025, 1, 20, 15, 48, 54, 523, DateTimeKind.Local).AddTicks(8407),
-                            DateUpdated = new DateTime(2025, 1, 20, 15, 48, 54, 523, DateTimeKind.Local).AddTicks(8408),
+                            DateCreated = new DateTime(2025, 1, 23, 19, 41, 7, 688, DateTimeKind.Local).AddTicks(1420),
+                            DateUpdated = new DateTime(2025, 1, 23, 19, 41, 7, 688, DateTimeKind.Local).AddTicks(1421),
                             ListingId = 1,
                             Name = "Ultraman",
                             UpdatedBy = "System"
@@ -363,8 +363,8 @@ namespace ProjectCardPark1.Migrations
                             CardId = 3,
                             Condition = "Broken",
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2025, 1, 20, 15, 48, 54, 523, DateTimeKind.Local).AddTicks(8410),
-                            DateUpdated = new DateTime(2025, 1, 20, 15, 48, 54, 523, DateTimeKind.Local).AddTicks(8411),
+                            DateCreated = new DateTime(2025, 1, 23, 19, 41, 7, 688, DateTimeKind.Local).AddTicks(1423),
+                            DateUpdated = new DateTime(2025, 1, 23, 19, 41, 7, 688, DateTimeKind.Local).AddTicks(1423),
                             ListingId = 2,
                             Name = "Wonderwoman",
                             UpdatedBy = "System"
@@ -375,8 +375,8 @@ namespace ProjectCardPark1.Migrations
                             CardId = 4,
                             Condition = "New",
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2025, 1, 20, 15, 48, 54, 523, DateTimeKind.Local).AddTicks(8414),
-                            DateUpdated = new DateTime(2025, 1, 20, 15, 48, 54, 523, DateTimeKind.Local).AddTicks(8415),
+                            DateCreated = new DateTime(2025, 1, 23, 19, 41, 7, 688, DateTimeKind.Local).AddTicks(1424),
+                            DateUpdated = new DateTime(2025, 1, 23, 19, 41, 7, 688, DateTimeKind.Local).AddTicks(1425),
                             ListingId = 3,
                             UpdatedBy = "System"
                         },
@@ -386,8 +386,8 @@ namespace ProjectCardPark1.Migrations
                             CardId = 5,
                             Condition = "Stolen",
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2025, 1, 20, 15, 48, 54, 523, DateTimeKind.Local).AddTicks(8417),
-                            DateUpdated = new DateTime(2025, 1, 20, 15, 48, 54, 523, DateTimeKind.Local).AddTicks(8418),
+                            DateCreated = new DateTime(2025, 1, 23, 19, 41, 7, 688, DateTimeKind.Local).AddTicks(1426),
+                            DateUpdated = new DateTime(2025, 1, 23, 19, 41, 7, 688, DateTimeKind.Local).AddTicks(1427),
                             ListingId = 3,
                             Name = "Aquaman",
                             UpdatedBy = "System"
@@ -439,8 +439,8 @@ namespace ProjectCardPark1.Migrations
                             AdminId = 1,
                             CategoryId = 1,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2025, 1, 20, 15, 48, 54, 523, DateTimeKind.Local).AddTicks(8805),
-                            DateUpdated = new DateTime(2025, 1, 20, 15, 48, 54, 523, DateTimeKind.Local).AddTicks(8807),
+                            DateCreated = new DateTime(2025, 1, 23, 19, 41, 7, 688, DateTimeKind.Local).AddTicks(1562),
+                            DateUpdated = new DateTime(2025, 1, 23, 19, 41, 7, 688, DateTimeKind.Local).AddTicks(1562),
                             Name = "PG",
                             Type = "unknown",
                             UpdatedBy = "System"
@@ -451,8 +451,8 @@ namespace ProjectCardPark1.Migrations
                             AdminId = 1,
                             CategoryId = 2,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2025, 1, 20, 15, 48, 54, 523, DateTimeKind.Local).AddTicks(8810),
-                            DateUpdated = new DateTime(2025, 1, 20, 15, 48, 54, 523, DateTimeKind.Local).AddTicks(8811),
+                            DateCreated = new DateTime(2025, 1, 23, 19, 41, 7, 688, DateTimeKind.Local).AddTicks(1565),
+                            DateUpdated = new DateTime(2025, 1, 23, 19, 41, 7, 688, DateTimeKind.Local).AddTicks(1565),
                             Name = "PG",
                             Type = "unknown",
                             UpdatedBy = "System"
@@ -463,8 +463,8 @@ namespace ProjectCardPark1.Migrations
                             AdminId = 1,
                             CategoryId = 3,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2025, 1, 20, 15, 48, 54, 523, DateTimeKind.Local).AddTicks(8813),
-                            DateUpdated = new DateTime(2025, 1, 20, 15, 48, 54, 523, DateTimeKind.Local).AddTicks(8814),
+                            DateCreated = new DateTime(2025, 1, 23, 19, 41, 7, 688, DateTimeKind.Local).AddTicks(1566),
+                            DateUpdated = new DateTime(2025, 1, 23, 19, 41, 7, 688, DateTimeKind.Local).AddTicks(1567),
                             Name = "R18",
                             Type = "WhoKnows",
                             UpdatedBy = "System"
@@ -527,8 +527,8 @@ namespace ProjectCardPark1.Migrations
                             Amount = 100,
                             CategoryId = 1,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2025, 1, 20, 15, 48, 54, 523, DateTimeKind.Local).AddTicks(8956),
-                            DateUpdated = new DateTime(2025, 1, 20, 15, 48, 54, 523, DateTimeKind.Local).AddTicks(8957),
+                            DateCreated = new DateTime(2025, 1, 23, 19, 41, 7, 688, DateTimeKind.Local).AddTicks(1660),
+                            DateUpdated = new DateTime(2025, 1, 23, 19, 41, 7, 688, DateTimeKind.Local).AddTicks(1661),
                             ListingId = 1,
                             Price = 5.21,
                             UpdatedBy = "System",
@@ -541,8 +541,8 @@ namespace ProjectCardPark1.Migrations
                             Amount = 20,
                             CategoryId = 2,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2025, 1, 20, 15, 48, 54, 523, DateTimeKind.Local).AddTicks(8960),
-                            DateUpdated = new DateTime(2025, 1, 20, 15, 48, 54, 523, DateTimeKind.Local).AddTicks(8961),
+                            DateCreated = new DateTime(2025, 1, 23, 19, 41, 7, 688, DateTimeKind.Local).AddTicks(1663),
+                            DateUpdated = new DateTime(2025, 1, 23, 19, 41, 7, 688, DateTimeKind.Local).AddTicks(1663),
                             ListingId = 2,
                             Price = 1000.1,
                             UpdatedBy = "System",
@@ -555,8 +555,8 @@ namespace ProjectCardPark1.Migrations
                             Amount = 10,
                             CategoryId = 3,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2025, 1, 20, 15, 48, 54, 523, DateTimeKind.Local).AddTicks(8964),
-                            DateUpdated = new DateTime(2025, 1, 20, 15, 48, 54, 523, DateTimeKind.Local).AddTicks(8965),
+                            DateCreated = new DateTime(2025, 1, 23, 19, 41, 7, 688, DateTimeKind.Local).AddTicks(1665),
+                            DateUpdated = new DateTime(2025, 1, 23, 19, 41, 7, 688, DateTimeKind.Local).AddTicks(1665),
                             ListingId = 3,
                             Price = 55.600000000000001,
                             UpdatedBy = "System",
@@ -569,8 +569,8 @@ namespace ProjectCardPark1.Migrations
                             Amount = 8,
                             CategoryId = 2,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2025, 1, 20, 15, 48, 54, 523, DateTimeKind.Local).AddTicks(8968),
-                            DateUpdated = new DateTime(2025, 1, 20, 15, 48, 54, 523, DateTimeKind.Local).AddTicks(8969),
+                            DateCreated = new DateTime(2025, 1, 23, 19, 41, 7, 688, DateTimeKind.Local).AddTicks(1667),
+                            DateUpdated = new DateTime(2025, 1, 23, 19, 41, 7, 688, DateTimeKind.Local).AddTicks(1668),
                             ListingId = 4,
                             Price = 23.399999999999999,
                             UpdatedBy = "System",
@@ -621,8 +621,8 @@ namespace ProjectCardPark1.Migrations
                         {
                             Id = 1,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2025, 1, 20, 15, 48, 54, 523, DateTimeKind.Local).AddTicks(9111),
-                            DateUpdated = new DateTime(2025, 1, 20, 15, 48, 54, 523, DateTimeKind.Local).AddTicks(9112),
+                            DateCreated = new DateTime(2025, 1, 23, 19, 41, 7, 688, DateTimeKind.Local).AddTicks(1760),
+                            DateUpdated = new DateTime(2025, 1, 23, 19, 41, 7, 688, DateTimeKind.Local).AddTicks(1761),
                             Description = "Beautify Card!",
                             RatingId = 1,
                             Stars = 9.5,
@@ -633,8 +633,8 @@ namespace ProjectCardPark1.Migrations
                         {
                             Id = 2,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2025, 1, 20, 15, 48, 54, 523, DateTimeKind.Local).AddTicks(9115),
-                            DateUpdated = new DateTime(2025, 1, 20, 15, 48, 54, 523, DateTimeKind.Local).AddTicks(9116),
+                            DateCreated = new DateTime(2025, 1, 23, 19, 41, 7, 688, DateTimeKind.Local).AddTicks(1763),
+                            DateUpdated = new DateTime(2025, 1, 23, 19, 41, 7, 688, DateTimeKind.Local).AddTicks(1763),
                             Description = "Cards are damaged! Dishonesty!",
                             RatingId = 2,
                             Stars = 3.0,
@@ -645,8 +645,8 @@ namespace ProjectCardPark1.Migrations
                         {
                             Id = 3,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2025, 1, 20, 15, 48, 54, 523, DateTimeKind.Local).AddTicks(9119),
-                            DateUpdated = new DateTime(2025, 1, 20, 15, 48, 54, 523, DateTimeKind.Local).AddTicks(9120),
+                            DateCreated = new DateTime(2025, 1, 23, 19, 41, 7, 688, DateTimeKind.Local).AddTicks(1765),
+                            DateUpdated = new DateTime(2025, 1, 23, 19, 41, 7, 688, DateTimeKind.Local).AddTicks(1765),
                             Description = "Will Trade again!",
                             RatingId = 3,
                             Stars = 8.0,
@@ -657,8 +657,8 @@ namespace ProjectCardPark1.Migrations
                         {
                             Id = 4,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2025, 1, 20, 15, 48, 54, 523, DateTimeKind.Local).AddTicks(9122),
-                            DateUpdated = new DateTime(2025, 1, 20, 15, 48, 54, 523, DateTimeKind.Local).AddTicks(9123),
+                            DateCreated = new DateTime(2025, 1, 23, 19, 41, 7, 688, DateTimeKind.Local).AddTicks(1767),
+                            DateUpdated = new DateTime(2025, 1, 23, 19, 41, 7, 688, DateTimeKind.Local).AddTicks(1767),
                             Description = "Will NOT Trade again! Shame!",
                             RatingId = 4,
                             Stars = 1.0,
@@ -669,8 +669,8 @@ namespace ProjectCardPark1.Migrations
                         {
                             Id = 5,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2025, 1, 20, 15, 48, 54, 523, DateTimeKind.Local).AddTicks(9126),
-                            DateUpdated = new DateTime(2025, 1, 20, 15, 48, 54, 523, DateTimeKind.Local).AddTicks(9127),
+                            DateCreated = new DateTime(2025, 1, 23, 19, 41, 7, 688, DateTimeKind.Local).AddTicks(1769),
+                            DateUpdated = new DateTime(2025, 1, 23, 19, 41, 7, 688, DateTimeKind.Local).AddTicks(1769),
                             Description = "Great! Never been so good!",
                             RatingId = 5,
                             Stars = 8.9000000000000004,
@@ -681,8 +681,8 @@ namespace ProjectCardPark1.Migrations
                         {
                             Id = 6,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2025, 1, 20, 15, 48, 54, 523, DateTimeKind.Local).AddTicks(9129),
-                            DateUpdated = new DateTime(2025, 1, 20, 15, 48, 54, 523, DateTimeKind.Local).AddTicks(9130),
+                            DateCreated = new DateTime(2025, 1, 23, 19, 41, 7, 688, DateTimeKind.Local).AddTicks(1771),
+                            DateUpdated = new DateTime(2025, 1, 23, 19, 41, 7, 688, DateTimeKind.Local).AddTicks(1771),
                             Description = "Scary Trader!",
                             RatingId = 6,
                             Stars = 0.0,
@@ -723,6 +723,9 @@ namespace ProjectCardPark1.Migrations
                     b.Property<byte[]>("ProfileImage")
                         .HasColumnType("varbinary(max)");
 
+                    b.Property<string>("ProfileImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("RatingId")
                         .HasColumnType("int");
 
@@ -732,8 +735,8 @@ namespace ProjectCardPark1.Migrations
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -751,7 +754,7 @@ namespace ProjectCardPark1.Migrations
                             Name = "Beautify Card!",
                             RatingId = 3,
                             Stars = 9.5,
-                            UserId = 1
+                            UserId = "1"
                         },
                         new
                         {
@@ -764,7 +767,7 @@ namespace ProjectCardPark1.Migrations
                             Name = "Beautify Card!",
                             RatingId = 3,
                             Stars = 9.5,
-                            UserId = 2
+                            UserId = "2"
                         },
                         new
                         {
@@ -777,7 +780,7 @@ namespace ProjectCardPark1.Migrations
                             Name = "Beautify Card!",
                             RatingId = 4,
                             Stars = 8.5,
-                            UserId = 3
+                            UserId = "3"
                         },
                         new
                         {
@@ -790,7 +793,7 @@ namespace ProjectCardPark1.Migrations
                             Name = "Beautify Card!",
                             RatingId = 2,
                             Stars = 5.5,
-                            UserId = 4
+                            UserId = "4"
                         });
                 });
 

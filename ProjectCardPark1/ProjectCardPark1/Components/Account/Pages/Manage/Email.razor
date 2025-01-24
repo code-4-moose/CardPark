@@ -11,6 +11,7 @@
 @inject IEmailSender<ProjectCardPark1User> EmailSender
 @inject IdentityUserAccessor UserAccessor
 @inject NavigationManager NavigationManager
+@inject ProjectCardPark1.Service.SharedService SharedService
 
 <PageTitle>Manage email</PageTitle>
 
@@ -52,21 +53,29 @@
         </EditForm>
     </div>
 </div>
+<p> @getuserId() </p>
 
 @code {
     private string? message;
     private ProjectCardPark1User user = default!;
     private string? email;
     private bool isEmailConfirmed;
-
+    private string? userid;
     [CascadingParameter]
     private HttpContext HttpContext { get; set; } = default!;
 
     [SupplyParameterFromForm(FormName = "change-email")]
     private InputModel Input { get; set; } = new();
 
+    private string getuserId()
+    {
+        return "USER ID" + SharedService.ShareUserId;
+    }
+
+
     protected override async Task OnInitializedAsync()
     {
+        userid = SharedService.ShareUserId;
         user = await UserAccessor.GetRequiredUserAsync(HttpContext);
         email = await UserManager.GetEmailAsync(user);
         isEmailConfirmed = await UserManager.IsEmailConfirmedAsync(user);
