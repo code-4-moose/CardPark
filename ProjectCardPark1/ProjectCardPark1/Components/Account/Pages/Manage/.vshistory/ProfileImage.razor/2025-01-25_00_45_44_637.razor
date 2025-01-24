@@ -29,9 +29,9 @@
                 <div class="col-md-6">
                     <img src="@imgSrc" width="200" height="200" style="border: 1px solid #000000; margin-top: 10px;" />
                 </div>
-                <br />
+
                 <!-- Submit Button -->
-                <button onclick = "showAlert()" type="submit" class="btn btn-primary">Update Profile Image</button>
+                <button type="submit" class="btn btn-primary">Update Profile Image</button>
             </EditForm>
         }
         else
@@ -39,12 +39,8 @@
             <p>Loading...</p>
         }
     </div>
-</div>  
-<script>
-    function showAlert() {
-        alert("Looking good!");
-    }
-</script>
+</div>
+<p> @getuserId() </p>
 
 <script src="_content/BlazorInputFile/BlazorInputFile.js"></script>
 
@@ -70,8 +66,6 @@
         userid = Message;
         using var context = DbFactory.CreateDbContext();
         User ??= await context.User.FirstOrDefaultAsync(m => m.UserId == userid);
-        _fileBytes = User.ProfileImage;
-        imgSrc = User.ProfileImageUrl;
     }
     private string getuserId()
     {
@@ -116,6 +110,8 @@
                 // Save the changes to the database
                 await context.SaveChangesAsync();
 
+                _fileBytes = null;
+                imgSrc = ""; // Clear the image preview
             }
             else
             {

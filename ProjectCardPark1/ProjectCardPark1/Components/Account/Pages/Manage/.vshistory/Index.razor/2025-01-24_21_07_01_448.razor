@@ -16,6 +16,7 @@
 
 <h3>Profile</h3>
 <StatusMessage />
+
 <div class="row">
     <div class="col-md-6">
         <EditForm Model="Input" FormName="profile" OnValidSubmit="OnValidSubmitAsync" method="post">
@@ -32,14 +33,15 @@
             </div>
             <button type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
         </EditForm>
-        <br/>
-        <button onclick="location.href='/UpdateImage?msg=@userId';" class="w-100 btn btn-lg btn-primary">Change Profile Picture</button>
-        @* <a href="/UpdateImage?msg=@userId" class="button-style">Go to Page 2 with Dynamic Query String Data</a> *@
+        <p> @getuserId() </p>
+        <button @onclick= "updatePF" class="w-100 btn btn-lg btn-primary">Save</button>
+
     </div>
 </div>
 
 <script src="_content/Solutaris.InfoWARE.ProtectedBrowserStorage/config.js"></script>
 
+<a href="/UpdateImage?msg=@userId"> Go to Page 2 with Dynamic Query String Data</a>
 
 @code {
     private ProjectCardPark1User user = default!;
@@ -73,7 +75,7 @@
 
         Input.PhoneNumber ??= phoneNumber;
     }
-    private async Task updatePF()
+    private void updatePF()
     {
         NavigationManager.NavigateTo($"/UpdateImage");
     }
