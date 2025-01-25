@@ -29,16 +29,10 @@
 
 <body>
     <div class="container_1">
-        @if (Image == null)
-        {
-            <img src="./ProfilePic/download.png" class="css-shadow" />
-        }
-        else
-        {
-            <img src="@imgSrc" class="css-shadow" />
-        }
+        <img src="@imgSrc" class="css-shadow" />
         <h1 class="username">@name</h1>
         <p class="user_desc">From @address</p>
+        <div class="user_joined_date">Joined 5y 2m ago</div>
         @if (rating == 0) {
             <div class="user-rating-norating">
                 <h3>No Ratings</h3>
@@ -59,7 +53,7 @@
     </div>
 </body>
 
-@code {
+    @code {
     string? userid;
     private ProjectCardPark1User user = default!;
 
@@ -74,7 +68,6 @@
     string message = "wdadawadadw";
     string address;
     double rating;
-    byte[] Image;
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
@@ -87,11 +80,10 @@
         userid = UserManager.GetUserId(claimsPrincipal);
         using var context = DbFactory.CreateDbContext();
         User ??= await context.User.FirstOrDefaultAsync(m => m.UserId == userid);
-        Image = User.ProfileImage;
         imgSrc = User.ProfileImageUrl;
         name = User.Name;
         address = User.Address;
-        rating = User.Stars;
+        rating = 5;
     }
 
     public async Task<string> GetUserPhotoAsync(int userId)
