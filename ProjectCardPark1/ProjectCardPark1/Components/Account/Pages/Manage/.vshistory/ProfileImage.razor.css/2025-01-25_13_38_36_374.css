@@ -1,0 +1,42 @@
+﻿body{
+    font-family:"Open Sans", sans-serif;
+    height:100vh;
+    display:flex;
+    align-items:center;
+    background-color:gray;
+}
+
+.profiles{
+    display:flex;
+
+    &__group{
+        position:relative;
+        margin-left:-1.2rem;
+        cursor:pointer;
+
+        img{
+               width:6rem;
+               height:6rem;
+               object-fit:cover;
+               object-position:top;
+               border-radius:50%;
+               border:4px solid gray;
+               position:relative;
+               top:0;
+               transition:250ms top ease-in-out;
+
+           }
+
+        p{
+            position:absolute;
+            background-color:gray;
+            color:white;
+            border-radius:$radius;
+            padding:0.2rem 0.5rem;
+            top:6rem;
+            text-align:center;
+            left:50%;
+            transform:translate(-50%);
+        }
+    }
+}

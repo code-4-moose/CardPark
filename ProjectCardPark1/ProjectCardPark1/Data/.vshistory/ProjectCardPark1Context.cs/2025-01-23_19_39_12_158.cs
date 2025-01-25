@@ -23,7 +23,7 @@ namespace ProjectCardPark1.Data
 
             // For SSMS: 
             optionsBuilder.UseSqlServer(@"Server=LAPTOP-JPNVKAR5\SQLEXPRESS;Database=ProjectCardPark1;Trusted_Connection=True;TrustServerCertificate=True;");
-            // Note LAPTOP-JPNVKAR5\\SQLEXPRESS
+            // Note
             // Any changes of database name, u need to do migration again.
 
         }

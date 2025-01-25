@@ -20,10 +20,12 @@
 @inject RoleManager<IdentityRole> RoleManager
 
 <PageTitle>Register</PageTitle>
+
 <h1 class="heading-cardparc ">CardParc</h1>
-<body>
+
 <div class="d-flex justify-content-center align-items-center vh-100">
     <div class="register-container ">
+        <h1 class="registertext">Join us in Card Trading!</h1>
         <StatusMessage Message="@Message" />
         <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register">
             <DataAnnotationsValidator />
@@ -56,14 +58,15 @@
                 <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
             </div>
             <div class="mb-3">
-                <InputText id="address" @bind-Value="User.Address" class="form-control" placeholder = "Address" />
+                <label for="address" class="form-label">Address:</label>
+                <InputText id="address" @bind-Value="User.Address" class="form-control" />
                 <ValidationMessage For="() => User.Address" class="text-danger" />
             </div>  
-@*             <div class="mb-3">
+            <div class="mb-3">
                 <label for="contact" class="form-label">Phone Number:</label>
-                <InputNumber id="contact" @bind-Value="User.Contact" class="form-control" placeholder ="Phone Number" />
+                <InputNumber id="contact" @bind-Value="User.Contact" class="form-control" />
                 <ValidationMessage For="() => User.Contact" class="text-danger" />
-            </div> *@
+            </div>
             <button @onclick = "AddUser" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
         </EditForm>
         <EditForm method="post" Model="User" OnValidSubmit="AddUser" FormName="create" Enhance>
@@ -71,12 +74,12 @@
                 <label for="address" class="form-label">Address:</label>
                 <InputText id="address" @bind-Value="User.Address" class="form-control" />
                 <ValidationMessage For="() => User.Address" class="text-danger" />
-             </div>
-            @*<div class="mb-3 visually-hidden">
+            </div>
+            <div class="mb-3 visually-hidden">
                 <label for="contact" class="form-label">Phone Number:</label>
                 <InputNumber id="contact" @bind-Value="User.Contact" class="form-control" />
                 <ValidationMessage For="() => User.Contact" class="text-danger" />
-            </div> *@
+            </div>
             <div class="mb-3 visually-hidden">
                 <label for="profileimage" class="form-label">Profile Image:</label>
                 <InputFile id="profileimage" OnChange="HandleFileSelection" accept="image/*" class="form-control" />
@@ -104,7 +107,6 @@
         </EditForm> *@
     </div>
 </div>
-</body>
 
 <script src="_content/BlazorInputFile/BlazorInputFile.js"></script>
 

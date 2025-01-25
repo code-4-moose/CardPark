@@ -10,7 +10,6 @@
 
 <h1>Update Profile Image</h1>
 <hr />
-<body>
 <div class="row">
     <div class="col-md-4">
         @if (User != null)
@@ -27,8 +26,11 @@
                 </div>
 
                 <!-- Image Preview -->
-                <img src="@imgSrc" class="css-shadow"/>
-                <br/>
+                <div class="profile_pic">
+                <div class="col-md-6">
+                    <img src="@imgSrc" width="200" height="200" style="border: 1px solid #000000; margin-top: 10px;" />
+                </div>
+                </div>
                 <br />
                 <!-- Submit Button -->
                 <button onclick = "showAlert()" type="submit" class="btn btn-primary">Update Profile Image</button>
@@ -40,7 +42,6 @@
         }
     </div>
 </div>  
-</body>
 <script>
     function showAlert() {
         alert("Looking good!");

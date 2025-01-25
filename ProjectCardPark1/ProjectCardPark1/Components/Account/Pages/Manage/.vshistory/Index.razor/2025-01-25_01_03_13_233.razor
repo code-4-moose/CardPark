@@ -32,8 +32,7 @@
             </div>
             <button type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
         </EditForm>
-        <br/>
-        <button onclick="location.href='/UpdateImage?msg=@userId';" class="w-100 btn btn-lg btn-primary">Change Profile Picture</button>
+        <button onclick="location.href='/UpdateImage?msg=@userId';" class="w-100 btn btn-lg btn-primary"> Go to Page 2 with Dynamic Query String Data</button>
         @* <a href="/UpdateImage?msg=@userId" class="button-style">Go to Page 2 with Dynamic Query String Data</a> *@
     </div>
 </div>
@@ -67,9 +66,9 @@
 
         userId = UserManager.GetUserId(claimsPrincipal);
 
-        // SharedService.ShareUserId = userId;
+        SharedService.ShareUserId = userId;
 
-        // localStorage.SetItem("userId", userId);
+        localStorage.SetItem("userId", userId);
 
         Input.PhoneNumber ??= phoneNumber;
     }
