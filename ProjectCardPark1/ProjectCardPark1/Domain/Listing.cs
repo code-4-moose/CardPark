@@ -25,5 +25,7 @@ namespace ProjectCardPark1.Domain
 
         public byte[]? ListingImage { get; set; }
         public string? ListingImageUrl { get; set; }
+
+        public string? ListingStatus {  get; set; } //Listing if its sold or not
     }
 }
