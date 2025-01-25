@@ -6,11 +6,13 @@
 
 <PageTitle>Create</PageTitle>
 
-<h1>Create</h1>
-
-<h2>Listing</h2>
-<hr />
-<div class="row">
+<div class="listing">
+    <h1>Add Listing</h1>
+    <hr />
+    <div class="row">
+        <div class="card-img">
+            <img src="/add_image.png" alt="Add Image here" />
+        </div>
     <div class="col-md-4">
         <EditForm method="post" Model="Listing" OnValidSubmit="AddListing" FormName="create" Enhance>
             <DataAnnotationsValidator />
@@ -45,28 +47,29 @@
                 <InputNumber id="adminid" @bind-Value="Listing.AdminId" class="form-control" /> 
                 <ValidationMessage For="() => Listing.AdminId" class="text-danger" /> 
             </div>        
-            <div class="mb-3">
+            <div class="mb-3" hidden>
                 <label for="datecreated" class="form-label">DateCreated:</label> 
                 <InputDate id="datecreated" @bind-Value="Listing.DateCreated" class="form-control" /> 
                 <ValidationMessage For="() => Listing.DateCreated" class="text-danger" /> 
             </div>        
-            <div class="mb-3">
+            <div class="mb-3" hidden>
                 <label for="dateupdated" class="form-label">DateUpdated:</label> 
                 <InputDate id="dateupdated" @bind-Value="Listing.DateUpdated" class="form-control" /> 
                 <ValidationMessage For="() => Listing.DateUpdated" class="text-danger" /> 
             </div>        
-            <div class="mb-3">
+            <div class="mb-3" hidden>
                 <label for="createdby" class="form-label">CreatedBy:</label> 
                 <InputText id="createdby" @bind-Value="Listing.CreatedBy" class="form-control" /> 
                 <ValidationMessage For="() => Listing.CreatedBy" class="text-danger" /> 
             </div>        
-            <div class="mb-3">
+            <div class="mb-3" hidden>
                 <label for="updatedby" class="form-label">UpdatedBy:</label> 
                 <InputText id="updatedby" @bind-Value="Listing.UpdatedBy" class="form-control" /> 
                 <ValidationMessage For="() => Listing.UpdatedBy" class="text-danger" /> 
             </div>        
             <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>
+        </div>
     </div>
 </div>
 
@@ -75,12 +78,34 @@
 </div>
 
 @code {
+    private string userId = "System";
+
+    @inject AuthenticationStateProvider authenticationStateProvider
+
+    protected override async void OnInitialized()
+    {
+        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        // Get the userId claim
+        var userIdClaim = user.FindFirst("userId");
+        if (userIdClaim != null)
+        {
+            userId = userIdClaim.Value;
+        }
+    }
+
     [SupplyParameterFromForm]
     private Listing Listing { get; set; } = new();
 
     // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
     private async Task AddListing()
     {
+        Listing.CreatedBy = userId;
+        Listing.UpdatedBy = userId;
+
+        Listing.DateCreated = DateTime.Now;
+        Listing.DateUpdated = DateTime.Now;
+
         using var context = DbFactory.CreateDbContext();
         context.Listing.Add(Listing);
         await context.SaveChangesAsync();
