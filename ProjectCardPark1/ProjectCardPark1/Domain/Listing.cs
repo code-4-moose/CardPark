@@ -22,5 +22,8 @@ namespace ProjectCardPark1.Domain
         public Admin? Admin{ get; set; } // Nav Prop
 
         public ICollection<Card>? Card { get; set; } // Nav Prop  1..Many
+
+        public byte[]? ListingImage { get; set; }
+        public string? ListingImageUrl { get; set; }
     }
 }
