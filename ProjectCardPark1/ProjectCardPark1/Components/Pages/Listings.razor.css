@@ -3,6 +3,7 @@
     align-items: center;
     justify-content: center;
     user-select: none;
+    margin-bottom: 60px;
 }
 
 .search-bar {
@@ -39,5 +40,77 @@
     border-radius: 50%;
     width: 40px;
     height: 40px;
+    cursor: pointer;
+}
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 16px;
+    padding: 16px;
+}
+
+.card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card-image {
+    text-align: center;
+    padding: 16px;
+}
+
+.card-content {
+    padding: 16px;
+}
+
+.card-content h3 {
+    font-size: 18px;
+    margin-bottom: 8px;
+}
+
+.card-content p {
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+
+.card-content strong {
+    font-weight: bold;
+}
+
+/* Popup Image Styles */
+.popup-image {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.popup-image img {
+    max-width: 90%;
+    max-height: 90%;
+    margin: auto;
+}
+
+.popup-image .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    color: #fff;
+    font-size: 30px;
     cursor: pointer;
 }

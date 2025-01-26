@@ -1,13 +1,80 @@
 ﻿@page "/Card_Listings"
 @rendermode InteractiveServer
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using ProjectCardPark1.Domain
+@using ProjectCardPark1.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
 
 <PageTitle>Card Listings</PageTitle>
 
 <h1>Results for ""</h1>
 
 <div class="search-bar-container">
-	<form action="/Card_Listings" method="get" class="search-bar">
-		<input type="text" placeholder="Search..." name="q" />
-		<button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
-	</form>
+    <form action="/Card_Listings" method="get" class="search-bar">
+        <input type="text" placeholder="Search..." name="q" />
+        <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+    </form>
 </div>
+
+<p>Click on the images to zoom in</p>
+
+<div class="card-grid">
+    @foreach (var listing in context.Listing.Skip(3))
+    {
+        <div class="card">
+            <div class="card-image">
+                @if (!string.IsNullOrEmpty(listing.ListingImageUrl))
+                {
+                    <img src="@listing.ListingImageUrl" alt="@listing.Name" class="card-img" style="width: 150px; height: 150px;" />
+                }
+                else
+                {
+                    <span>No Image</span>
+                }
+            </div>
+            <div class="card-content">
+                <h3>@listing.Name</h3>
+                <p><strong>Price:</strong> @listing.Price</p>
+                <p><strong>Amount:</strong> @listing.Amount</p>
+                <p><strong>Description:</strong> @listing.Description</p>
+                <p><strong>User ID:</strong> @listing.UserId</p>
+                <p><strong>Category ID:</strong> @listing.CategoryId</p>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Popup for Enlarged Image -->
+<div class="popup-image">
+    <span class="close-btn" onclick="closePopup()">×</span>
+    <img src="" alt="Enlarged Image" />
+</div>
+
+<script>
+    document.querySelectorAll('.card-img').forEach(image => {
+        image.onclick = () => {
+            const popup = document.querySelector('.popup-image');
+            const popupImg = popup.querySelector('img');
+            popup.style.display = 'flex';
+            popupImg.src = image.getAttribute('src');
+        };
+    });
+
+    function closePopup() {
+        document.querySelector('.popup-image').style.display = 'none';
+    }
+</script>
+
+@code {
+    private ProjectCardPark1Context context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}
+
