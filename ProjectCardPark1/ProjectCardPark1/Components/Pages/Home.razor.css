@@ -81,6 +81,8 @@
 .Categories {
     border-top: 5px solid #006bb7;
     margin-top: 40px;
+    padding-bottom: 40px;
+
 }
 
 .Categories h1 {
@@ -95,6 +97,59 @@
     -webkit-text-stroke: 2px darkgrey;
     z-index: 2;
     user-select: none;
+}
+
+
+.categories-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.button-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    width: 1000px;
+    place-items: center;
+}
+
+.button {
+    position: relative;
+    place-self: center;
+    overflow: hidden;
+    height: 200px;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.button:hover {
+    transform: scale(1.05);
+}
+
+.button img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.button:hover img {
+    transform: scale(1.1);
+}
+
+.button-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
 }
 
 @media (max-width: 1500px) {

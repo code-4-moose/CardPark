@@ -23,6 +23,11 @@ else
                 <ValidationSummary role="alert"/>
                 <input type="hidden" name="Listing.Id" value="@Listing.Id" />
                 <div class="mb-3">
+                    <label for="name" class="form-label">Name:</label>
+                    <InputText id="name" @bind-Value="Listing.Name" class="form-control" />
+                    <ValidationMessage For="() => Listing.Name" class="text-danger" />
+                </div>
+                <div class="mb-3" hidden>
                     <label for="listingid" class="form-label">ListingId:</label>
                     <InputNumber id="listingid" @bind-Value="Listing.ListingId" class="form-control" />
                     <ValidationMessage For="() => Listing.ListingId" class="text-danger" />
@@ -47,10 +52,15 @@ else
                     <InputNumber id="categoryid" @bind-Value="Listing.CategoryId" class="form-control" />
                     <ValidationMessage For="() => Listing.CategoryId" class="text-danger" />
                 </div>
-                <div class="mb-3">
+                <div class="mb-3" hidden>
                     <label for="adminid" class="form-label">AdminId:</label>
                     <InputNumber id="adminid" @bind-Value="Listing.AdminId" class="form-control" />
                     <ValidationMessage For="() => Listing.AdminId" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description:</label>
+                    <InputText id="description" @bind-Value="Listing.Description" class="form-control" />
+                    <ValidationMessage For="() => Listing.Description" class="text-danger" />
                 </div>
                 <div class="mb-3" hidden>
                     <label for="datecreated" class="form-label">DateCreated:</label>

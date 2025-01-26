@@ -1,0 +1,106 @@
+﻿@page "/Account/Profile"
+
+@rendermode @(new InteractiveServerRenderMode(false));
+@using Microsoft.AspNetCore.Mvc.RazorPages;
+@using Microsoft.EntityFrameworkCore;
+@using System.ComponentModel.DataAnnotations
+@using System.Security.Claims
+@using System.Text
+@using System.Text.Encodings.Web
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.WebUtilities
+@using ProjectCardPark1.Data
+@using ProjectCardPark1.Domain
+
+@inject SignInManager<ProjectCardPark1User> SignInManager
+@inject UserManager<ProjectCardPark1User> UserManager
+@inject IUserStore<ProjectCardPark1User> UserStore
+@inject IEmailSender<ProjectCardPark1User> EmailSender
+@inject NavigationManager NavigationManager
+@inject IdentityRedirectManager RedirectManager
+@inject ILogger<ExternalLogin> Logger
+@inject UserManager<ProjectCardPark1User> UserManager
+@inject IEmailSender<ProjectCardPark1User> EmailSender
+@inject IdentityUserAccessor UserAccessor
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
+
+
+<body>
+    <div class="container_1">
+        @if (imgSrc == null)
+        {
+            <img src="./ProfilePic/download.png" class="css-shadow" />
+        }
+        else
+        {
+            <img src="@imgSrc" class="css-shadow" />
+        }
+        <h1 class="username">@name</h1>
+        <p class="user_desc">From @address</p>
+        @if (rating == 0) {
+            <div class="user-rating-norating">
+                <h3>No Ratings</h3>
+            </div>
+        }
+        else{
+            <div class="user-rating">
+            <h3>5.0</h3>
+            <i class="fa-solid fa-star star_css" style="font-size: 1.2em;"></i>
+            </div>
+        }
+    </div>
+    <hr />
+    <div class="container_2">
+        <h4>Current Listings</h4>
+        <div class="listings">
+        </div>
+    </div>
+    <p>@imgSrc</p>
+</body>
+
+    @code {
+    string? userid;
+    private ProjectCardPark1User user = default!;
+
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
+
+    [SupplyParameterFromForm]
+    private User User { get; set; }
+
+    string imgSrc = ""; // Base64 string for image preview
+    string? name;
+    string message = "wdadawadadw";
+    string address;
+    double rating;
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var claimsPrincipal = authState.User;
+
+        // user = await UserManager.GetUserAsync(claimsPrincipal);
+
+        // user = await UserAccessor.GetRequiredUserAsync(HttpContext);
+
+        userid = UserManager.GetUserId(claimsPrincipal);
+        using var context = DbFactory.CreateDbContext();
+        User ??= await context.User.FirstOrDefaultAsync(m => m.UserId == userid);
+        imgSrc = User.ProfileImageUrl;
+        name = User.Name;
+        address = User.Address;
+        rating = 5;
+    }
+
+    public async Task<string> GetUserPhotoAsync(int userId)
+    {
+        using var context = DbFactory.CreateDbContext();
+        // Assuming you have a DbContext or similar to interact with the database
+        var user = await context.User.FindAsync(userId);
+        imgSrc = user?.ProfileImageUrl;
+        return user?.ProfileImageUrl; // Assuming the photo is stored in a 'Photo' column as byte[]
+    }
+
+
+}

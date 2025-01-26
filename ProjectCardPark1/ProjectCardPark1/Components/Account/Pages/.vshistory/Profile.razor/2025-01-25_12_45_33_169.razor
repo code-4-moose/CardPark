@@ -1,0 +1,96 @@
+﻿@page "/Account/Profile"
+
+@rendermode @(new InteractiveServerRenderMode(false));
+@using Microsoft.AspNetCore.Mvc.RazorPages;
+@using Microsoft.EntityFrameworkCore;
+@using System.ComponentModel.DataAnnotations
+@using System.Security.Claims
+@using System.Text
+@using System.Text.Encodings.Web
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.WebUtilities
+@using ProjectCardPark1.Data
+@using ProjectCardPark1.Domain
+
+@inject SignInManager<ProjectCardPark1User> SignInManager
+@inject UserManager<ProjectCardPark1User> UserManager
+@inject IUserStore<ProjectCardPark1User> UserStore
+@inject IEmailSender<ProjectCardPark1User> EmailSender
+@inject NavigationManager NavigationManager
+@inject IdentityRedirectManager RedirectManager
+@inject ILogger<ExternalLogin> Logger
+@inject UserManager<ProjectCardPark1User> UserManager
+@inject IEmailSender<ProjectCardPark1User> EmailSender
+@inject IdentityUserAccessor UserAccessor
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
+
+
+<body>
+    <div class="container_1">
+        <div class="profile_pic">
+            <div class="col-md-6">
+                <img src="@imgSrc" width="200" height="200" style="border: 1px solid #000000; margin-top: 10px;" />
+            </div>
+        </div>
+        <h1 class="username">Amos Tan</h1>
+        <p class="user_desc">This user loves mooses</p>
+        <div class="user_joined_date">Joined 5y 2m ago</div>
+        <div class="user-rating">
+            <h3>5.0</h3>
+            <i class="fa-solid fa-star star_css" style="font-size: 1.2em;"></i>
+        </div>
+    </div>
+    <hr />
+    <div class="container_2">
+        <h4>Current Listings</h4>
+        <div class="listings">
+        </div>
+        <p>@message</p>
+        <button @onclick="UpdateMessage">Update Message</button>
+    </div>
+</body>
+
+@code {
+    string? userid;
+    private ProjectCardPark1User user = default!;
+
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
+
+    [SupplyParameterFromForm]
+    private User User { get; set; }
+
+    string imgSrc = ""; // Base64 string for image preview
+
+    string message = "wdadawadadw";
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var claimsPrincipal = authState.User;
+
+        // user = await UserManager.GetUserAsync(claimsPrincipal);
+
+        // user = await UserAccessor.GetRequiredUserAsync(HttpContext);
+
+        userid = UserManager.GetUserId(claimsPrincipal);
+        using var context = DbFactory.CreateDbContext();
+        User ??= await context.User.FirstOrDefaultAsync(m => m.UserId == userid);
+        imgSrc = User.ProfileImageUrl;
+    }
+
+    public async Task<string> GetUserPhotoAsync(int userId)
+    {
+        using var context = DbFactory.CreateDbContext();
+        // Assuming you have a DbContext or similar to interact with the database
+        var user = await context.User.FindAsync(userId);
+        imgSrc = user?.ProfileImageUrl;
+        return user?.ProfileImageUrl; // Assuming the photo is stored in a 'Photo' column as byte[]
+    }
+    private void UpdateMessage()
+    {
+        message = userid;
+    }
+
+}
