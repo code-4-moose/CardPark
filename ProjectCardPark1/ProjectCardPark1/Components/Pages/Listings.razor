@@ -1,30 +1,28 @@
 ﻿@page "/Card_Listings"
 @rendermode InteractiveServer
 @using Microsoft.EntityFrameworkCore
-@using Microsoft.AspNetCore.Components.QuickGrid
 @using ProjectCardPark1.Domain
 @using ProjectCardPark1.Data
 @implements IAsyncDisposable
 @inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
+@inject IJSRuntime JSRuntime
 
 <PageTitle>Card Listings</PageTitle>
 
-<h1>Results for ""</h1>
+<h1>Results for "@searchQuery"</h1>
 
 <div class="search-bar-container">
-    <form action="/Card_Listings" method="get" class="search-bar">
-        <input type="text" placeholder="Search..." name="q" />
+    <form @onsubmit="HandleSubmit" class="search-bar">
+        <input type="text" placeholder="Search..." @bind="searchQuery" @oninput="FilterListings" />
         <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
     </form>
 </div>
 
-<p>Click on the images to zoom in</p>
-
 <div class="card-grid">
-    @foreach (var listing in context.Listing.Skip(3))
+    @foreach (var listing in filteredListings)
     {
         <div class="card">
-            <div class="card-image">
+            <div class="card-image" @onclick="() => ShowImage(listing.ListingImageUrl)">
                 @if (!string.IsNullOrEmpty(listing.ListingImageUrl))
                 {
                     <img src="@listing.ListingImageUrl" alt="@listing.Name" class="card-img" style="width: 150px; height: 150px;" />
@@ -47,34 +45,74 @@
 </div>
 
 <!-- Popup for Enlarged Image -->
-<div class="popup-image">
-    <span class="close-btn" onclick="closePopup()">×</span>
-    <img src="" alt="Enlarged Image" />
+<div class="popup-image" style="display:none;" id="popupRef">
+    <span class="close-btn" @onclick="ClosePopup">×</span>
+    <img src="" alt="Enlarged Image" id="popupImage" />
 </div>
 
 <script>
-    document.querySelectorAll('.card-img').forEach(image => {
-        image.onclick = () => {
-            const popup = document.querySelector('.popup-image');
-            const popupImg = popup.querySelector('img');
-            popup.style.display = 'flex';
-            popupImg.src = image.getAttribute('src');
-        };
-    });
+        // Show image in popup
+    function showImagePopup(imageUrl) {
+        const popup = document.getElementById("popupRef");
+        const popupImg = document.getElementById("popupImage");
 
-    function closePopup() {
-        document.querySelector('.popup-image').style.display = 'none';
+        // Display the popup and set the image source
+        popup.style.display = 'flex';
+        popupImg.src = imageUrl;
     }
+
+    // Close the popup
+    function closeImagePopup() {
+        const popup = document.getElementById("popupRef");
+        popup.style.display = 'none';
+    }
+
 </script>
 
 @code {
     private ProjectCardPark1Context context = default!;
+    private string searchQuery = string.Empty;
+    private List<Listing> filteredListings = new List<Listing>();
 
-    protected override void OnInitialized()
+    // For handling the image popup
+    protected override async Task OnInitializedAsync()
     {
         context = DbFactory.CreateDbContext();
+        var allListings = await context.Listing.ToListAsync();
+        filteredListings = allListings;
+    }
+
+    private void FilterListings()
+    {
+        if (string.IsNullOrWhiteSpace(searchQuery))
+        {
+            filteredListings = context.Listing.ToList();
+        }
+        else
+        {
+            filteredListings = context.Listing
+                .AsEnumerable()
+                .Where(l => !string.IsNullOrEmpty(l.Name) && l.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
+    }
+
+    private async Task ShowImage(string imageUrl)
+    {
+        // Use JSInterop to display the popup and set the image source
+        await JSRuntime.InvokeVoidAsync("showImagePopup", imageUrl);
+    }
+
+    private async Task ClosePopup()
+    {
+        // Use JSInterop to hide the popup
+        await JSRuntime.InvokeVoidAsync("closeImagePopup");
+    }
+
+    private void HandleSubmit()
+    {
+        FilterListings();
     }
 
     public async ValueTask DisposeAsync() => await context.DisposeAsync();
 }
-

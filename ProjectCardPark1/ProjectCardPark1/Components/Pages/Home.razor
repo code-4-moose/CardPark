@@ -112,18 +112,8 @@
                 <img src="./logos/pokemon-logo.png" alt="Button Image 3">
             </div>
             <div class="button">
-                <img src="./logos/more-logo.png" alt="Button Image 4">
+				<a href="/Card_Listings"><img src="./logos/more-logo.png" alt="Button Image 4"></a>
             </div>
         </div>
     </div>
 </div>
-
-
-<script>
-    document.querySelectorAll('.card-listings .card-img img').forEach(image => {
-        image.onclick = () =>{
-            document.querySelector('.popup-image').style.display = 'block';
-            document.querySelector('.popup-image img').src = image.getAttribute('src');
-        }
-    });
-</script>
