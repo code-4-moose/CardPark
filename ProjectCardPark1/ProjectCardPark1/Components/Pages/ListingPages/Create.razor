@@ -122,12 +122,16 @@
     private IList<Category> Categories;
 
     [SupplyParameterFromForm]
+    private Category Category { get; set; } = new();
+
+    [SupplyParameterFromForm]
     private Listing Listing { get; set; } = new();
 
     [SupplyParameterFromForm]
     private User User { get; set; }
     @inject AuthenticationStateProvider authenticationStateProvider
 
+    string? categoryName;
     protected override async void OnInitialized()
     {
         var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
@@ -139,15 +143,20 @@
         userId = UserManager.GetUserId(claimsPrincipal);
         User ??= await context.User.FirstOrDefaultAsync(m => m.UserId == userId);
 
-        
         Listing.UserId = User.Id;
         Listing.AdminId = 1;
         Listing.UserName = User.Name;
+    }
+    private string GetCategoryName(int categoryId)
+    {
+        var selectedCategory = Categories.FirstOrDefault(c => c.Id == categoryId);
+        return selectedCategory?.Name ?? string.Empty; // Return the category name or an empty string if not found
     }
 
     // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
     private async Task AddListing()
     {
+        Listing.CategoryName = GetCategoryName(Listing.CategoryId);
         Listing.CreatedBy = userId;
         Listing.UpdatedBy = userId;
         Listing.DateCreated = DateTime.Now;
