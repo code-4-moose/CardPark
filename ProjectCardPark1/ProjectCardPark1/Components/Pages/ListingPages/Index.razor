@@ -15,15 +15,17 @@
 </p>
 
 <QuickGrid Class="table" Items="context.Listing">
+    <PropertyColumn Property="listing => listing.Name" />
     <PropertyColumn Property="listing => listing.ListingId" />
     <PropertyColumn Property="listing => listing.Price" />
     <PropertyColumn Property="listing => listing.Amount" />
+    <PropertyColumn Property="listing => listing.Description" />
     <PropertyColumn Property="listing => listing.UserId" />
     <PropertyColumn Property="listing => listing.CategoryId" />
     <PropertyColumn Property="listing => listing.AdminId" />
     <PropertyColumn Property="listing => listing.DateCreated" />
     <PropertyColumn Property="listing => listing.DateUpdated" />
-    <PropertyColumn Property="listing => listing.CreatedBy" />
+    <PropertyColumn Property="listing => listing.UserName" />
     <PropertyColumn Property="listing => listing.UpdatedBy" />
 
     <TemplateColumn Context="listing">
