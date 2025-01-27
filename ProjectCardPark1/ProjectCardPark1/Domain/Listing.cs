@@ -34,5 +34,7 @@ namespace ProjectCardPark1.Domain
         public string? Description { get; set; }
         
         public string? UserName { get; set; }
+
+        public string? CategoryName { get; set; }
     }
 }
