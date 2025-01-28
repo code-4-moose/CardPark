@@ -208,20 +208,13 @@
 
 .YouOwnThis {
     position: relative;
-    left:30%;
-=======
+    left: 30%;
+}
 
 .card-image {
     position: relative;
     text-align: center;
     margin-bottom: 16px;
-}
-
-.card-actions {
-    display: flex;
-    justify-content: center;
-    padding: 8px;
-
 }
 
 .card.bought-card .card-actions {
