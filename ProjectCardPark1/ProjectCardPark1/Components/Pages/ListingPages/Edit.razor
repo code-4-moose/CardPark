@@ -42,12 +42,12 @@ else
                     <InputNumber id="amount" @bind-Value="Listing.Amount" class="form-control" />
                     <ValidationMessage For="() => Listing.Amount" class="text-danger" />
                 </div>
-                <div class="mb-3">
+                <div class="mb-3" hidden>
                     <label for="userid" class="form-label">UserId:</label>
                     <InputNumber id="userid" @bind-Value="Listing.UserId" class="form-control" />
                     <ValidationMessage For="() => Listing.UserId" class="text-danger" />
                 </div>
-                <div class="mb-3">
+                <div class="mb-3" hidden>
                     <label for="categoryid" class="form-label">CategoryId:</label>
                     <InputNumber id="categoryid" @bind-Value="Listing.CategoryId" class="form-control" />
                     <ValidationMessage For="() => Listing.CategoryId" class="text-danger" />
