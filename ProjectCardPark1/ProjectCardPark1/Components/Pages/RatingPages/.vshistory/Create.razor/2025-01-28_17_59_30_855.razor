@@ -1,13 +1,16 @@
 ﻿@page "/ratings/create"
+@rendermode InteractiveServer
 @using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Identity
 @using ProjectCardPark1.Domain
 @using ProjectCardPark1.Data
-@using Microsoft.AspNetCore.Identity
 
 @inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
 @inject NavigationManager NavigationManager
-@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject SignInManager<ProjectCardPark1User> SignInManager
 @inject UserManager<ProjectCardPark1User> UserManager
+@inject IUserStore<ProjectCardPark1User> UserStore
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <PageTitle>Create</PageTitle>
 
@@ -15,10 +18,10 @@
 
 <h2>Rating</h2>
 <hr />
-
 <style>
     .star-rating {
         font-size: 2rem;
+        cursor: pointer;
     }
 
     .star {
@@ -35,7 +38,6 @@
             color: #ffdb4d; /* Lighter yellow for hover preview */
         }
 </style>
-
 <div class="row">
     <div class="col-md-4">
         <EditForm method="post" Model="Rating" OnValidSubmit="AddRating" FormName="create" Enhance>
@@ -45,108 +47,115 @@
                 <label for="ratingid" class="form-label">RatingId:</label> 
                 <InputNumber id="ratingid" @bind-Value="Rating.RatingId" class="form-control" /> 
                 <ValidationMessage For="() => Rating.RatingId" class="text-danger" /> 
-            </div>
+            </div>        
             <div class="mb-3">
                 <label for="description" class="form-label">Description:</label> 
                 <InputText id="description" @bind-Value="Rating.Description" class="form-control" /> 
                 <ValidationMessage For="() => Rating.Description" class="text-danger" /> 
             </div>        
             <div class="mb-3">
-                <label for="stars" class="form-label">Stars:</label> 
-                <InputNumber id="stars" @bind-Value="Rating.Stars" class="form-control" /> 
-                <ValidationMessage For="() => Rating.Stars" class="text-danger" /> 
+                @for (int i = 1; i <= 5; i++)
+                {
+                    int starIndex = i; // Capture the current star index
+                    <span class="star @(starIndex <= rating ? "filled" : "") @(starIndex <= hoverRating ? "hover-filled" : "")"
+                          @onclick="() => SetRating(starIndex)"
+                          @onmouseover="() => SetHoverRating(starIndex)"
+                          @onmouseout="ClearHoverRating">
+                        &#9733;
+                    </span>
+                }
+                <label for="stars" class="form-label" hidden>Stars:</label> 
+                <InputNumber id="stars" @bind-Value="Rating.Stars" class="form-control" min="1" max="5" hidden />
+                <ValidationMessage For="() => Rating.Stars" class="text-danger" hidden />
             </div>        
-            @* <div class="mb-3" hidden>
+            <div class="mb-3" hidden>
                 <label for="userid" class="form-label">UserId:</label> 
                 <InputNumber id="userid" @bind-Value="Rating.UserId" class="form-control" /> 
                 <ValidationMessage For="() => Rating.UserId" class="text-danger" /> 
-            </div>         
-            <div class="mb-3">
+            </div>        
+            <div class="mb-3" hidden>
                 <label for="datecreated" class="form-label">DateCreated:</label> 
                 <InputDate id="datecreated" @bind-Value="Rating.DateCreated" class="form-control" /> 
                 <ValidationMessage For="() => Rating.DateCreated" class="text-danger" /> 
             </div>        
-            <div class="mb-3">
+            <div class="mb-3" hidden>
                 <label for="dateupdated" class="form-label">DateUpdated:</label> 
                 <InputDate id="dateupdated" @bind-Value="Rating.DateUpdated" class="form-control" /> 
                 <ValidationMessage For="() => Rating.DateUpdated" class="text-danger" /> 
             </div>        
-            <div class="mb-3">
+            <div class="mb-3" hidden>
                 <label for="createdby" class="form-label">CreatedBy:</label> 
                 <InputText id="createdby" @bind-Value="Rating.CreatedBy" class="form-control" /> 
                 <ValidationMessage For="() => Rating.CreatedBy" class="text-danger" /> 
             </div>        
-            <div class="mb-3">
+            <div class="mb-3" hidden>
                 <label for="updatedby" class="form-label">UpdatedBy:</label> 
                 <InputText id="updatedby" @bind-Value="Rating.UpdatedBy" class="form-control" /> 
                 <ValidationMessage For="() => Rating.UpdatedBy" class="text-danger" /> 
-            </div>     *@   
+            </div>        
             <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>
     </div>
 </div>
-<p>@userid</p>
+
 <div>
     <a href="/ratings">Back to List</a>
+    <p>@userid</p>
 </div>
-
+<p>@USERID</p>
 @code {
-    // HOW RATING WORK.
-    // 1. when listing is bought, pop up this rating page.
-    // 2. u need to get the userid of the listing seller.
-    // 3. den u process User?? with the userid of the seller.
-    // 4. den the rating would be on the seller.
-
-    string? userid;
-
     [SupplyParameterFromForm]
     private Rating Rating { get; set; } = new();
 
     [SupplyParameterFromForm]
     private User User { get; set; }
 
-    private ProjectCardPark1Context context = default!;
-
+    string? userid;
+    int hoverRating = 0;
+    int rating;
+    int USERID;
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
     protected override async Task OnInitializedAsync()
     {
+        using var context = DbFactory.CreateDbContext();
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var claimsPrincipal = authState.User;
 
         userid = UserManager.GetUserId(claimsPrincipal);
-        context = DbFactory.CreateDbContext();
 
-        var allListings = await context.Listing.ToListAsync();
         User ??= await context.User.FirstOrDefaultAsync(m => m.UserId == userid);
 
-
-        Rating.UserId = User.Id;
-        Rating.DateCreated = DateTime.Now;
-        Rating.DateUpdated = DateTime.Now;
-        Rating.UpdatedBy = userid;
-        Rating.CreatedBy = userid;
-
+        USERID = User.Id;
     }
-
-    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
     private async Task AddRating()
+
     {
         using var context = DbFactory.CreateDbContext();
 
+        Rating.UserId = User.Id;
+        User.NoRatings += 1;
+        Rating.RatingId = 1;
+
+        Rating.DateCreated = DateTime.Now;
+        Rating.DateUpdated = DateTime.Now;
+
+        userid = "CANNOT WORK"
         context.Rating.Add(Rating);
 
-        context.Attach(User!).State = EntityState.Modified;
-
-        User.Stars += Rating.Stars;
-        // if (User.NoRatings == null)
-        // {
-        //     User.NoRatings = 1;
-        // }
-        // else
-        // {
-        //     User.NoRatings += 1;
-        // }
         await context.SaveChangesAsync();
         NavigationManager.NavigateTo("/ratings");
     }
+    private void SetRating(int newRating)
+    {
+        rating = newRating;
+    }
+    private void SetHoverRating(int newHoverRating)
+    {
+        hoverRating = newHoverRating;
+    }
 
+    private void ClearHoverRating()
+    {
+        hoverRating = 0; // Reset hover preview when mouse leaves
+    }
 }

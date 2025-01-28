@@ -41,7 +41,7 @@
         <EditForm method="post" Model="Rating" OnValidSubmit="AddRating" FormName="create" Enhance>
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" role="alert"/>
-            <div class="mb-3" hidden>
+            <div class="mb-3">
                 <label for="ratingid" class="form-label">RatingId:</label> 
                 <InputNumber id="ratingid" @bind-Value="Rating.RatingId" class="form-control" /> 
                 <ValidationMessage For="() => Rating.RatingId" class="text-danger" /> 
@@ -91,11 +91,6 @@
 </div>
 
 @code {
-    // HOW RATING WORK.
-    // 1. when listing is bought, pop up this rating page.
-    // 2. u need to get the userid of the listing seller.
-    // 3. den u process User?? with the userid of the seller.
-    // 4. den the rating would be on the seller.
 
     string? userid;
 
@@ -118,33 +113,18 @@
         var allListings = await context.Listing.ToListAsync();
         User ??= await context.User.FirstOrDefaultAsync(m => m.UserId == userid);
 
-
         Rating.UserId = User.Id;
         Rating.DateCreated = DateTime.Now;
         Rating.DateUpdated = DateTime.Now;
         Rating.UpdatedBy = userid;
         Rating.CreatedBy = userid;
-
     }
 
     // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
     private async Task AddRating()
     {
         using var context = DbFactory.CreateDbContext();
-
         context.Rating.Add(Rating);
-
-        context.Attach(User!).State = EntityState.Modified;
-
-        User.Stars += Rating.Stars;
-        // if (User.NoRatings == null)
-        // {
-        //     User.NoRatings = 1;
-        // }
-        // else
-        // {
-        //     User.NoRatings += 1;
-        // }
         await context.SaveChangesAsync();
         NavigationManager.NavigateTo("/ratings");
     }

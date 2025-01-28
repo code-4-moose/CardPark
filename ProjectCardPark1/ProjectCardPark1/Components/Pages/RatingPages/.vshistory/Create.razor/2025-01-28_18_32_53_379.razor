@@ -91,11 +91,6 @@
 </div>
 
 @code {
-    // HOW RATING WORK.
-    // 1. when listing is bought, pop up this rating page.
-    // 2. u need to get the userid of the listing seller.
-    // 3. den u process User?? with the userid of the seller.
-    // 4. den the rating would be on the seller.
 
     string? userid;
 
@@ -137,14 +132,14 @@
         context.Attach(User!).State = EntityState.Modified;
 
         User.Stars += Rating.Stars;
-        // if (User.NoRatings == null)
-        // {
-        //     User.NoRatings = 1;
-        // }
-        // else
-        // {
-        //     User.NoRatings += 1;
-        // }
+        if (User.NoRatings == null)
+        {
+            User.NoRatings = 1;
+        }
+        else
+        {
+            User.NoRatings += 1;
+        }
         await context.SaveChangesAsync();
         NavigationManager.NavigateTo("/ratings");
     }

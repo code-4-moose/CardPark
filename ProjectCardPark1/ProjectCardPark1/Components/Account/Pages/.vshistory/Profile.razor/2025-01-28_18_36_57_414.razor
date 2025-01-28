@@ -169,12 +169,12 @@
         var allListings = await context.Listing.ToListAsync();
         filteredListings = allListings;
         User ??= await context.User.FirstOrDefaultAsync(m => m.UserId == userid);
-        
+
         Image = User.ProfileImage;
         imgSrc = User.ProfileImageUrl;
         name = User.Name;
         address = User.Address;
-        rating = User.Stars;
+        rating = User.Stars/(User.NoRatings.Value);
     }
     private void FilterListings()
     {
