@@ -14,10 +14,11 @@
 
 <PageTitle>Profile</PageTitle>
 
+<h3>Profile</h3>
 <StatusMessage />
 <div class="row">
     <div class="col-md-6">
-        @* <EditForm Model="Input" FormName="profile" OnValidSubmit="OnValidSubmitAsync" method="post">
+        <EditForm Model="Input" FormName="profile" OnValidSubmit="OnValidSubmitAsync" method="post">
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" role="alert" />
             <div class="form-floating mb-3">
@@ -30,10 +31,10 @@
                 <ValidationMessage For="() => Input.PhoneNumber" class="text-danger" />
             </div>
             <button type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
-        </EditForm> *@
+        </EditForm>
         <br/>
-        <button onclick="location.href='/UpdateImage?msg=@userId';" class="w-100 btn btn-lg btn-primary">Change Profile Information</button>
-@*          <a href="/UpdateImage?msg=@userId" class="button-style">Go to Page 2 with Dynamic Query String Data</a> *@
+        <button onclick="location.href='/UpdateImage?msg=@userId';" class="w-100 btn btn-lg btn-primary">Change Profile Picture</button>
+        @* <a href="/UpdateImage?msg=@userId" class="button-style">Go to Page 2 with Dynamic Query String Data</a> *@
     </div>
 </div>
 
@@ -72,9 +73,9 @@
 
         Input.PhoneNumber ??= phoneNumber;
     }
-    private async Task updateProfile()
+    private async Task updatePF()
     {
-        NavigationManager.NavigateTo($"/users/edit");
+        NavigationManager.NavigateTo($"/UpdateImage");
     }
 
     private async Task OnValidSubmitAsync()
