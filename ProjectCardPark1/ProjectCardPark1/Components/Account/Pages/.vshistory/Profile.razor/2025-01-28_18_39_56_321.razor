@@ -49,7 +49,7 @@
         }
         else{
             <div class="user-rating">
-            <h3>5.0</h3>
+            <h3>@RatingMsg</h3>
             <i class="fa-solid fa-star star_css" style="font-size: 1.2em;"></i>
             </div>
         }
@@ -157,6 +157,7 @@
     double rating;
     byte[] Image;
     string? listingId;
+    string RatingMsg;
     private ProjectCardPark1Context context = default!;
 
     protected override async Task OnInitializedAsync()
@@ -169,12 +170,13 @@
         var allListings = await context.Listing.ToListAsync();
         filteredListings = allListings;
         User ??= await context.User.FirstOrDefaultAsync(m => m.UserId == userid);
-        
+
         Image = User.ProfileImage;
         imgSrc = User.ProfileImageUrl;
         name = User.Name;
         address = User.Address;
-        rating = User.Stars;
+        rating = User.Stars/(User.NoRatings.Value);
+        RatingMsg = rating.ToString("0.01");
     }
     private void FilterListings()
     {

@@ -137,14 +137,14 @@
         context.Attach(User!).State = EntityState.Modified;
 
         User.Stars += Rating.Stars;
-        // if (User.NoRatings == null)
-        // {
-        //     User.NoRatings = 1;
-        // }
-        // else
-        // {
-        //     User.NoRatings += 1;
-        // }
+        if (User.NoRatings == null)
+        {
+            User.NoRatings = 1;
+        }
+        else
+        {
+            User.NoRatings += 1;
+        }
         await context.SaveChangesAsync();
         NavigationManager.NavigateTo("/ratings");
     }
