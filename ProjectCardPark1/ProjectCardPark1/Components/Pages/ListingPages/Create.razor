@@ -107,10 +107,6 @@
     </div>
 </div>
 
-<div>
-    <a href="/listings">Back to List</a>
-</div>
-
 <script src="_content/BlazorInputFile/BlazorInputFile.js"></script>
 
 @code {
@@ -165,7 +161,7 @@
         using var context = DbFactory.CreateDbContext();
         context.Listing.Add(Listing);
         await context.SaveChangesAsync();
-        NavigationManager.NavigateTo("/listings");
+        NavigationManager.NavigateTo("/listings/complete");
     }
 
     private async Task HandleFileSelection(InputFileChangeEventArgs e)
