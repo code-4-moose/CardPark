@@ -22,10 +22,10 @@ namespace ProjectCardPark1.Data
             // optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=CarRentalManagementConsoleapp_DB;Trusted_Connection=True;MultipleActiveResultSets=True;");
 
             // For SSMS: 
-            optionsBuilder.UseSqlServer(@"Server=LAPTOP-JPNVKAR5\SQLEXPRESS;Database=ProjectCardPark1;Trusted_Connection=True;TrustServerCertificate=True;");
+            optionsBuilder.UseSqlServer(@"Server=THAT-MATSURI-PC\SQLEXPRESS ;Database=ProjectCardPark1;Trusted_Connection=True;TrustServerCertificate=True;");
             // Note
             // Any changes of database name, u need to do migration again.
-            //LAPTOP-JPNVKAR5\SQLEXPRESS
+
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -35,6 +35,7 @@ namespace ProjectCardPark1.Data
             builder.ApplyConfiguration(new AdminSeed());
             builder.ApplyConfiguration(new CardSeed());
             builder.ApplyConfiguration(new CategorySeed());
+            builder.ApplyConfiguration(new ListingSeed());
             builder.ApplyConfiguration(new RatingSeed());
 
             builder.ApplyConfiguration(new RoleSeed());
