@@ -59,7 +59,13 @@
             
             @if (listing.Sold != true)
             {
-                @if (listing.CreatedBy != userid)
+                @if (userid == null)
+                {
+                    
+                    <a href="/Account/Register">Login to purchase</a>
+                    
+                }
+                else if (listing.CreatedBy != userid)
                 {
                     <div class="card-actions">
                         <button class="buy-now" @onclick="() => ConfirmPurchase(listing)">Buy Now</button>
