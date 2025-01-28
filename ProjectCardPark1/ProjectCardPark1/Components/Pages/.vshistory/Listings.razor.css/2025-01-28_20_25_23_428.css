@@ -93,6 +93,7 @@
     opacity: 1;
 }
 
+
 .card-content h3 {
     font-size: 18px;
     margin-bottom: 8px;
@@ -117,7 +118,6 @@
     display: none;
     justify-content: center;
     align-items: center;
-    z-index: 9999; /* Ensure popup is on top */
 }
 
 .popup-image img {
@@ -146,7 +146,7 @@
     transition: background-color 0.3s ease;
     display: flex;
     flex-direction: column; /* Ensure consistent vertical layout */
-    height: 380px; /* Fixed minimum height for the card */
+    min-height: 380px; /* Fixed minimum height for the card */
     height: 100%;
 }
 
@@ -157,7 +157,7 @@
 
 .card-actions {
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     padding: 8px;
     margin-top: auto; /* Ensures the Buy Now button is always at the bottom of the card */
     min-height: 40px; /* Reserve space for the Buy Now button */
@@ -184,9 +184,8 @@
 }
 
 .bought-card {
-    background-color: rgba(128, 128, 128, 0.2); /* Light gray background when bought */
+    background-color: rgba(128, 128, 128, 0.2); /* Light gray background */
     pointer-events: none; /* Disable interactions */
-    z-index: 0; /* Ensure it is behind other elements */
 }
 
 .bought-overlay {
@@ -202,28 +201,12 @@
     color: white;
     font-size: 1.5rem;
     font-weight: bold;
-    z-index: 1; /* Ensure this is behind other card content but still above the card */
+    z-index: 1;
     pointer-events: none; /* Ensure it's non-interactive */
 }
-
 .YouOwnThis {
     position: relative;
-    left:30%;
-=======
-
-.card-image {
-    position: relative;
-    text-align: center;
-    margin-bottom: 16px;
-}
-
-.card-actions {
-    display: flex;
+    align-items: center;
     justify-content: center;
-    padding: 8px;
-
 }
 
-.card.bought-card .card-actions {
-    display: none; /* Hide the button when item is bought */
-}

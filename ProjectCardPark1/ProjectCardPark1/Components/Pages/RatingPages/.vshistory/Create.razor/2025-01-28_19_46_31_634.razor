@@ -114,6 +114,7 @@
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var claimsPrincipal = authState.User;
 
+        userid = UserManager.GetUserId(claimsPrincipal);
         context = DbFactory.CreateDbContext();
 
         var allListings = await context.Listing.ToListAsync();
@@ -138,14 +139,14 @@
         context.Attach(User!).State = EntityState.Modified;
 
         User.Stars += Rating.Stars;
-        if (User.NoRatings == null)
-        {
-            User.NoRatings = 1;
-        }
-        else
-        {
-            User.NoRatings += 1;
-        }
+        // if (User.NoRatings == null)
+        // {
+        //     User.NoRatings = 1;
+        // }
+        // else
+        // {
+        //     User.NoRatings += 1;
+        // }
         await context.SaveChangesAsync();
         NavigationManager.NavigateTo("/ratings");
     }

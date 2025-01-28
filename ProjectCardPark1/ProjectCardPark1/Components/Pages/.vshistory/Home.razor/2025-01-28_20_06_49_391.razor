@@ -1,11 +1,11 @@
 ﻿@page "/"
 
-@using Microsoft.AspNetCore.Identity;
-
 @inject NavigationManager NavigationManager
-@inject SignInManager<ProjectCardPark1User> SignInManager 
+@* @inject SignInManager<ProjectCardPark1User> SignInManager *@
 
 <PageTitle>Home</PageTitle>
+
+
 
 <div class="banner">
     <div class="slider" style="--quantity: 6">
@@ -128,10 +128,15 @@
 
     protected override async Task OnInitializedAsync()
     {
-        if (Logout == true)
-        {
-            await SignInManager.SignOutAsync();
-            NavigationManager.NavigateTo("/", forceLoad: true);
-        }
+        // Check for the logout flag in the query string
+        // var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+        // if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("logout", out var logoutValue) && logoutValue == "true")
+        // {
+        //     Perform the logout process
+        //     await SignInManager.SignOutAsync();
+
+        //     Optionally, redirect to another page after logout
+        //     NavigationManager.NavigateTo("/", forceLoad: true); Reload the main page
+        // }
     }
 }
