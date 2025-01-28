@@ -36,5 +36,7 @@ namespace ProjectCardPark1.Domain
         public string? UserName { get; set; }
 
         public string? CategoryName { get; set; }
+
+        public Boolean? Sold { get; set; }
     }
 }
