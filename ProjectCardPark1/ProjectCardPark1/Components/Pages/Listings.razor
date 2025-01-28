@@ -21,12 +21,18 @@
 <div class="card-grid">
     @foreach (var listing in filteredListings)
     {
-        <div class="card">
+        <div class="card @(listing.Sold == true ? "bought-card" : "")">
+            @if (listing.Sold == true)
+            {
+                <div class="bought-overlay">
+                    SOLD
+                </div>
+            }
             <div class="card-image" @onclick="() => ShowImage(listing.ListingImageUrl)">
                 @if (!string.IsNullOrEmpty(listing.ListingImageUrl))
                 {
                     <div class="image-wrapper">
-                        <img src="@listing.ListingImageUrl" alt="@listing.Name" class="card-img" style="height: 150px; width: 150px;"/>
+                        <img src="@listing.ListingImageUrl" alt="@listing.Name" class="card-img" style="height: 150px; width: 150px;" />
                         <div class="hover-overlay">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </div>
@@ -34,7 +40,7 @@
                 }
                 else
                 {
-                    <img src="./no-image.jpg" style="width: 150px; height: 150px;"/>
+                    <img src="./no-image.jpg" style="width: 150px; height: 150px;" />
                 }
             </div>
             <div class="card-content">
@@ -45,17 +51,13 @@
                 <p><strong>Username:</strong> @listing.UserName</p>
                 <p><strong>Category:</strong> @listing.CategoryName</p>
             </div>
-            <!-- Buy Now Button -->
-            <div class="card-actions">
-                 @if (listing.Sold == null) 
-                {
+
+            @if (listing.Sold != true)
+            {
+                <div class="card-actions">
                     <button class="buy-now" @onclick="() => ConfirmPurchase(listing)">Buy Now</button>
-                }
-                else
-                {
-                    <span class="bought-label">Bought</span>
-                }
-            </div>
+                </div>
+            }
         </div>
     }
 </div>
@@ -90,12 +92,21 @@
     private string searchQuery = string.Empty;
     private List<Listing> filteredListings = new List<Listing>();
 
-    // For handling the image popup
     protected override async Task OnInitializedAsync()
     {
         context = DbFactory.CreateDbContext();
         var allListings = await context.Listing.ToListAsync();
         filteredListings = allListings;
+    }
+
+    private async Task ConfirmPurchase(Listing listing)
+    {
+        var confirmed = await JSRuntime.InvokeAsync<bool?>("confirm", $"Are you sure you want to buy {listing.Name}?");
+        if (confirmed == true) // Handle the nullable bool properly
+        {
+            listing.Sold = true;
+            await context.SaveChangesAsync(); // Save changes to the database
+        }
     }
 
     private void FilterListings()
@@ -115,13 +126,11 @@
 
     private async Task ShowImage(string imageUrl)
     {
-        // Use JSInterop to display the popup and set the image source
         await JSRuntime.InvokeVoidAsync("showImagePopup", imageUrl);
     }
 
     private async Task ClosePopup()
     {
-        // Use JSInterop to hide the popup
         await JSRuntime.InvokeVoidAsync("closeImagePopup");
     }
 
@@ -130,15 +139,6 @@
         FilterListings();
     }
 
-    private async Task ConfirmPurchase(Listing listing)
-    {
-        var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to buy {listing.Name}?");
-        if (confirmed)
-        {
-             listing.Sold = true;
-            await context.SaveChangesAsync(); // Save changes to the database
-        }
-    }
-
     public async ValueTask DisposeAsync() => await context.DisposeAsync();
 }
+
