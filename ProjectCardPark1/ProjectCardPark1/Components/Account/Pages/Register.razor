@@ -269,8 +269,8 @@
                     ProfileImageUrl = imgSrc,
                     DateCreated = DateTime.Now,
                     DateUpdated = DateTime.Now,
-                    CreatedBy = fullname,
-                    UpdatedBy = fullname
+                    CreatedBy = "System",
+                    UpdatedBy = "System"
                 };
 
             using var context = DbFactory.CreateDbContext();
