@@ -206,6 +206,11 @@
     pointer-events: none; /* Ensure it's non-interactive */
 }
 
+.YouOwnThis {
+    position: relative;
+    left:30%;
+=======
+
 .card-image {
     position: relative;
     text-align: center;
@@ -216,6 +221,7 @@
     display: flex;
     justify-content: center;
     padding: 8px;
+
 }
 
 .card.bought-card .card-actions {

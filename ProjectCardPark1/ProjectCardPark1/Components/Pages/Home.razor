@@ -1,8 +1,11 @@
 ﻿@page "/"
 
+@using Microsoft.AspNetCore.Identity;
+
+@inject NavigationManager NavigationManager
+@inject SignInManager<ProjectCardPark1User> SignInManager 
+
 <PageTitle>Home</PageTitle>
-
-
 
 <div class="banner">
     <div class="slider" style="--quantity: 6">
@@ -117,3 +120,18 @@
         </div>
     </div>
 </div>
+
+@code{
+
+    [SupplyParameterFromQuery(Name = "logout")]
+    public Boolean Logout { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Logout == true)
+        {
+            await SignInManager.SignOutAsync();
+            NavigationManager.NavigateTo("/", forceLoad: true);
+        }
+    }
+}

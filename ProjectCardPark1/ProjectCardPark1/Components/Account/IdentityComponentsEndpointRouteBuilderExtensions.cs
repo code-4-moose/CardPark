@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using System.Text.Json;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;
@@ -45,8 +46,8 @@ namespace Microsoft.AspNetCore.Routing
                 SignInManager<ProjectCardPark1User> signInManager,
                 [FromForm] string returnUrl) =>
             {
-                await signInManager.SignOutAsync();
-                return TypedResults.LocalRedirect($"~/{returnUrl}");
+                //await signInManager.SignOutAsync();
+                return TypedResults.LocalRedirect($"~/?logout=true");
             });
 
             var manageGroup = accountGroup.MapGroup("/Manage").RequireAuthorization();

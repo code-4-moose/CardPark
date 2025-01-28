@@ -1,0 +1,152 @@
+﻿@page "/Card_Listings"
+@rendermode InteractiveServer
+@using Microsoft.EntityFrameworkCore
+@using ProjectCardPark1.Domain
+@using ProjectCardPark1.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
+
+<PageTitle>Card Listings</PageTitle>
+
+<h1>Results for "@searchQuery"</h1>
+
+<div class="search-bar-container">
+    <form @onsubmit="HandleSubmit" class="search-bar">
+        <input type="text" placeholder="Search..." @bind="searchQuery" @oninput="FilterListings" />
+        <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+    </form>
+</div>
+
+<div class="card-grid">
+    @foreach (var listing in filteredListings)
+    {
+        <div class="card @(listing.Sold == true ? "bought-card" : "")">
+            @if (listing.Sold == true)
+            {
+                <div class="bought-overlay">
+                    SOLD
+                </div>
+            }
+            <div class="card-image" @onclick="() => ShowImage(listing.ListingImageUrl)">
+                @if (!string.IsNullOrEmpty(listing.ListingImageUrl))
+                {
+                    <div class="image-wrapper">
+                        <img src="@listing.ListingImageUrl" alt="@listing.Name" class="card-img" style="height: 150px; width: 150px;" />
+                        <div class="hover-overlay">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <img src="./no-image.jpg" style="width: 150px; height: 150px;" />
+                }
+            </div>
+            <div class="card-content">
+                <h3>@listing.Name</h3>
+                <p><strong>Price:</strong> @listing.Price</p>
+                <p><strong>Amount:</strong> @listing.Amount</p>
+                <p><strong>Description:</strong> @listing.Description</p>
+                <p><strong>Username:</strong> @listing.UserName</p>
+                <p><strong>Category:</strong> @listing.CategoryName</p>
+            </div>
+            
+            @if (listing.Sold != true)
+            {
+                @if (listing.CreatedBy != userId)
+                {
+                    <div class="card-actions">
+                        <button class="buy-now" @onclick="() => ConfirmPurchase(listing)">Buy Now</button>
+                    </div>
+                }
+            }
+        </div>
+    }
+</div>
+
+<!-- Popup for Enlarged Image -->
+<div class="popup-image" style="display:none;" id="popupRef">
+    <span class="close-btn" @onclick="ClosePopup">×</span>
+    <img src="" alt="Enlarged Image" id="popupImage" />
+</div>
+
+<script>
+        // Show image in popup
+    function showImagePopup(imageUrl) {
+        const popup = document.getElementById("popupRef");
+        const popupImg = document.getElementById("popupImage");
+
+        // Display the popup and set the image source
+        popup.style.display = 'flex';
+        popupImg.src = imageUrl;
+    }
+
+    // Close the popup
+    function closeImagePopup() {
+        const popup = document.getElementById("popupRef");
+        popup.style.display = 'none';
+    }
+
+</script>
+
+@code {
+    private ProjectCardPark1Context context = default!;
+    private string searchQuery = string.Empty;
+    private List<Listing> filteredListings = new List<Listing>();
+
+    string? userId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        context = DbFactory.CreateDbContext();
+        var allListings = await context.Listing.ToListAsync();
+        filteredListings = allListings;
+    }
+
+    private async Task ConfirmPurchase(Listing listing)
+    {
+        userId = listing.CreatedBy;
+        var confirmed = await JSRuntime.InvokeAsync<bool?>("confirm", $"Are you sure you want to buy {listing.Name}?");
+        if (confirmed == true) // Handle the nullable bool properly
+        {
+            listing.Sold = true;
+            await context.SaveChangesAsync(); // Save changes to the database
+            NavigationManager.NavigateTo($"/ratings/create?userId={userId}");
+        }
+    }
+
+    private void FilterListings()
+    {
+        if (string.IsNullOrWhiteSpace(searchQuery))
+        {
+            filteredListings = context.Listing.ToList();
+        }
+        else
+        {
+            filteredListings = context.Listing
+                .AsEnumerable()
+                .Where(l => !string.IsNullOrEmpty(l.Name) && l.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
+    }
+
+    private async Task ShowImage(string imageUrl)
+    {
+        await JSRuntime.InvokeVoidAsync("showImagePopup", imageUrl);
+    }
+
+    private async Task ClosePopup()
+    {
+        await JSRuntime.InvokeVoidAsync("closeImagePopup");
+    }
+
+    private void HandleSubmit()
+    {
+        FilterListings();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}
+

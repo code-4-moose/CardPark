@@ -3,9 +3,14 @@
 @using Microsoft.EntityFrameworkCore
 @using ProjectCardPark1.Domain
 @using ProjectCardPark1.Data
+@using Microsoft.AspNetCore.Identity
+
 @implements IAsyncDisposable
 @inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
 @inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserManager<ProjectCardPark1User> UserManager
 
 <PageTitle>Card Listings</PageTitle>
 
@@ -51,12 +56,21 @@
                 <p><strong>Username:</strong> @listing.UserName</p>
                 <p><strong>Category:</strong> @listing.CategoryName</p>
             </div>
-
+            
             @if (listing.Sold != true)
             {
-                <div class="card-actions">
-                    <button class="buy-now" @onclick="() => ConfirmPurchase(listing)">Buy Now</button>
-                </div>
+                @if (listing.CreatedBy != userid)
+                {
+                    <div class="card-actions">
+                        <button class="buy-now" @onclick="() => ConfirmPurchase(listing)">Buy Now</button>
+                    </div>
+                }
+                else
+                {
+                    <div class="YouOwnThis">
+                        <p>You own this</p>
+                    </div>
+                }
             }
         </div>
     }
@@ -92,20 +106,29 @@
     private string searchQuery = string.Empty;
     private List<Listing> filteredListings = new List<Listing>();
 
+    string? URL_userId;
+    string? userid;
     protected override async Task OnInitializedAsync()
     {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var claimsPrincipal = authState.User;
+        userid = UserManager.GetUserId(claimsPrincipal);
+
         context = DbFactory.CreateDbContext();
+
         var allListings = await context.Listing.ToListAsync();
         filteredListings = allListings;
     }
 
     private async Task ConfirmPurchase(Listing listing)
     {
+        URL_userId = listing.CreatedBy;
         var confirmed = await JSRuntime.InvokeAsync<bool?>("confirm", $"Are you sure you want to buy {listing.Name}?");
         if (confirmed == true) // Handle the nullable bool properly
         {
             listing.Sold = true;
             await context.SaveChangesAsync(); // Save changes to the database
+            NavigationManager.NavigateTo($"/ratings/create?userId={URL_userId}");
         }
     }
 
