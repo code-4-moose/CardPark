@@ -1,0 +1,139 @@
+﻿@page "/Account/Manage"
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@using ProjectCardPark1.Data
+@using ProjectCardPark1.Service
+@using ProjectCardPark1.Domain
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserManager<ProjectCardPark1User> UserManager
+@inject SignInManager<ProjectCardPark1User> SignInManager
+@inject IdentityUserAccessor UserAccessor
+@inject IdentityRedirectManager RedirectManager
+@inject ProjectCardPark1.Service.SharedService SharedService
+@inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
+
+<PageTitle>Profile</PageTitle>
+
+<h3>Profile</h3>
+<StatusMessage />
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-floating mb-3">
+            <input type="text" value="@fullname" class="form-control" />
+            <label for="firstname" class="form-label">Name</label>
+        </div>
+        <button @onclick="SaveName" class="w-100 btn btn-lg btn-primary">Save Name</button>
+        <EditForm Model="Input" FormName="profile" OnValidSubmit="OnValidSubmitAsync" method="post">
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert" />
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="Input.PhoneNumber" class="form-control" placeholder="Please enter your phone number." />
+                <label for="phone-number" class="form-label">Phone number</label>
+                <ValidationMessage For="() => Input.PhoneNumber" class="text-danger" />
+            </div>
+
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
+        </EditForm>
+        <br/>
+        <button onclick="location.href='/UpdateImage?msg=@userId';" class="w-100 btn btn-lg btn-primary">Change Profile Picture</button>
+        @* <a href="/UpdateImage?msg=@userId" class="button-style">Go to Page 2 with Dynamic Query String Data</a> *@
+    </div>
+</div>
+
+<script src="_content/Solutaris.InfoWARE.ProtectedBrowserStorage/config.js"></script>
+
+
+@code {
+    private ProjectCardPark1User user = default!;
+    private string? username;
+    private string? phoneNumber;
+    string? userId;
+    private string? fullname;
+    private ProjectCardPark1Context context = default!;
+
+    [SupplyParameterFromForm]
+    private User User { get; set; }
+
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
+
+    [SupplyParameterFromForm]
+    private InputModel Input { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var claimsPrincipal = authState.User;
+
+        userId = UserManager.GetUserId(claimsPrincipal);
+        context = DbFactory.CreateDbContext();
+        User ??= await context.User.FirstOrDefaultAsync(m => m.UserId == userId);
+
+        user = await UserManager.GetUserAsync(claimsPrincipal);
+
+        user = await UserAccessor.GetRequiredUserAsync(HttpContext);
+        username = await UserManager.GetUserNameAsync(user);
+        fullname = User.Name;
+        phoneNumber = await UserManager.GetPhoneNumberAsync(user);
+
+
+
+        // SharedService.ShareUserId = userId;
+
+        // localStorage.SetItem("userId", userId);
+
+        Input.PhoneNumber ??= phoneNumber;
+    }
+
+    private async Task SaveName()
+    {
+        context.Attach(User!).State = EntityState.Modified;
+
+        try
+        {
+            // Fetch the existing user from the database
+            var existingUser = await context.User.FirstOrDefaultAsync(u => u.UserId == userId); // Replace `User.Id` with the actual unique identifier for the user
+
+            if (existingUser != null)
+            {
+                if (fullname != null)
+                {
+                    existingUser.Name = fullname;
+                }
+                // Save the changes to the database
+                await context.SaveChangesAsync();
+
+            }
+            else
+            {
+                Console.WriteLine("User not found!");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+    private async Task OnValidSubmitAsync()
+    {
+        if (Input.PhoneNumber != phoneNumber)
+        {
+            var setPhoneResult = await UserManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
+            if (!setPhoneResult.Succeeded)
+            {
+                RedirectManager.RedirectToCurrentPageWithStatus("Error: Failed to set phone number.", HttpContext);
+            }
+        }
+
+        await SignInManager.RefreshSignInAsync(user);
+        RedirectManager.RedirectToCurrentPageWithStatus("Your profile has been updated", HttpContext);
+    }
+    private sealed class InputModel
+    {
+        [Phone]
+        [Display(Name = "Phone number")]
+        public string? PhoneNumber { get; set; }
+    }
+}

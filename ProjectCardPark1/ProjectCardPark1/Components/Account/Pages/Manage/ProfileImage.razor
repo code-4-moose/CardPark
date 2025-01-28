@@ -8,7 +8,7 @@
 
 <PageTitle>Create</PageTitle>
 
-<h1>Update Profile Image</h1>
+<h1>Update Profile Information</h1>
 <hr />
 <body>
 <div class="row">
@@ -18,6 +18,21 @@
             <EditForm method="post" Model="User" OnValidSubmit="UpdateProfileImage" FormName="update" Enhance>
                 <DataAnnotationsValidator />
                 <ValidationSummary class="text-danger" role="alert" />
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name:</label>
+                    <InputText id="name" @bind-Value="User.Name" class="form-control" />
+                    <ValidationMessage For="() => User.Name" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="address" class="form-label">Address:</label>
+                    <InputText id="address" @bind-Value="User.Address" class="form-control" />
+                    <ValidationMessage For="() => User.Address" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="contact" class="form-label">Contact:</label>
+                    <InputNumber id="contact" @bind-Value="User.Contact" class="form-control" />
+                    <ValidationMessage For="() => User.Contact" class="text-danger" />
+                </div>
 
                 <!-- Profile Image Upload -->
                 <div class="mb-3">
@@ -25,13 +40,12 @@
                     <InputFile id="profileimage" OnChange="HandleFileSelection" accept="image/*" class="form-control" />
                     <ValidationMessage For="() => User.ProfileImage" class="text-danger" />
                 </div>
-
                 <!-- Image Preview -->
                 <img src="@imgSrc" class="css-shadow"/>
                 <br/>
                 <br />
                 <!-- Submit Button -->
-                <button onclick = "showAlert()" type="submit" class="btn btn-primary">Update Profile Image</button>
+                <button onclick = "showAlert()" type="submit" class="btn btn-primary">Update Profile Information</button>
             </EditForm>
         }
         else
@@ -60,6 +74,7 @@
     [SupplyParameterFromForm]
     private User User { get; set; }
 
+    int USERID;
     string imgSrc = ""; // Base64 string for image preview
     byte[] _fileBytes = null; // Byte array for the uploaded image
 
@@ -73,6 +88,8 @@
         User ??= await context.User.FirstOrDefaultAsync(m => m.UserId == userid);
         _fileBytes = User.ProfileImage;
         imgSrc = User.ProfileImageUrl;
+        USERID = User.Id;
+
     }
     private string getuserId()
     {
@@ -112,6 +129,7 @@
             {
                 if(_fileBytes != null)
                 {
+                    existingUser.DateUpdated = DateTime.Now;
                     existingUser.ProfileImage = _fileBytes;
                 }
                 // Save the changes to the database
