@@ -14,6 +14,7 @@
         public ICollection<Listing>? Listing { get; set; } // Nav Prop
         public byte[]? ProfileImage { get; set; }
         public string? ProfileImageUrl { get; set; }
+        public int? NoRatings { get; set; }
     }
 
 }
