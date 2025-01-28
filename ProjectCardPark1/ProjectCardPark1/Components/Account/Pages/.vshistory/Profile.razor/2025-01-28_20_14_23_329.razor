@@ -96,10 +96,12 @@
                             <p><strong>Username:</strong> @listing.UserName</p>
                             <p><strong>Category:</strong> @listing.CategoryName</p>
                         </div>
-                        @if (listing.Sold != true){
                         <button onclick="location.href='/listings/edit?id=@listing.Id';" class="w-100 btn btn-lg btn-primary">Change Listing Information</button>
-                        }
                         </div>
+                    }
+                    else
+                    {
+
                     }
                 }
             </div>
@@ -162,8 +164,8 @@
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var claimsPrincipal = authState.User;
-        userid = UserManager.GetUserId(claimsPrincipal);
 
+        userid = UserManager.GetUserId(claimsPrincipal);
         context = DbFactory.CreateDbContext();
         var allListings = await context.Listing.ToListAsync();
         filteredListings = allListings;

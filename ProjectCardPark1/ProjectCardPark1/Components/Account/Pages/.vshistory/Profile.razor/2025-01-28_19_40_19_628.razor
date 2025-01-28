@@ -48,7 +48,7 @@
         }
         else{
             <div class="user-rating">
-            <h3>@ratingMSG</h3>
+            <h3>5.0</h3>
             <i class="fa-solid fa-star star_css" style="font-size: 1.2em;"></i>
             </div>
         }
@@ -71,13 +71,9 @@
                 {
                     @if (listing.UserId == User.Id)
                     {
-                    <div class="card @(listing.Sold == true ? "bought-card" : "")" >
-                        @if (listing.Sold == true)
-                            {
-                                <div class="bought-overlay">
-                                    SOLD
-                                </div>
-                            }
+                        
+                    
+                    <div class="card">
                         <div class="card-image" @onclick="() => ShowImage(listing.ListingImageUrl)">
                             @if (!string.IsNullOrEmpty(listing.ListingImageUrl))
                             {
@@ -96,10 +92,15 @@
                             <p><strong>Username:</strong> @listing.UserName</p>
                             <p><strong>Category:</strong> @listing.CategoryName</p>
                         </div>
-                        @if (listing.Sold != true){
                         <button onclick="location.href='/listings/edit?id=@listing.Id';" class="w-100 btn btn-lg btn-primary">Change Listing Information</button>
-                        }
                         </div>
+                    }
+                    else
+                    {
+                        <div>
+
+                        </div>
+
                     }
                 }
             </div>
@@ -155,26 +156,24 @@
     double rating;
     byte[] Image;
     string? listingId;
-    string ratingMSG;
     private ProjectCardPark1Context context = default!;
 
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var claimsPrincipal = authState.User;
-        userid = UserManager.GetUserId(claimsPrincipal);
 
+        userid = UserManager.GetUserId(claimsPrincipal);
         context = DbFactory.CreateDbContext();
         var allListings = await context.Listing.ToListAsync();
         filteredListings = allListings;
-
         User ??= await context.User.FirstOrDefaultAsync(m => m.UserId == userid);
+        
         Image = User.ProfileImage;
         imgSrc = User.ProfileImageUrl;
         name = User.Name;
         address = User.Address;
-        rating = (User.Stars/User.NoRatings.Value);
-        ratingMSG = rating.ToString("0.0");
+        rating = User.Stars;
     }
     private void FilterListings()
     {

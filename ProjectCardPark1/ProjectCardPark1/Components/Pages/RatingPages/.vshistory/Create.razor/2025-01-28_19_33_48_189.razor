@@ -97,15 +97,13 @@
     // 3. den u process User?? with the userid of the seller.
     // 4. den the rating would be on the seller.
 
+    string? userid;
 
     [SupplyParameterFromForm]
     private Rating Rating { get; set; } = new();
 
     [SupplyParameterFromForm]
     private User User { get; set; }
-
-    [SupplyParameterFromQuery(Name = "userId")]
-    public string userid { get; set; }
 
     private ProjectCardPark1Context context = default!;
 
@@ -114,6 +112,7 @@
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var claimsPrincipal = authState.User;
 
+        userid = UserManager.GetUserId(claimsPrincipal);
         context = DbFactory.CreateDbContext();
 
         var allListings = await context.Listing.ToListAsync();
@@ -138,14 +137,14 @@
         context.Attach(User!).State = EntityState.Modified;
 
         User.Stars += Rating.Stars;
-        if (User.NoRatings == null)
-        {
-            User.NoRatings = 1;
-        }
-        else
-        {
-            User.NoRatings += 1;
-        }
+        // if (User.NoRatings == null)
+        // {
+        //     User.NoRatings = 1;
+        // }
+        // else
+        // {
+        //     User.NoRatings += 1;
+        // }
         await context.SaveChangesAsync();
         NavigationManager.NavigateTo("/ratings");
     }

@@ -206,6 +206,7 @@
 }
 .YouOwnThis {
     position: relative;
-    left:30%;
+    align-items: center;
+    justify-content: center;
 }
 
