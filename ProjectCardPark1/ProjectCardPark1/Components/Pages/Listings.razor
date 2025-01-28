@@ -16,13 +16,31 @@
 
 <h1>Results for "@searchQuery"</h1>
 
-<div class="search-bar-container">
-    <form @onsubmit="HandleSubmit" class="search-bar">
-        <input type="text" placeholder="Search..." @bind="searchQuery" @oninput="FilterListings" />
-        <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
-    </form>
+<div class="filter-search-container">
+    <!-- Search Bar -->
+    <div class="search-bar-container">
+        <form @onsubmit="HandleSubmit" class="search-bar">
+            <input type="text" placeholder="Search..." @bind="searchQuery" @oninput="FilterListings" />
+            <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </form>
+    </div>
+
+    <!-- Category Filter Dropdown -->
+    <div class="filter-container">
+        <select id="categoryFilter" @onchange="FilterByCategory">
+            <option value="">All Categories</option>
+            @if (Categories != null)
+            {
+                foreach (var category in Categories.Skip(3))
+                {
+                    <option value="@category.Name">@category.Name</option>
+                }
+            }
+        </select>
+    </div>
 </div>
 
+<!-- Listings Grid -->
 <div class="card-grid">
     @foreach (var listing in filteredListings)
     {
@@ -56,13 +74,13 @@
                 <p><strong>Username:</strong> @listing.UserName</p>
                 <p><strong>Category:</strong> @listing.CategoryName</p>
             </div>
-            
+
             @if (listing.Sold != true)
             {
                 @if (userid == null)
                 {
                     <div class="card-actions">
-                    <a href="/Account/Login">Login to purchase</a>
+                        <a href="/Account/Login">Login to purchase</a>
                     </div>
                 }
                 else if (listing.CreatedBy != userid)
@@ -89,7 +107,7 @@
 </div>
 
 <script>
-        // Show image in popup
+    // Show image in popup
     function showImagePopup(imageUrl) {
         const popup = document.getElementById("popupRef");
         const popupImg = document.getElementById("popupImage");
@@ -104,16 +122,18 @@
         const popup = document.getElementById("popupRef");
         popup.style.display = 'none';
     }
-
 </script>
 
 @code {
     private ProjectCardPark1Context context = default!;
     private string searchQuery = string.Empty;
+    private string selectedCategory = string.Empty;  // Track selected category
     private List<Listing> filteredListings = new List<Listing>();
+    private IList<Category> Categories;
 
     string? URL_userId;
     string? userid;
+
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
@@ -122,7 +142,10 @@
 
         context = DbFactory.CreateDbContext();
 
+        // Load all listings and categories
         var allListings = await context.Listing.ToListAsync();
+        Categories = context.Category.ToList();
+
         filteredListings = allListings;
     }
 
@@ -130,27 +153,29 @@
     {
         URL_userId = listing.CreatedBy;
         var confirmed = await JSRuntime.InvokeAsync<bool?>("confirm", $"Are you sure you want to buy {listing.Name}?");
-        if (confirmed == true) // Handle the nullable bool properly
+        if (confirmed == true)
         {
             listing.Sold = true;
-            await context.SaveChangesAsync(); // Save changes to the database
+            await context.SaveChangesAsync();
             NavigationManager.NavigateTo($"/ratings/create?userId={URL_userId}");
         }
     }
 
     private void FilterListings()
     {
-        if (string.IsNullOrWhiteSpace(searchQuery))
-        {
-            filteredListings = context.Listing.ToList();
-        }
-        else
-        {
-            filteredListings = context.Listing
-                .AsEnumerable()
-                .Where(l => !string.IsNullOrEmpty(l.Name) && l.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase))
-                .ToList();
-        }
+        filteredListings = context.Listing
+            .AsEnumerable()
+            .Where(l =>
+                (string.IsNullOrEmpty(searchQuery) || l.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase)) &&
+                (string.IsNullOrEmpty(selectedCategory) || l.CategoryName == selectedCategory)
+            )
+            .ToList();
+    }
+
+    private void FilterByCategory(ChangeEventArgs e)
+    {
+        selectedCategory = e.Value.ToString();
+        FilterListings();  // Call FilterListings to apply both search and category filters
     }
 
     private async Task ShowImage(string imageUrl)
@@ -170,4 +195,3 @@
 
     public async ValueTask DisposeAsync() => await context.DisposeAsync();
 }
-
