@@ -6,35 +6,37 @@
 @implements IAsyncDisposable
 @inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
 
-@attribute [Authorize(Roles = "Administrator")]
-<PageTitle>Index</PageTitle>
+@* @attribute [Authorize(Roles = "Administrator")] *@
+<PageTitle>Listings</PageTitle>
 
-<h1>Index</h1>
+<div class="container">
+    <div class="card">
+        <div class="card-header text-white bg-primary">
+            <h2 class="text-center">Listings</h2>
+        </div>
+        <div class="card-body">
+            <QuickGrid Class="table" Items="context.Listing">
+                <TemplateColumn Title="Image">
+                    <img src="@context.ListingImageUrl" alt="Listing Image" class="listing-image" />
+                </TemplateColumn>
+                <PropertyColumn Property="listing => listing.UserName" Title="User" />
+                <PropertyColumn Property="listing => listing.Name" Title="Item Name" />
+                <PropertyColumn Property="listing => listing.Price" Title="Price ($)" />
+                <PropertyColumn Property="listing => listing.Amount" Title="Stock" />
+                <PropertyColumn Property="listing => listing.Description" Title="Description" />
+                <PropertyColumn Property="listing => listing.CategoryName" Title="Category" />
+                <PropertyColumn Property="listing => listing.DateCreated" Title="Date Created" />
+                <PropertyColumn Property="listing => listing.DateUpdated" Title="Date Updated" />
+                <PropertyColumn Property="listing => listing.UpdatedBy" Title="Updated By" />
 
-<p>
-    <a href="listings/create">Create New</a>
-</p>
-
-<QuickGrid Class="table" Items="context.Listing">
-    <PropertyColumn Property="listing => listing.Name" />
-    <PropertyColumn Property="listing => listing.ListingId" />
-    <PropertyColumn Property="listing => listing.Price" />
-    <PropertyColumn Property="listing => listing.Amount" />
-    <PropertyColumn Property="listing => listing.Description" />
-    <PropertyColumn Property="listing => listing.UserId" />
-    <PropertyColumn Property="listing => listing.CategoryId" />
-    <PropertyColumn Property="listing => listing.AdminId" />
-    <PropertyColumn Property="listing => listing.DateCreated" />
-    <PropertyColumn Property="listing => listing.DateUpdated" />
-    <PropertyColumn Property="listing => listing.UserName" />
-    <PropertyColumn Property="listing => listing.UpdatedBy" />
-
-    <TemplateColumn Context="listing">
-        <a href="@($"listings/edit?id={listing.Id}")">Edit</a> |
-        <a href="@($"listings/details?id={listing.Id}")">Details</a> |
-        <a href="@($"listings/delete?id={listing.Id}")">Delete</a>
-    </TemplateColumn>
-</QuickGrid>
+                <TemplateColumn Context="listing">
+                    <a class="btn-custom btn-details mx-1" href="@($"listings/details?id={listing.Id}")">Details</a>
+                    <a class="btn-custom btn-delete mx-1" href="@($"listings/delete?id={listing.Id}")">Delete</a>
+                </TemplateColumn>
+            </QuickGrid>
+        </div>
+    </div>
+</div>
 
 @code {
     private ProjectCardPark1Context context = default!;
