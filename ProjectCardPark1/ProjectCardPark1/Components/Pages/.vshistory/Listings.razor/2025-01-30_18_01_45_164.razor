@@ -83,16 +83,16 @@
                         <a href="/Account/Login">Login to purchase</a>
                     </div>
                 }
-                else if (userid == "3781efa7-66dc-47f0-860f-e506d04102e4")
-                {
-                    <div class="card-actions">
-                        your the admin LOL
-                    </div>
-                }
                 else if (listing.CreatedBy != userid)
                 {
                     <div class="card-actions">
                         <button class="buy-now" @onclick="() => ConfirmPurchase(listing)">Buy Now</button>
+                    </div>
+                }
+                else if (userid == "3781efa7-66dc-47f0-860f-e506d04102e4")
+                {
+                    <div class="card-actions" >
+                        your the admin LOL
                     </div>
                 }
                 else
@@ -105,8 +105,6 @@
         </div>
     }
 </div>
-
-<p>@userid</p>
 
 <!-- Popup for Enlarged Image -->
 <div class="popup-image" style="display:none;" id="popupRef">
