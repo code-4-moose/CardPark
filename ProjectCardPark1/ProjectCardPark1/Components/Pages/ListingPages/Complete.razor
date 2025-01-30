@@ -1,5 +1,9 @@
 ﻿@page "/listings/complete"
 
+@attribute [Authorize(Roles = "Administrator, User")]
+
+<PageTitle>Listing Successful</PageTitle>
+
 <div class="container">
     <div class="card">
         <h1>Your Listing has been successful!</h1>

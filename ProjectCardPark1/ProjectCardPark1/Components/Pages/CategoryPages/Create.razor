@@ -4,6 +4,8 @@
 @inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
 @inject NavigationManager NavigationManager
 
+@attribute [Authorize(Roles = "Administrator")]
+
 <PageTitle>Create</PageTitle>
 
 <h1>Create</h1>

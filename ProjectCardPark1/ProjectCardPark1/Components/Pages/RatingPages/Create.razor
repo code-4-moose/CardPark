@@ -9,6 +9,8 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject UserManager<ProjectCardPark1User> UserManager
 
+@attribute [Authorize(Roles = "Administrator, User")]
+
 <PageTitle>Create</PageTitle>
 
 <h1>Create</h1>
@@ -147,7 +149,7 @@
             User.NoRatings += 1;
         }
         await context.SaveChangesAsync();
-        NavigationManager.NavigateTo("/ratings");
+        NavigationManager.NavigateTo("/");
     }
 
 }
