@@ -11,6 +11,8 @@
 @inject ProjectCardPark1.Components.Account.IdentityUserAccessor UserAccessor
 @inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
 
+@attribute [Authorize(Roles = "Administrator, User")]
+
 <PageTitle>Create</PageTitle>
 
 <div class="listing">
@@ -107,10 +109,6 @@
     </div>
 </div>
 
-<div>
-    <a href="/listings">Back to List</a>
-</div>
-
 <script src="_content/BlazorInputFile/BlazorInputFile.js"></script>
 
 @code {
@@ -165,7 +163,7 @@
         using var context = DbFactory.CreateDbContext();
         context.Listing.Add(Listing);
         await context.SaveChangesAsync();
-        NavigationManager.NavigateTo("/listings");
+        NavigationManager.NavigateTo("/listings/complete");
     }
 
     private async Task HandleFileSelection(InputFileChangeEventArgs e)
