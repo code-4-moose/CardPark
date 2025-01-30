@@ -44,7 +44,7 @@
 <div class="card-grid">
     @foreach (var listing in filteredListings)
     {
-        <div class="card @(listing.Sold == true ? "bought-card" : "")">
+        <div class="card @(listing.Sold == true ? "sold-card" : "")">
             @if (listing.Sold == true)
             {
                 <div class="bought-overlay">
