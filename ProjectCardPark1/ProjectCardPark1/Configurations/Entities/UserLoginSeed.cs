@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
 namespace ProjectCardPark1.Configurations.Entities
 {
     public class UserLoginSeed : IEntityTypeConfiguration<ProjectCardPark1User>

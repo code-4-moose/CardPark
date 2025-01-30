@@ -13,46 +13,14 @@ namespace ProjectCardPark1.Configurations.Entities
                 new User
                 {
                     Id = 1,
-                    UserId = "1",
-                    Name = "Beautify Card!",
-                    Address = "Beautify Card!",
+                    UserId = "3781efa7-66dc-47f0-860f-e506d04102e4",
+                    Name = "Admin",
+                    Address = "Nil",
                     Contact = 889988123,
-                    Stars = 9.5,
+                    Stars = 0,
                     RatingId = 3,
-                    ListingId = 1
-                },
-                new User
-                {
-                    Id = 2,
-                    UserId = "2",
-                    Name = "Beautify Card!",
-                    Address = "Beautify Card!",
-                    Contact = 889966000,
-                    Stars = 9.5,
-                    RatingId = 3,
-                    ListingId = 2
-                },
-                new User
-                {
-                    Id = 3,
-                    UserId = "3",
-                    Name = "Beautify Card!",
-                    Address = "Beautify Card!",
-                    Contact = 779966111,
-                    Stars = 8.5,
-                    RatingId = 4,
-                    ListingId = 3
-                },
-                new User
-                {
-                    Id = 4,
-                    UserId = "4",
-                    Name = "Beautify Card!",
-                    Address = "Beautify Card!",
-                    Contact = 339968881,
-                    Stars = 5.5,
-                    RatingId = 2,
-                    ListingId = 4
+                    ListingId = 1,
+                    NoRatings = 0
                 }
             );
         }
