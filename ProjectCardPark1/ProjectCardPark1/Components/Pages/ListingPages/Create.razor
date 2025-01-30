@@ -11,6 +11,8 @@
 @inject ProjectCardPark1.Components.Account.IdentityUserAccessor UserAccessor
 @inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
 
+@attribute [Authorize(Roles = "Administrator, User")]
+
 <PageTitle>Create</PageTitle>
 
 <div class="listing">
@@ -30,7 +32,7 @@
                 <DataAnnotationsValidator />
                 <ValidationSummary class="text-danger" role="alert"/>
                 <div class="mb-3">
-                    <label for="profileimage" class="form-label">Profile Image:</label>
+                    <label for="profileimage" class="form-label">Item Image:</label>
                     <InputFile id="profileimage" OnChange="HandleFileSelection" accept="image/*" class="form-control" />
                     <ValidationMessage For="() => Listing.ListingImage" class="text-danger" />
                 </div>
@@ -107,10 +109,6 @@
     </div>
 </div>
 
-<div>
-    <a href="/listings">Back to List</a>
-</div>
-
 <script src="_content/BlazorInputFile/BlazorInputFile.js"></script>
 
 @code {
@@ -165,7 +163,7 @@
         using var context = DbFactory.CreateDbContext();
         context.Listing.Add(Listing);
         await context.SaveChangesAsync();
-        NavigationManager.NavigateTo("/listings");
+        NavigationManager.NavigateTo("/listings/complete");
     }
 
     private async Task HandleFileSelection(InputFileChangeEventArgs e)

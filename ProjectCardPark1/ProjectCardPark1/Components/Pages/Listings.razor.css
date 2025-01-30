@@ -1,4 +1,4 @@
-﻿.search-bar-container {
+﻿.filter-search-container {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -9,12 +9,26 @@
 .search-bar {
     height: 50px;
     width: 100%;
-    max-width: 800px;
+    width: 800px;
     background: rgba(105, 104, 104, 0.2);
     display: flex;
     align-items: center;
     border-radius: 60px;
     padding: 10px 20px;
+}
+
+.filter-container select {
+    background: rgba(105, 104, 104, 0.2);
+    border: none; /* Remove the border */
+    outline: none; /* Remove any outline */
+    font-size: 20px;
+    color: #332d2d;
+    padding: 10px 20px;
+    border-radius: 60px;
+    margin-left: 20px; 
+    width: auto; 
+    flex-shrink: 0; 
+    height: 50px; 
 }
 
 .search-bar input {
@@ -208,20 +222,13 @@
 
 .YouOwnThis {
     position: relative;
-    left:30%;
-=======
+    left: 30%;
+}
 
 .card-image {
     position: relative;
     text-align: center;
     margin-bottom: 16px;
-}
-
-.card-actions {
-    display: flex;
-    justify-content: center;
-    padding: 8px;
-
 }
 
 .card.bought-card .card-actions {
