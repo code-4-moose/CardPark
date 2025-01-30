@@ -86,6 +86,23 @@ h1 {
     transform: scale(1.05);
 }
 
+.btn-back {
+    display: inline-block;
+    background-color: #6c757d; /* Gray */
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background 0.3s ease, transform 0.2s;
+    margin-bottom: 15px;
+}
+
+.btn-back:hover {
+    background-color: #5a6268; /* Slightly darker gray */
+    transform: scale(1.05);
+}
+
 .listing-image {
     margin: 5px;
     width: 80px;
