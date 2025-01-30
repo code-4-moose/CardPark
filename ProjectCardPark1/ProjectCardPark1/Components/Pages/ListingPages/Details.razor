@@ -4,6 +4,8 @@
 @inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
 @inject NavigationManager NavigationManager
 
+@attribute [Authorize(Roles = "Administrator")]
+
 <PageTitle>Details</PageTitle>
 
 <div class="container">
@@ -24,10 +26,10 @@
                     </div>
                     <div class="col-md-8">
                         <dl class="row">
-                            <dt class="col-sm-3">CreatedBy</dt>
+                            <dt class="col-sm-3">Created By</dt>
                             <dd class="col-sm-9">@listing.UserName</dd>
 
-                            <dt class="col-sm-3">Name</dt>
+                            <dt class="col-sm-3">Item Name</dt>
                             <dd class="col-sm-9">@listing.Name</dd>
 
                             <dt class="col-sm-3">Price</dt>
@@ -36,8 +38,8 @@
                             <dt class="col-sm-3">Amount</dt>
                             <dd class="col-sm-9">@listing.Amount</dd>
 
-                            <dt class="col-sm-3">CategoryId</dt>
-                            <dd class="col-sm-9">@listing.CategoryId</dd>
+                            <dt class="col-sm-3">Category</dt>
+                            <dd class="col-sm-9">@listing.CategoryName</dd>
 
                             <dt class="col-sm-3">Description</dt>
                             <dd class="col-sm-9">@listing.Description</dd>
