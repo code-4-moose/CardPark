@@ -1,0 +1,14 @@
+﻿{
+    "Logging": {
+        "LogLevel": {
+            "Default": "Information",
+            "Microsoft.AspNetCore": "Warning"
+        }
+    },
+    "AllowedHosts": "*",
+  "ConnectionStrings": {
+    "IdentityContext": "Server=(localdb)\\mssqllocaldb;Database=IdentityContext;Trusted_Connection=True;MultipleActiveResultSets=true",
+    "ProjectCardPark1Context": "Data Source=THAT-MATSURI-PC\\SQLEXPRESS;Initial Catalog=ProjectCardPark1;Integrated Security=True;Encrypt=False"
+  } //LAPTOP-JPNVKAR5\\SQLEXPRESS
+    //THAT-MATSURI-PC\\SQLEXPRESS
+} 
