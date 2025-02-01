@@ -2,8 +2,6 @@
     width: 200px;
     height: 200px;
     border-radius: 50%;
-    border: 2px solid;
-    filter: drop-shadow(0 0 8px #ff5722);
 }
 body {
     background-color: #f0f8ff;

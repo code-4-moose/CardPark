@@ -5,10 +5,12 @@
 @inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
 @inject ProjectCardPark1.Service.SharedService SharedService
 @using ProjectCardPark1.Data
+@inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
 
 <PageTitle>Create</PageTitle>
 
-<h1>Update Profile Image</h1>
+<h1>Update Profile</h1>
 <hr />
 <body>
 <div class="row">
@@ -18,20 +20,34 @@
             <EditForm method="post" Model="User" OnValidSubmit="UpdateProfileImage" FormName="update" Enhance>
                 <DataAnnotationsValidator />
                 <ValidationSummary class="text-danger" role="alert" />
-
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Name:</label>
+                        <InputText id="name" @bind-Value="User.Name" class="form-control" />
+                        <ValidationMessage For="() => User.Name" class="text-danger" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Address:</label>
+                        <InputText id="address" @bind-Value="User.Address" class="form-control" />
+                        <ValidationMessage For="() => User.Address" class="text-danger" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="contact" class="form-label">Contact:</label>
+                        <InputNumber id="contact" @bind-Value="User.Contact" class="form-control" />
+                        <ValidationMessage For="() => User.Contact" class="text-danger" />
+                    </div>
                 <!-- Profile Image Upload -->
-                <div class="mb-3">
-                    <label for="profileimage" class="form-label">Profile Image:</label>
-                    <InputFile id="profileimage" OnChange="HandleFileSelection" accept="image/*" class="form-control" />
-                    <ValidationMessage For="() => User.ProfileImage" class="text-danger" />
-                </div>
+                    <div class="mb-3">
+                        <label for="profileimage" class="form-label">Profile Image:</label>
+                        <InputFile id="profileimage" OnChange="HandleFileSelection" accept="image/*" class="form-control" />
+                        <ValidationMessage For="() => User.ProfileImage" class="text-danger" />
+                    </div>
 
                 <!-- Image Preview -->
                 <img src="@imgSrc" class="css-shadow"/>
                 <br/>
                 <br />
                 <!-- Submit Button -->
-                <button onclick = "showAlert()" type="submit" class="btn btn-primary">Update Profile Image</button>
+                    <button @onclick="NavigateToProfile" type="submit" class="btn btn-primary">Update Profile</button>
             </EditForm>
         }
         else
@@ -126,6 +142,17 @@
         catch (Exception ex)
         {
             Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+    private async Task NavigateToProfile()
+    {
+        // Show an alert (optional)
+        var isConfirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to update your profile?");
+
+        if (isConfirmed)
+        {
+            // Navigate to the desired page
+            Navigation.NavigateTo("/Account/Profile");
         }
     }
 }

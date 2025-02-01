@@ -1,0 +1,137 @@
+﻿@page "/ratings/create"
+@using Microsoft.EntityFrameworkCore
+@using ProjectCardPark1.Domain
+@using ProjectCardPark1.Data
+@using Microsoft.AspNetCore.Identity
+@inject IJSRuntime JSRuntime
+@inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserManager<ProjectCardPark1User> UserManager
+@attribute [Authorize(Roles = "Administrator, User")]
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>Rating</h2>
+<hr />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+<style>
+    .stars i {
+        color: gainsboro;
+        font-size: 30px;
+        cursor: pointer;
+        transition: color 0.4s ease;
+    }
+
+        .stars i.active {
+            color: orange;
+        }
+</style>
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Rating" OnValidSubmit="AddRating" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert" />
+            <div class="mb-3" hidden>
+                <label for="ratingid" class="form-label">RatingId:</label>
+                <InputNumber id="ratingid" @bind-Value="Rating.RatingId" class="form-control" />
+                <ValidationMessage For="() => Rating.RatingId" class="text-danger" />
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description:</label>
+                <InputText id="description" @bind-Value="Rating.Description" class="form-control" />
+                <ValidationMessage For="() => Rating.Description" class="text-danger" />
+            </div>
+            <div class="container">
+                <div class="rating">
+                    <div class="stars">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            <i class="fas fa-star @(i <= selectedRating ? "active" : "")"
+                               @onclick="() => SetRating(i)"
+                               @onmouseover="() => SetHoverRating(i)"
+                               @onmouseout="ResetHoverRating"></i>
+                        }
+                    </div>
+                </div>
+                <p>Rating: <span id="selected-rating">@selectedRating</span> star(s)</p>
+            </div>
+            <p>You have rated: @selectedRating star(s)</p>
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private Rating Rating { get; set; } = new();
+
+    [SupplyParameterFromForm]
+    private User User { get; set; }
+
+    [SupplyParameterFromQuery(Name = "userId")]
+    public string userid { get; set; }
+
+    private int selectedRating = 0;  // Default value for rating
+    private int hoverRating = 0;  // Value used for hover effect
+
+    private ProjectCardPark1Context context = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var claimsPrincipal = authState.User;
+
+        context = DbFactory.CreateDbContext();
+
+        var allListings = await context.Listing.ToListAsync();
+        User ??= await context.User.FirstOrDefaultAsync(m => m.UserId == userid);
+
+        Rating.ReviewerName = User.Name;
+        Rating.UserId = User.Id;
+        Rating.DateCreated = DateTime.Now;
+        Rating.DateUpdated = DateTime.Now;
+        Rating.UpdatedBy = userid;
+        Rating.CreatedBy = userid;
+    }
+
+    private void SetRating(int stars)
+    {
+        selectedRating = stars;  // Update selected rating
+        Rating.Stars = stars;    // Update the Rating model
+        StateHasChanged();       // Force UI update
+    }
+
+    private void SetHoverRating(int stars)
+    {
+        hoverRating = stars;  // Set the hover rating to show when hovering over stars
+    }
+
+    private void ResetHoverRating()
+    {
+        hoverRating = 0;  // Reset hover rating when not hovering
+    }
+
+    private async Task AddRating()
+    {
+        using var context = DbFactory.CreateDbContext();
+
+        context.Rating.Add(Rating);
+
+        context.Attach(User!).State = EntityState.Modified;
+
+        User.Stars += Rating.Stars;
+        if (User.NoRatings == null)
+        {
+            User.NoRatings = 1;
+        }
+        else
+        {
+            User.NoRatings += 1;
+        }
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/");
+    }
+}
