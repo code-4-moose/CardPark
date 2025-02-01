@@ -49,12 +49,12 @@
 .number {
     position: relative;
     top: -80%;
-    left: 18%;
+    left: 19%;
 }
 .user_desc{
     position:relative;
     top:-80%;
-    left:18%;
+    left:19%;
 }
 .user_joined_date{
     position:relative;
@@ -72,7 +72,7 @@
 }
 .user-rating-norating {
     position: relative;
-    top: -140%;
+    top: -120%;
     left: 85%;
     display: flex;
     justify-items: center;
