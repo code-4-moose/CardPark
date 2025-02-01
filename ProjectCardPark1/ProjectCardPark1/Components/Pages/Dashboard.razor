@@ -1,6 +1,18 @@
-﻿@page "/Dashboard"
+﻿@page "/dashboard"
 
-<h3>Dashboard</h3>
+@attribute [Authorize(Roles = "Administrator")]
+
+<PageTitle>Dashboard</PageTitle>
+
+<div class="dashboard-container">
+    <h1 class="dashboard-title">Dashboard</h1>
+    <div class="dashboard-grid">
+        <a href="/listings" class="dashboard-btn">Listing</a>
+        <a href="/categories" class="dashboard-btn">Category</a>
+        <a href="/ratings" class="dashboard-btn">Rating</a>
+        <a href="/users" class="dashboard-btn">User</a>
+    </div>
+</div>
 
 @code {
 
