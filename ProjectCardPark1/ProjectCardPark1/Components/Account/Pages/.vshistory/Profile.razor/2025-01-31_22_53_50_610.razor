@@ -48,8 +48,8 @@
         }
         else{
             <div class="user-rating">
-                <h3>@ratingMSG ⭐</h3>
-            @* <i class="fa-solid fa-star star_css" style="font-size: 1.3em;"></i> *@
+            <h3>@ratingMSG</h3>
+            <i class="fa-solid fa-star star_css" style="font-size: 1.2em;"></i>
             </div>
         }
     </div>
@@ -111,33 +111,6 @@
             </div>
         </div>
     </div>
-    <hr />
-    <div class="container_3">
-        <h2 class="reviews-title">User Reviews</h2>
-
-        @if (filteredRatings.Count == 0)
-        {
-            <p class="no-reviews">No reviews yet.</p>
-        }
-        else
-        {
-            <div class="reviews-list">
-                @foreach (var review in filteredRatings)
-                {
-                    <div class="review-card">
-                        <div class="review-header">
-                            <h4 class="reviewer-name">@review.ReviewerName</h4>
-                            <span class="review-rating">
-                                @review.Stars ⭐
-                            </span>
-                        </div>
-                        <p class="review-text">@review.Description</p>
-                        <small class="review-date">@review.DateCreated.ToString("MMMM dd, yyyy")</small>
-                    </div>
-                }
-            </div>
-        }
-    </div>
 </body>
 
 <script>
@@ -166,7 +139,6 @@
 
     private List<Listing> filteredListings = new List<Listing>();
 
-    private List<Rating> filteredRatings = new List<Rating>();
 
     private ProjectCardPark1User user = default!;
 
@@ -184,7 +156,6 @@
     byte[] Image;
     string? listingId;
     string ratingMSG;
-    int N_userid;
     private ProjectCardPark1Context context = default!;
 
     protected override async Task OnInitializedAsync()
@@ -198,20 +169,12 @@
         filteredListings = allListings;
 
         User ??= await context.User.FirstOrDefaultAsync(m => m.UserId == userid);
-
-        N_userid = User.Id;
-
         Image = User.ProfileImage;
         imgSrc = User.ProfileImageUrl;
         name = User.Name;
         address = User.Address;
         rating = (User.Stars/User.NoRatings.Value);
         ratingMSG = rating.ToString("0.0");
-
-        filteredRatings = await context.Rating
-            .Where(r => r.UserId == N_userid)
-            .OrderByDescending(r => r.DateCreated)
-            .ToListAsync();
     }
     private void FilterListings()
     {

@@ -222,68 +222,13 @@ hr{
     z-index: 1;
     pointer-events: none; /* Ensure it's non-interactive */
 }
-
 .container_3 {
+    height: 200px;
     width: 95%;
     margin: 0 auto;
     padding: 16px;
     box-sizing: border-box;
-    border-radius: 8px;
     box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1); /* Horizontal, Vertical, Blur, Color */
-    background-color: white;
-}
-.reviews-title {
-    font-size: 1.8em;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 15px;
-    color: #333;
-}
-
-.no-reviews {
-    text-align: center;
-    font-size: 1.2em;
-    color: #777;
-}
-
-.reviews-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.review-card {
-    background: #f9f9f9;
-    padding: 15px;
     border-radius: 8px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.08);
-}
-
-.review-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-}
-
-.reviewer-name {
-    font-size: 1.2em;
-    font-weight: bold;
-    color: #333;
-}
-
-.review-rating {
-    font-size: 1.3em;
-    color: #ff9800;
-}
-
-.review-text {
-    font-size: 1em;
-    color: #555;
-    margin-bottom: 8px;
-}
-
-.review-date {
-    font-size: 0.9em;
-    color: #888;
+    background-color: white;
 }

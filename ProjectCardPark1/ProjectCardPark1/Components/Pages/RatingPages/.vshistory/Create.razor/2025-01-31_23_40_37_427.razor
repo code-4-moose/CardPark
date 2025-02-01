@@ -1,7 +1,4 @@
 ﻿@page "/ratings/create"
-
-@rendermode InteractiveServer
-
 @using Microsoft.EntityFrameworkCore
 @using ProjectCardPark1.Domain
 @using ProjectCardPark1.Data
@@ -21,24 +18,23 @@
 <h2>Rating</h2>
 <hr />
 <style>
-    .container {
-        background-color: #fff;
-        width: 250px;
-        height: 100px;
-        padding: 10px;
-        text-align: center;
-        border-radius: 2rem;
-    }
-
-    .rating {
-        font-size: 36px;
+    .star-rating {
+        display: flex;
+        gap: 5px;
+        font-size: 1.8em;
+        cursor: pointer;
+        user-select: none;
     }
 
     .star {
-        cursor: pointer;
-        color: rgb(139, 139, 139);
-        transition: color 0.2s;
+        color: #ccc;
+        transition: color 0.2s ease-in-out;
     }
+
+        .star:hover,
+        .star.selected {
+            color: #f4b400;
+        }
 </style>
 <div class="row">
     <div class="col-md-4">
@@ -55,15 +51,16 @@
                 <InputText id="description" @bind-Value="Rating.Description" class="form-control" /> 
                 <ValidationMessage For="() => Rating.Description" class="text-danger" /> 
             </div>        
-            <div class="container">
-                <div class="rating">
-                    <span class="star" data-rating="1">★</span>
-                    <span class="star" data-rating="2">★</span>
-                    <span class="star" data-rating="3">★</span>
-                    <span class="star" data-rating="4">★</span>
-                    <span class="star" data-rating="5">★</span>
-                </div>
-                <p>Rating: <span id="selected-rating">0</span> star</p>
+            <div class="star-rating">
+                @for (int i = 1; i <= 5; i++)
+                {
+                    <span class="star @(i <= (hoverRating > 0 ? hoverRating : selectedRating) ? "selected" : "")"
+                          @onmouseover="() => SetHoverRating(i)"
+                          @onmouseout="() => ResetHoverRating()"
+                          @onclick="() => SetRating(i)">
+                        ★
+                    </span>
+                }
             </div>
             <p>You have rated: @selectedRating star(s)</p>
             @* <div class="mb-3">
@@ -100,31 +97,6 @@
         </EditForm>
     </div>
 </div>
-<script>
-    const stars = document.querySelectorAll('.star');
-    const selectedRating = document.getElementById('selected-rating');
-
-    stars.forEach(star => {
-        star.addEventListener('click', () => {
-            const rating = parseInt(star.getAttribute('data-rating'));
-            selectedRating.textContent = rating;
-            resetStars();
-            highlightStars(rating);
-        });
-    });
-
-    function resetStars() {
-        stars.forEach(star => {
-            star.style.color = 'gray';
-        });
-    }
-
-    function highlightStars(rating) {
-        for (let i = 0; i < rating; i++) {
-            stars[i].style.color = 'gold';
-        }
-    }
-</script>
 
 @code {
     // HOW RATING WORK.
@@ -169,8 +141,7 @@
     }
     private void SetRating(int stars)
     {
-        selectedRating = stars;  // Update selected rating
-        hoverRating = 0;         // Reset hover effect after selection
+        selectedRating = stars;  // Set the rating to the selected star number
     }
 
     private void SetHoverRating(int stars)
