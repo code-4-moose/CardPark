@@ -10,7 +10,6 @@
     margin: 0;
 }
 
-/* Container for the card */
 .container {
     display: flex;
     justify-content: center;
@@ -20,7 +19,6 @@
     margin-top: 100px;
 }
 
-/* Card styling */
 .card {
     background-color: #fff;
     color: #333;
@@ -34,7 +32,6 @@
     animation: slideIn 0.8s ease-out;
 }
 
-/* Heading styling */
 .card h1 {
     font-size: 2.5rem;
     color: #4CAF50;
@@ -42,14 +39,12 @@
     text-transform: uppercase;
 }
 
-/* Button container */
 .buttons {
     display: flex;
-    gap: 1.5rem; /* Space between buttons */
-    justify-content: center; /* Center the buttons horizontally */
+    gap: 1.5rem; 
+    justify-content: center; 
 }
 
-/* Button styles */
 .btn {
     display: inline-block;
     padding: 1rem 2rem;
@@ -72,22 +67,20 @@
     transform: translateY(-4px);
 }
 
-/* Orange "Go To Profile" button */
+
 .btn-secondary {
-    background-color: #FF5722; /* Orange color */
+    background-color: #FF5722;
 }
 
 .btn-secondary:hover {
-    background-color: #E64A19; /* Darker orange on hover */
+    background-color: #E64A19;
     transform: translateY(-4px);
 }
 
-/* Button active state */
 .btn:active {
     transform: translateY(1px);
 }
 
-/* Animation for the card */
 @keyframes slideIn {
     0% {
         transform: translateY(30px);
