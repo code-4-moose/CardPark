@@ -163,7 +163,7 @@
             URL_userId = listing.CreatedBy;
             listing.Sold = true;
             await context.SaveChangesAsync();
-            NavigationManager.NavigateTo($"/ratings/create?userId={URL_userId}");
+            NavigationManager.NavigateTo($"/ratings/create");
         }
     }
 

@@ -128,11 +128,6 @@
                 <InputNumber id="ratingid" @bind-Value="Rating.RatingId" class="form-control" /> 
                 <ValidationMessage For="() => Rating.RatingId" class="text-danger" /> 
             </div>
-        <div class="mb-3" hidden>
-            <label for="ratingid" class="form-label">RatingId:</label>
-            <InputNumber id="ratingid" @bind-Value="Rating.Stars" class="form-control" />
-            <ValidationMessage For="() => Rating.Stars" class="text-danger" />
-        </div>
             <div class="star_container">
                 <div class="rating">
                     <div class="stars">
@@ -196,8 +191,7 @@
             </div>     *@
 
           <button type="submit" class="btn-clean">Rate</button>
-         <p>@Rating.ReviewerName</p> 
-         <p>@SetStars</p>
+         @*<p>@User.Name</p> *@
         </EditForm>
 </div>
 @code {
@@ -207,7 +201,6 @@
     // 3. den u process User?? with the userid of the seller.
     // 4. den the rating would be on the seller.
 
-    private ProjectCardPark1User Buyer_user = default!;
 
     [SupplyParameterFromForm]
     private Rating Rating { get; set; } = new();
@@ -215,13 +208,9 @@
     [SupplyParameterFromForm]
     private User User { get; set; }
 
-    [SupplyParameterFromForm]
-    private User Buyer_User { get; set; }
-
     [SupplyParameterFromQuery(Name = "userId")]
-    public string seller_userid { get; set; }
+    public string userid { get; set; }
 
-    string Buyer_userId;
     private int SelectedRating = 0;
     private int SetStars;
     private ProjectCardPark1Context context = default!;
@@ -231,23 +220,19 @@
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var claimsPrincipal = authState.User;
-        Buyer_user = await UserManager.GetUserAsync(claimsPrincipal);
-        Buyer_userId = UserManager.GetUserId(claimsPrincipal);
 
         context = DbFactory.CreateDbContext();
 
         var allListings = await context.Listing.ToListAsync();
+        User ??= await context.User.FirstOrDefaultAsync(m => m.UserId == userid);
 
-        User ??= await context.User.FirstOrDefaultAsync(m => m.UserId == seller_userid);
-
-        Buyer_User ??= await context.User.FirstOrDefaultAsync(m => m.UserId == Buyer_userId);
-
-        Rating.ReviewerName = Buyer_User.Name;
+        Rating.ReviewerName = User.Name;
         Rating.UserId = User.Id;
         Rating.DateCreated = DateTime.Now;
         Rating.DateUpdated = DateTime.Now;
-        Rating.UpdatedBy = Buyer_User.UserId;
-        Rating.CreatedBy = Buyer_User.UserId;
+        Rating.UpdatedBy = userid;
+        Rating.CreatedBy = userid;
+        Rating.Stars = SetStars;
     }
     // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
     private async Task AddRating()
@@ -256,7 +241,6 @@
         var isConfirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to submit your rating? (Ratings cannot be altered or deleted)");
         if (isConfirmed)
         {
-            Rating.Stars = SetStars;
             context.Rating.Add(Rating);
 
             context.Attach(User!).State = EntityState.Modified;
@@ -280,4 +264,6 @@
     {
         SetStars = rating;
     }
+
+
 }

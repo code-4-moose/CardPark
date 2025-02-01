@@ -157,10 +157,10 @@
 
     private async Task ConfirmPurchase(Listing listing)
     {
+        URL_userId = listing.CreatedBy;
         var confirmed = await JSRuntime.InvokeAsync<bool?>("confirm", $"Are you sure you want to buy {listing.Name}?");
         if (confirmed == true)
         {
-            URL_userId = listing.CreatedBy;
             listing.Sold = true;
             await context.SaveChangesAsync();
             NavigationManager.NavigateTo($"/ratings/create?userId={URL_userId}");

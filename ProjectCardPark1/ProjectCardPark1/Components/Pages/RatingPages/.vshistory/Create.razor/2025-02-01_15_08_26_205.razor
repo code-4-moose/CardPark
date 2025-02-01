@@ -7,7 +7,6 @@
 @using ProjectCardPark1.Data
 @using Microsoft.AspNetCore.Identity
 
-@inject IJSRuntime JSRuntime
 @inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -21,7 +20,6 @@
 <style>
         .star_container{
             position:relative;
-            left:-33%;
         }
         .rating > input {
             display: none;
@@ -63,7 +61,6 @@
             }
 
     .desc_container{
-        margin-bottom:10px;
     }
     .description-box {
         width: 100%;
@@ -93,28 +90,7 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     margin-top:110px;
     padding: 20px;
-    background-color:white;
     }
-
-    .btn-clean {
-        background-color: #007bff; /* Primary color */
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        font-size: 16px;
-        cursor: pointer;
-        transition: background-color 0.3s ease, transform 0.2s ease;
-    }
-
-        .btn-clean:hover {
-            background-color: #0056b3; /* Darker shade on hover */
-            transform: scale(1.05); /* Slightly enlarge on hover */
-        }
-
-        .btn-clean:active {
-            transform: scale(0.95); /* Slightly shrink on click */
-        }
 </style>
 <div class="whole_container">
     <h2>Successful Purchase!</h2>
@@ -128,11 +104,6 @@
                 <InputNumber id="ratingid" @bind-Value="Rating.RatingId" class="form-control" /> 
                 <ValidationMessage For="() => Rating.RatingId" class="text-danger" /> 
             </div>
-        <div class="mb-3" hidden>
-            <label for="ratingid" class="form-label">RatingId:</label>
-            <InputNumber id="ratingid" @bind-Value="Rating.Stars" class="form-control" />
-            <ValidationMessage For="() => Rating.Stars" class="text-danger" />
-        </div>
             <div class="star_container">
                 <div class="rating">
                     <div class="stars">
@@ -193,11 +164,8 @@
                 <label for="updatedby" class="form-label">UpdatedBy:</label> 
                 <InputText id="updatedby" @bind-Value="Rating.UpdatedBy" class="form-control" /> 
                 <ValidationMessage For="() => Rating.UpdatedBy" class="text-danger" /> 
-            </div>     *@
-
-          <button type="submit" class="btn-clean">Rate</button>
-         <p>@Rating.ReviewerName</p> 
-         <p>@SetStars</p>
+            </div>     *@   
+            <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>
 </div>
 @code {
@@ -207,7 +175,6 @@
     // 3. den u process User?? with the userid of the seller.
     // 4. den the rating would be on the seller.
 
-    private ProjectCardPark1User Buyer_user = default!;
 
     [SupplyParameterFromForm]
     private Rating Rating { get; set; } = new();
@@ -215,13 +182,9 @@
     [SupplyParameterFromForm]
     private User User { get; set; }
 
-    [SupplyParameterFromForm]
-    private User Buyer_User { get; set; }
-
     [SupplyParameterFromQuery(Name = "userId")]
-    public string seller_userid { get; set; }
+    public string userid { get; set; }
 
-    string Buyer_userId;
     private int SelectedRating = 0;
     private int SetStars;
     private ProjectCardPark1Context context = default!;
@@ -231,53 +194,48 @@
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var claimsPrincipal = authState.User;
-        Buyer_user = await UserManager.GetUserAsync(claimsPrincipal);
-        Buyer_userId = UserManager.GetUserId(claimsPrincipal);
 
         context = DbFactory.CreateDbContext();
 
         var allListings = await context.Listing.ToListAsync();
+        User ??= await context.User.FirstOrDefaultAsync(m => m.UserId == userid);
 
-        User ??= await context.User.FirstOrDefaultAsync(m => m.UserId == seller_userid);
-
-        Buyer_User ??= await context.User.FirstOrDefaultAsync(m => m.UserId == Buyer_userId);
-
-        Rating.ReviewerName = Buyer_User.Name;
+        Rating.ReviewerName = User.Name;
         Rating.UserId = User.Id;
         Rating.DateCreated = DateTime.Now;
         Rating.DateUpdated = DateTime.Now;
-        Rating.UpdatedBy = Buyer_User.UserId;
-        Rating.CreatedBy = Buyer_User.UserId;
+        Rating.UpdatedBy = userid;
+        Rating.CreatedBy = userid;
+        Rating.Stars = SetStars;
     }
     // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
     private async Task AddRating()
     {
         using var context = DbFactory.CreateDbContext();
-        var isConfirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to submit your rating? (Ratings cannot be altered or deleted)");
-        if (isConfirmed)
+
+        context.Rating.Add(Rating);
+
+        context.Attach(User!).State = EntityState.Modified;
+
+        User.Stars += Rating.Stars;
+        if (User.NoRatings == null)
         {
-            Rating.Stars = SetStars;
-            context.Rating.Add(Rating);
-
-            context.Attach(User!).State = EntityState.Modified;
-
-            User.Stars += Rating.Stars;
-            if (User.NoRatings == null)
-            {
-                User.NoRatings = 1;
-            }
-            else
-            {
-                User.NoRatings += 1;
-            }
-            await context.SaveChangesAsync();
-            NavigationManager.NavigateTo("/");
+            User.NoRatings = 1;
         }
+        else
+        {
+            User.NoRatings += 1;
+        }
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/");
     }
     private string RatingText = "No rating selected"; // Initialize with a default value
 
     private void HandleRatingChange(int rating)
     {
         SetStars = rating;
+        RatingText = $"{rating} out of 5";
+        Console.WriteLine($"Selected Rating: {rating}");
     }
+
 }

@@ -128,11 +128,6 @@
                 <InputNumber id="ratingid" @bind-Value="Rating.RatingId" class="form-control" /> 
                 <ValidationMessage For="() => Rating.RatingId" class="text-danger" /> 
             </div>
-        <div class="mb-3" hidden>
-            <label for="ratingid" class="form-label">RatingId:</label>
-            <InputNumber id="ratingid" @bind-Value="Rating.Stars" class="form-control" />
-            <ValidationMessage For="() => Rating.Stars" class="text-danger" />
-        </div>
             <div class="star_container">
                 <div class="rating">
                     <div class="stars">
@@ -197,7 +192,6 @@
 
           <button type="submit" class="btn-clean">Rate</button>
          <p>@Rating.ReviewerName</p> 
-         <p>@SetStars</p>
         </EditForm>
 </div>
 @code {
@@ -248,6 +242,7 @@
         Rating.DateUpdated = DateTime.Now;
         Rating.UpdatedBy = Buyer_User.UserId;
         Rating.CreatedBy = Buyer_User.UserId;
+        Rating.Stars = SetStars;
     }
     // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
     private async Task AddRating()
@@ -256,7 +251,6 @@
         var isConfirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to submit your rating? (Ratings cannot be altered or deleted)");
         if (isConfirmed)
         {
-            Rating.Stars = SetStars;
             context.Rating.Add(Rating);
 
             context.Attach(User!).State = EntityState.Modified;
@@ -280,4 +274,6 @@
     {
         SetStars = rating;
     }
+
+
 }
