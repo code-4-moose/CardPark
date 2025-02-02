@@ -5,21 +5,20 @@
 @inject NavigationManager NavigationManager
 @rendermode @(new InteractiveServerRenderMode(false))
 @attribute [Authorize(Roles = "User")]
-@inject IJSRuntime JSRuntime
+
 <PageTitle>Edit</PageTitle>
 
+<h1>Edit</h1>
 
-
-
-<div class="edit-listing">
-    <h1>Edit Listing</h1>
-    <hr />
-    @if (Listing is null)
-    {
-        <p><em>Loading...</em></p>
-    }
-    else
-    {
+<h2>Listing</h2>
+<hr />
+<div class="listing">
+@if (Listing is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
     <div class="row">
         @if (imgSrc == "")
         {
@@ -112,7 +111,7 @@
                 </div>
                 <button type="submit" class="btn btn-primary">Save</button>
             </EditForm>
-                <button @onclick = "GoBack" class="cancel-button">Cancel</button>
+                <button onclick = "GoBack" class="cancel-button">Cancel</button>
         </div>
     </div>
 }
@@ -162,8 +161,6 @@
 
         
         Listing ??= await context.Listing.FirstOrDefaultAsync(m => m.Id == Id);
-        
-        imgSrc = Listing.ListingImageUrl;
 
         if (Listing is null)
         {
@@ -226,13 +223,8 @@
             }
         }
     }
-    private async Task GoBack()
+    private void GoBack()
     {
-        bool confirm = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to cancel? All changes will be lost.");
-
-        if (confirm)
-        {
-            NavigationManager.NavigateTo("Account/Profile");
-        }
+        NavigationManager.NavigateTo("Account/Profile");
     }
 }

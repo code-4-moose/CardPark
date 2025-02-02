@@ -8,18 +8,14 @@
 @inject IJSRuntime JSRuntime
 <PageTitle>Edit</PageTitle>
 
-
-
-
-<div class="edit-listing">
-    <h1>Edit Listing</h1>
-    <hr />
-    @if (Listing is null)
-    {
-        <p><em>Loading...</em></p>
-    }
-    else
-    {
+<hr />
+<div class="listing">
+@if (Listing is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
     <div class="row">
         @if (imgSrc == "")
         {
