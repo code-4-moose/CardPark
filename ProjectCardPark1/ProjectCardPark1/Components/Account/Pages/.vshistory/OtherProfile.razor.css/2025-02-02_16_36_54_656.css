@@ -1,0 +1,333 @@
+﻿body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    background-color: #f0f8ff;
+}
+
+.css-shadow {
+    width: 170px;
+    height: 170px;
+    border-radius: 50%;
+}
+
+.container_1 {
+    height: 200px;
+    width: 95%;
+    margin: 0 auto;
+    padding: 16px;
+    box-sizing: border-box;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1); /* Horizontal, Vertical, Blur, Color */
+    border-radius: 8px;
+    background-color: white;
+}
+
+.profile_pic {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-color: #4caf50;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+    border: 2px solid #000;
+    position: relative;
+    left: 0%;
+    overflow: hidden;
+}
+
+    .profile_pic img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: cover;
+    }
+
+.username {
+    position: relative;
+    top: -80%;
+    left: 18%;
+}
+
+.number {
+    position: relative;
+    top: -80%;
+    left: 18%;
+}
+
+.user_desc {
+    position: relative;
+    top: -80%;
+    left: 18%;
+}
+
+.user_joined_date {
+    position: relative;
+    top: -85%;
+    left: 85%;
+}
+
+.user-rating {
+    position: relative;
+    top: -115%;
+    left: 87%;
+    display: flex;
+    justify-items: center;
+    align-items: center;
+    gap: 7px;
+}
+
+.user-rating-norating {
+    position: relative;
+    top: -140%;
+    left: 85%;
+    display: flex;
+    justify-items: center;
+    gap: 7px;
+}
+
+.star_css {
+    position: relative;
+    top: -5px;
+}
+
+.container_2 {
+    width: 95%;
+    margin: 0 auto;
+    padding: 16px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1); /* Horizontal, Vertical, Blur, Color */
+    background-color: white;
+}
+
+hr {
+    visibility: hidden;
+}
+
+.search-bar-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    margin-bottom: 60px;
+}
+
+.search-bar {
+    height: 50px;
+    width: 100%;
+    max-width: 800px;
+    background: rgba(105, 104, 104, 0.2);
+    display: flex;
+    align-items: center;
+    border-radius: 60px;
+    padding: 10px 20px;
+}
+
+    .search-bar input {
+        background: transparent;
+        flex: 1;
+        border: 0;
+        outline: none;
+        font-size: 20px;
+        color: #332d2d;
+    }
+
+::placeholder {
+    color: rgba(105, 104, 104, 0.4);
+}
+
+.search-bar button i {
+    width: 25px;
+}
+
+.search-bar button {
+    background: transparent;
+    border: 0;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 16px;
+    padding: 16px;
+}
+
+.card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+.card-image {
+    text-align: center;
+    padding: 16px;
+}
+
+.card-content {
+    padding: 16px;
+}
+
+    .card-content h3 {
+        font-size: 18px;
+        margin-bottom: 8px;
+    }
+
+    .card-content p {
+        font-size: 14px;
+        margin-bottom: 6px;
+    }
+
+    .card-content strong {
+        font-weight: bold;
+    }
+
+.popup-image {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+    .popup-image img {
+        max-width: 100%;
+        max-height: 100%;
+        user-select: none;
+    }
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: white;
+    font-size: 30px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.bought-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black */
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    z-index: 1;
+    pointer-events: none; /* Ensure it's non-interactive */
+}
+
+.container_3 {
+    width: 95%;
+    margin: 0 auto;
+    padding: 16px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1); /* Horizontal, Vertical, Blur, Color */
+    background-color: white;
+}
+
+.reviews-title {
+    font-size: 1.8em;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.no-reviews {
+    text-align: center;
+    font-size: 1.2em;
+    color: #777;
+}
+
+.reviews-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.review-card {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.08);
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.reviewer-name {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #333;
+}
+
+.review-rating {
+    font-size: 1.3em;
+    color: #ff9800;
+}
+
+.review-text {
+    font-size: 1em;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+.review-date {
+    font-size: 0.9em;
+    color: #888;
+}
+.card-actions {
+    display: flex;
+    justify-content: center;
+    padding: 8px;
+    margin-top: auto; /* Ensures the Buy Now button is always at the bottom of the card */
+    min-height: 40px; /* Reserve space for the Buy Now button */
+}
+.buy-now {
+    background-color: #28a745;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.image-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+    .image-wrapper:hover .card-img {
+        transform: scale(1.05); /* Slight zoom-in effect */
+    }

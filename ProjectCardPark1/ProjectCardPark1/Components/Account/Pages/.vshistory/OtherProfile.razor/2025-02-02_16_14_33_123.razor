@@ -1,4 +1,4 @@
-﻿@page "/Account/Profile"
+﻿@page "/Account/OtherProfile"
 
 @rendermode InteractiveServer
 @using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -40,14 +40,7 @@
         }
 
         <h1 class="username">@name</h1>
-        @if (contact != 0)
-        {
-            <p class="number">Number : @contact</p>
-        }
-        else
-        {
-            <p class="number">No Number</p>
-        }
+        <p class="number">Number : @contact</p>
         <p class="user_desc">From @address</p>
         @if (No_ratings == 0)
         {
@@ -55,10 +48,11 @@
                 <h3>No Ratings</h3>
             </div>
         }
-        else{
+        else
+        {
             <div class="user-rating">
                 <h3>@ratingMSG ⭐</h3>
-            @* <i class="fa-solid fa-star star_css" style="font-size: 1.3em;"></i> *@
+                @* <i class="fa-solid fa-star star_css" style="font-size: 1.3em;"></i> *@
             </div>
         }
     </div>
@@ -80,34 +74,35 @@
                 {
                     @if (listing.UserId == User.Id)
                     {
-                    <div class="card @(listing.Sold == true ? "bought-card" : "")" >
-                        @if (listing.Sold == true)
+                        <div class="card @(listing.Sold == true ? "bought-card" : "")">
+                            @if (listing.Sold == true)
                             {
                                 <div class="bought-overlay">
                                     SOLD
                                 </div>
                             }
-                        <div class="card-image" @onclick="() => ShowImage(listing.ListingImageUrl)">
-                            @if (!string.IsNullOrEmpty(listing.ListingImageUrl))
+                            <div class="card-image" @onclick="() => ShowImage(listing.ListingImageUrl)">
+                                @if (!string.IsNullOrEmpty(listing.ListingImageUrl))
+                                {
+                                    <img src="@listing.ListingImageUrl" alt="@listing.Name" class="card-img" style="width: 150px; height: 150px;" />
+                                }
+                                else
+                                {
+                                    <span>No Image</span>
+                                }
+                            </div>
+                            <div class="card-content">
+                                <h3>@listing.Name</h3>
+                                <p><strong>Price:</strong> @listing.Price</p>
+                                <p><strong>Amount:</strong> @listing.Amount</p>
+                                <p><strong>Description:</strong> @listing.Description</p>
+                                <p><strong>Username:</strong> @listing.UserName</p>
+                                <p><strong>Category:</strong> @listing.CategoryName</p>
+                            </div>
+                            @if (listing.Sold != true)
                             {
-                                <img src="@listing.ListingImageUrl" alt="@listing.Name" class="card-img" style="width: 150px; height: 150px;" />
+                                <button onclick="location.href='/listings/edit?id=@listing.Id';" class="w-100 btn btn-lg btn-primary">Change Listing Information</button>
                             }
-                            else
-                            {
-                                <span>No Image</span>
-                            }
-                        </div>
-                        <div class="card-content">
-                            <h3>@listing.Name</h3>
-                            <p><strong>Price:</strong> @listing.Price</p>
-                            <p><strong>Amount:</strong> @listing.Amount</p>
-                            <p><strong>Description:</strong> @listing.Description</p>
-                            <p><strong>Username:</strong> @listing.UserName</p>
-                            <p><strong>Category:</strong> @listing.CategoryName</p>
-                        </div>
-                        @if (listing.Sold != true){
-                        <button onclick="location.href='/listings/edit?id=@listing.Id';" class="w-100 btn btn-lg btn-primary">Change Listing Information</button>
-                        }
                         </div>
                     }
                 }
@@ -150,14 +145,14 @@
 </body>
 
 <script>
-            // Show image in popup
-        function showImagePopup(imageUrl) {
-            const popup = document.getElementById("popupRef");
-            const popupImg = document.getElementById("popupImage");
+    // Show image in popup
+    function showImagePopup(imageUrl) {
+        const popup = document.getElementById("popupRef");
+        const popupImg = document.getElementById("popupImage");
 
-            // Display the popup and set the image source
-            popup.style.display = 'flex';
-            popupImg.src = imageUrl;
+        // Display the popup and set the image source
+        popup.style.display = 'flex';
+        popupImg.src = imageUrl;
     }
 
     // Close the popup
@@ -216,7 +211,7 @@
         imgSrc = User.ProfileImageUrl;
         name = User.Name;
         address = User.Address;
-        rating = (User.Stars/User.NoRatings.Value);
+        rating = (User.Stars / User.NoRatings.Value);
         ratingMSG = rating.ToString("0.0");
         contact = User.Contact;
 
