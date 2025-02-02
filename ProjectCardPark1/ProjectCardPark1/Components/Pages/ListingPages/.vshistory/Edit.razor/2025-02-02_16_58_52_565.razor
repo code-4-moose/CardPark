@@ -3,41 +3,26 @@
 @using ProjectCardPark1.Domain
 @inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
 @inject NavigationManager NavigationManager
-@rendermode @(new InteractiveServerRenderMode(false))
+
 @attribute [Authorize(Roles = "User")]
-@inject IJSRuntime JSRuntime
+
 <PageTitle>Edit</PageTitle>
 
+<h1>Edit</h1>
 
-
-
-<div class="edit-listing">
-    <h1>Edit Listing</h1>
-    <hr />
-    @if (Listing is null)
-    {
-        <p><em>Loading...</em></p>
-    }
-    else
-    {
+<h2>Listing</h2>
+<hr />
+@if (Listing is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
     <div class="row">
-        @if (imgSrc == "")
-        {
-            <img src="/add_image.png" class="card-img" />
-        }
-        else
-        {
-            <img src="@imgSrc" class="card-img" />
-        }
         <div class="col-md-4">
             <EditForm method="post" Model="Listing" OnValidSubmit="UpdateListing" FormName="edit" Enhance>
                 <DataAnnotationsValidator />
                 <ValidationSummary role="alert"/>
-                <div class="mb-3">
-                    <label for="profileimage" class="form-label">Item Image:</label>
-                    <InputFile id="profileimage" OnChange="HandleFileSelection" accept="image/*" class="form-control" />
-                    <ValidationMessage For="() => Listing.ListingImage" class="text-danger" />
-                </div>
                 <input type="hidden" name="Listing.Id" value="@Listing.Id" />
                 <div class="mb-3">
                     <label for="name" class="form-label">Name:</label>
@@ -112,10 +97,12 @@
                 </div>
                 <button type="submit" class="btn btn-primary">Save</button>
             </EditForm>
-                <button @onclick = "GoBack" class="cancel-button">Cancel</button>
         </div>
     </div>
 }
+
+<div>
+    <a href="/listings">Back to List</a>
 </div>
 
 @code {
@@ -135,10 +122,6 @@
     [SupplyParameterFromForm]
     private Category Category { get; set; } = new();
 
-
-    string imgSrc = ""; // Base64 string for image preview
-
-    byte[] _fileBytes = null; // Byte array for the uploaded image
 
     private string GetCategoryName(int categoryId)
     {
@@ -162,8 +145,6 @@
 
         
         Listing ??= await context.Listing.FirstOrDefaultAsync(m => m.Id == Id);
-        
-        imgSrc = Listing.ListingImageUrl;
 
         if (Listing is null)
         {
@@ -200,7 +181,7 @@
                 }
             }
 
-            NavigationManager.NavigateTo("/Account/Profile");
+            NavigationManager.NavigateTo("/listings");
         }
     }
 
@@ -209,30 +190,4 @@
             using var context = DbFactory.CreateDbContext();
             return context.Listing.Any(e => e.Id == id);
         }
-
-    private async Task HandleFileSelection(InputFileChangeEventArgs e)
-    {
-        var file = e.File;
-        if (file != null)
-        {
-            // Read the file into a byte array
-            using (var ms = new MemoryStream())
-            {
-                await file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024).CopyToAsync(ms); //10 MB
-                _fileBytes = ms.ToArray();
-                imgSrc = $"data:{file.ContentType};base64,{Convert.ToBase64String(_fileBytes)}";
-                Listing.ListingImage = _fileBytes;
-                Listing.ListingImageUrl = imgSrc;
-            }
-        }
-    }
-    private async Task GoBack()
-    {
-        bool confirm = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to cancel? All changes will be lost.");
-
-        if (confirm)
-        {
-            NavigationManager.NavigateTo("Account/Profile");
-        }
-    }
 }

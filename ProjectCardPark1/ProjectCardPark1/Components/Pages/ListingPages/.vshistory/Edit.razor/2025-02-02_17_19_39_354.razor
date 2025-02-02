@@ -11,15 +11,15 @@
 
 
 
-<div class="edit-listing">
-    <h1>Edit Listing</h1>
+<div class="listing">
+    <h2>Edit Listing</h2>
     <hr />
-    @if (Listing is null)
-    {
-        <p><em>Loading...</em></p>
-    }
-    else
-    {
+@if (Listing is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
     <div class="row">
         @if (imgSrc == "")
         {

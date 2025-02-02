@@ -4,15 +4,13 @@
     width: 100%;
     height: 100%;
     overflow-x: hidden;
-    background-color: #f0f8ff;
+    background-color:#f0f8ff;
 }
-
 .css-shadow {
     width: 170px;
     height: 170px;
     border-radius: 50%;
 }
-
 .container_1 {
     height: 200px;
     width: 95%;
@@ -23,7 +21,6 @@
     border-radius: 8px;
     background-color: white;
 }
-
 .profile_pic {
     width: 150px;
     height: 150px;
@@ -39,47 +36,40 @@
     left: 0%;
     overflow: hidden;
 }
-
     .profile_pic img {
-        max-width: 100%;
-        max-height: 100%;
+        max-width: 100%; 
+        max-height: 100%; 
         object-fit: cover;
     }
-
-.username {
-    position: relative;
-    top: -80%;
-    left: 18%;
+.username{
+    position:relative;
+    top:-80%;
+    left:18%;
 }
-
 .number {
     position: relative;
     top: -80%;
     left: 18%;
 }
-
-.user_desc {
-    position: relative;
-    top: -80%;
-    left: 18%;
+.user_desc{
+    position:relative;
+    top:-80%;
+    left:18%;
 }
-
-.user_joined_date {
-    position: relative;
-    top: -85%;
-    left: 85%;
+.user_joined_date{
+    position:relative;
+    top:-85%;
+    left:85%;
 }
-
 .user-rating {
     position: relative;
     top: -115%;
     left: 87%;
     display: flex;
     justify-items: center;
-    align-items: center;
+    align-items:center;
     gap: 7px;
 }
-
 .user-rating-norating {
     position: relative;
     top: -140%;
@@ -88,12 +78,10 @@
     justify-items: center;
     gap: 7px;
 }
-
 .star_css {
     position: relative;
-    top: -5px;
+    top:-5px;
 }
-
 .container_2 {
     width: 95%;
     margin: 0 auto;
@@ -103,9 +91,8 @@
     box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1); /* Horizontal, Vertical, Blur, Color */
     background-color: white;
 }
-
-hr {
-    visibility: hidden;
+hr{
+    visibility:hidden;
 }
 
 .search-bar-container {
@@ -172,50 +159,6 @@ hr {
     .card:hover {
         transform: translateY(-5px);
     }
-
-.image-wrapper {
-    position: relative;
-    display: inline-block;
-}
-
-.card-img {
-    display: block;
-    width: auto;
-    max-width: 100%;
-    max-height: 100%;
-    transition: transform 0.3s ease-in-out;
-}
-
-.image-wrapper:hover .card-img {
-    transform: scale(1.05); /* Slight zoom-in effect */
-}
-
-.hover-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out;
-    transform: scale(1.05);
-    border-radius: 5px;
-    pointer-events: none; /* Ensure hover events only trigger on the wrapper */
-}
-
-    .hover-overlay i {
-        color: white;
-        font-size: 24px;
-    }
-
-.image-wrapper:hover .hover-overlay {
-    opacity: 1;
-}
-
 
 .card-image {
     text-align: center;
@@ -294,7 +237,6 @@ hr {
     box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1); /* Horizontal, Vertical, Blur, Color */
     background-color: white;
 }
-
 .reviews-title {
     font-size: 1.8em;
     font-weight: bold;
@@ -349,22 +291,4 @@ hr {
 .review-date {
     font-size: 0.9em;
     color: #888;
-}
-
-.card-actions {
-    display: flex;
-    justify-content: center;
-    padding: 8px;
-    margin-top: auto; /* Ensures the Buy Now button is always at the bottom of the card */
-    min-height: 40px; /* Reserve space for the Buy Now button */
-}
-
-.buy-now {
-    background-color: #28a745;
-    color: white;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
 }

@@ -88,19 +88,14 @@
                                 </div>
                             }
                         <div class="card-image" @onclick="() => ShowImage(listing.ListingImageUrl)">
-                                @if (!string.IsNullOrEmpty(listing.ListingImageUrl))
-                                {
-                                    <div class="image-wrapper">
-                                        <img src="@listing.ListingImageUrl" alt="@listing.Name" class="card-img" style="height: 150px; width: 150px;" />
-                                        <div class="hover-overlay">
-                                            <i class="fa-solid fa-magnifying-glass"></i>
-                                        </div>
-                                    </div>
-                                }
-                                else
-                                {
-                                    <img src="./no-image.jpg" style="width: 150px; height: 150px;" />
-                                }
+                            @if (!string.IsNullOrEmpty(listing.ListingImageUrl))
+                            {
+                                <img src="@listing.ListingImageUrl" alt="@listing.Name" class="card-img" style="width: 150px; height: 150px;" />
+                            }
+                            else
+                            {
+                                <span>No Image</span>
+                            }
                         </div>
                         <div class="card-content">
                             <h3>@listing.Name</h3>
