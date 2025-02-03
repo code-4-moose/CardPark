@@ -18,42 +18,6 @@
 }
 else
 {
-    <body>
-    <div class="container_1">
-        @if (Image == null)
-        {
-            <img src="./ProfilePic/download.png" class="css-shadow" />
-        }
-        else
-        {
-            <img src="@imgSrc" class="css-shadow" />
-        }
-
-        <h1 class="username">@name</h1>
-        @if (contact != 0)
-        {
-            <p class="number">Number : @contact</p>
-        }
-        else
-        {
-            <p class="number">No Number</p>
-        }
-        <p class="user_desc">From @address</p>
-        @if (No_ratings == 0)
-        {
-            <div class="user-rating-norating">
-                <h3>No Ratings</h3>
-            </div>
-        }
-        else
-        {
-            <div class="user-rating">
-                <h3>@ratingMSG ⭐</h3>
-                @* <i class="fa-solid fa-star star_css" style="font-size: 1.3em;"></i> *@
-            </div>
-        }
-    </div>
-    </body>
     <div class="row">
         <div class="col-md-4">
             <EditForm method="post" Model="Rating" OnValidSubmit="UpdateRating" FormName="edit" Enhance>
@@ -107,7 +71,7 @@ else
 }
 
 <div>
-    <a class="btn-custom btn-delete mx-1" href="/ratings/User">Back to List</a>
+    <a href="/ratings">Back to List</a>
 </div>
 
 @code {
@@ -117,37 +81,10 @@ else
     [SupplyParameterFromForm]
     private Rating? Rating { get; set; }
 
-    [SupplyParameterFromForm]
-    private User? User { get; set; }
-
-    private int SellerId;
-    private string imgSrc = ""; // Base64 string for image preview
-    private string? name;
-    private string address;
-    private double rating;
-    private byte[] Image;
-    private int contact;
-    private string ratingMSG; //stars,, int to string
-    private int No_ratings;
     protected override async Task OnInitializedAsync()
     {
         using var context = DbFactory.CreateDbContext();
-
-
         Rating ??= await context.Rating.FirstOrDefaultAsync(m => m.Id == Id);
-
-        SellerId = Rating.UserId;
-
-        User ??= await context.User.FirstOrDefaultAsync(u => u.Id == SellerId);
-
-        No_ratings = User.NoRatings.Value;
-        Image = User.ProfileImage;
-        imgSrc = User.ProfileImageUrl;
-        name = User.Name;
-        address = User.Address;
-        rating = (User.Stars / User.NoRatings.Value);
-        ratingMSG = rating.ToString("0.0");
-        contact = User.Contact;
 
         if (Rating is null)
         {
