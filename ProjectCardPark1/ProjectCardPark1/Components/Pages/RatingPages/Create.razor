@@ -133,6 +133,7 @@
             <InputNumber id="ratingid" @bind-Value="Rating.Stars" class="form-control" />
             <ValidationMessage For="() => Rating.Stars" class="text-danger" />
         </div>
+
             <div class="star_container">
                 <div class="rating">
                     <div class="stars">
@@ -153,6 +154,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="desc_container">
                 <textarea id="description"
                           @bind="Rating.Description"
@@ -160,7 +162,7 @@
                           placeholder="Enter a detailed description..."
                           rows="4"
                           maxlength="500">
-    </textarea>
+                </textarea>
                 <ValidationMessage For="() => Rating.Description" class="text-danger" />
             </div>
             
@@ -195,9 +197,14 @@
                 <ValidationMessage For="() => Rating.UpdatedBy" class="text-danger" /> 
             </div>     *@
 
-          <button type="submit" class="btn-clean">Rate</button>
+          <button type="submit" class="btn-clean" >Rate</button>
         </EditForm>
 </div>
+<script>
+    function showAlert() {
+        alert("Please select a number of stars.");
+    }
+</script>
 @code {
     // HOW RATING WORK.
     // 1. when listing is bought, pop up this rating page.
@@ -252,27 +259,35 @@
     {
         using var context = DbFactory.CreateDbContext();
         var isConfirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to submit your rating? (Ratings cannot be altered or deleted)");
-        if (isConfirmed)
+        if (SetStars != 0)
         {
-            Rating.Stars = SetStars;
-            context.Rating.Add(Rating);
-
-            context.Attach(User!).State = EntityState.Modified;
-
-            User.Stars += Rating.Stars;
-            if (User.NoRatings == null)
+            if (isConfirmed)
             {
-                User.NoRatings = 1;
+                Rating.Stars = SetStars;
+                context.Rating.Add(Rating);
+
+                context.Attach(User!).State = EntityState.Modified;
+
+                User.Stars += Rating.Stars;
+                if (User.NoRatings == null)
+                {
+                    User.NoRatings = 1;
+                }
+                else
+                {
+                    User.NoRatings += 1;
+                }
+                await context.SaveChangesAsync();
+                NavigationManager.NavigateTo("/");
             }
-            else
-            {
-                User.NoRatings += 1;
-            }
-            await context.SaveChangesAsync();
-            NavigationManager.NavigateTo("/");
         }
+        else
+        {
+            await JSRuntime.InvokeVoidAsync("showAlert", "Please select a number Stars");
+
+        }
+
     }
-    private string RatingText = "No rating selected"; // Initialize with a default value
 
     private void HandleRatingChange(int rating)
     {

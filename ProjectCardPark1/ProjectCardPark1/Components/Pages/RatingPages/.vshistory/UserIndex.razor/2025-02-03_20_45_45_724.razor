@@ -1,0 +1,69 @@
+﻿@page "/ratings/User"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using ProjectCardPark1.Domain
+@using ProjectCardPark1.Data
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+
+@implements IAsyncDisposable
+
+@inject AuthenticationStateProvider authenticationStateProvider
+@inject UserManager<ProjectCardPark1User> UserManager
+@inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
+
+
+@attribute [Authorize(Roles = "User")]
+
+<PageTitle>Index</PageTitle>
+
+<div class="container">
+    <div class="card">
+        <div class="card-header text-white bg-primary">
+            <h2 class="text-center">Ratings</h2>
+        </div>
+        <div class="card-body">
+            <QuickGrid Class="table" Items="context.Rating">
+                <PropertyColumn Property="Rating => Rating.ReviewerName" Title="Name (By)" />
+                <PropertyColumn Property="Rating => Rating.Description" Title="Description" />
+                <PropertyColumn Property="Rating => Rating.Stars" Title="Stars" />
+                <PropertyColumn Property="Rating => Rating.DateCreated" Title="Date Created" />
+                <PropertyColumn Property="Rating => Rating.DateUpdated" Title="Date Updated" />
+                <PropertyColumn Property="Rating => Rating.CreatedBy" Title="Created By (User Id)" />
+
+                <TemplateColumn Context="Rating">
+                    <a class="btn-custom btn-details mx-1" href="@($"/ratings/edit?id={Rating.Id}")">Edit</a>
+                </TemplateColumn>
+            </QuickGrid>
+        </div>
+    </div>
+</div>
+
+@code {
+    private ProjectCardPark1Context context = default!;
+
+    private List<Rating> ListRatings = new List<Rating>();
+
+    [SupplyParameterFromForm]
+    private Rating Rating { get; set; } = new();
+
+    private string userId;
+
+    
+    protected override async Task OnInitializedAsync()
+    {
+
+        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+        var claimsPrincipal = authState.User;
+
+        context = DbFactory.CreateDbContext();
+
+        userId = UserManager.GetUserId(claimsPrincipal);
+
+        ListRatings = await context.Rating
+        .OrderByDescending(r => r.DateCreated)
+        .ToListAsync();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

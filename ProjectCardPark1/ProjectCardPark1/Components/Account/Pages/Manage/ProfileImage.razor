@@ -151,6 +151,7 @@
 
         if (isConfirmed)
         {
+            await JSRuntime.InvokeVoidAsync("showAlert", "Go to Profile");
             // Navigate to the desired page
             Navigation.NavigateTo("/Account/Profile");
         }

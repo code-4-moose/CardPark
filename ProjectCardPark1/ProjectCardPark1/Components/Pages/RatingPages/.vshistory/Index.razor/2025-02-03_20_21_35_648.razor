@@ -1,0 +1,114 @@
+﻿@page "/ratings"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using ProjectCardPark1.Domain
+@using ProjectCardPark1.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
+
+
+@attribute [Authorize(Roles = "Administrator")]
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="ratings/create">Create New</a>
+</p>
+<style>
+    /* Table Styling */
+    .styled-table {
+        width: 80%;
+        border-collapse: collapse;
+        margin: 25px 0;
+        font-size: 0.9em;
+        font-family: sans-serif;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+        border-radius: 8px;
+    }
+
+        .styled-table thead tr {
+            background-color: #009879;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .styled-table th,
+        .styled-table td {
+            padding: 12px 15px;
+        }
+
+        .styled-table tbody tr {
+            border-bottom: 1px solid #dddddd;
+        }
+    /* Button Styling */
+    .btn-edit, .btn-details, .btn-delete {
+        display: inline-block;
+        padding: 5px 10px;
+        margin: 2px;
+        text-decoration: none;
+        border-radius: 4px;
+        font-size: 0.8em;
+        color: white;
+        cursor: pointer;
+    }
+
+    .btn-details {
+        background-color: #2196F3; /* Blue */
+    }
+
+        .btn-details:hover {
+            background-color: #1e88e5;
+        }
+
+    .btn-delete {
+        background-color: #f44336; /* Red */
+    }
+
+        .btn-delete:hover {
+            background-color: #e53935;
+        }
+    .ratingcontainer{
+        display:flex;
+        justify-content:center;
+    }
+</style>
+<div class="container">
+    <div class="card">
+        <div class="card-header text-white bg-primary">
+            <h2 class="text-center">Listings</h2>
+        </div>
+        <div class="card-body">
+            <QuickGrid Class="table" Items="context.Rating">
+                <PropertyColumn Property="Rating => Rating.ReviewerName" Title="User" />
+                <PropertyColumn Property="Rating => Rating.Description" Title="Item Name" />
+                <PropertyColumn Property="Rating => Rating.Stars" Title="Price ($)" />
+                <PropertyColumn Property="Rating => Rating.DateCreated" Title="Stock" />
+                <PropertyColumn Property="Rating => Rating.DateUpdated" Title="Description" />
+                <PropertyColumn Property="Rating => Rating.CreatedBy" Title="Category" />
+
+                <TemplateColumn Context="Rating">
+                    <a class="btn-custom btn-details mx-1" href="@($"/ratings/details?id={Rating.Id}")">Details</a>
+                    <a class="btn-custom btn-delete mx-1" href="@($"/ratings/delete?id={Rating.Id}")">Delete</a>
+                </TemplateColumn>
+            </QuickGrid>
+        </div>
+    </div>
+</div>
+
+@code {
+    private ProjectCardPark1Context context = default!;
+
+    private List<Rating> ListRatings = new List<Rating>();
+
+    
+    
+    protected override async Task OnInitializedAsync()
+    {
+        // var AllRatings = await context.Rating.ToListAsync();
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

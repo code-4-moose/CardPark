@@ -9,5 +9,9 @@
         public User? User { get; set; } // Nav Prop
 
         public string? ReviewerName { get; set; }
+
+        public int ListingId { get; set; } // FK
+
+        public Listing? Listing { get; set; } //Nav Prop
     }
 }

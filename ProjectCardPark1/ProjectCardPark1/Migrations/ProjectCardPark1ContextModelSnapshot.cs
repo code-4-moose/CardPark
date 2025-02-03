@@ -298,7 +298,7 @@ namespace ProjectCardPark1.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Admin");
+                    b.ToTable("Admin", (string)null);
 
                     b.HasData(
                         new
@@ -350,7 +350,7 @@ namespace ProjectCardPark1.Migrations
 
                     b.HasIndex("ListingId");
 
-                    b.ToTable("Card");
+                    b.ToTable("Card", (string)null);
 
                     b.HasData(
                         new
@@ -450,7 +450,7 @@ namespace ProjectCardPark1.Migrations
 
                     b.HasIndex("AdminId");
 
-                    b.ToTable("Category");
+                    b.ToTable("Category", (string)null);
 
                     b.HasData(
                         new
@@ -561,7 +561,7 @@ namespace ProjectCardPark1.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Listing");
+                    b.ToTable("Listing", (string)null);
                 });
 
             modelBuilder.Entity("ProjectCardPark1.Domain.Rating", b =>
@@ -603,7 +603,7 @@ namespace ProjectCardPark1.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Rating");
+                    b.ToTable("Rating", (string)null);
 
                     b.HasData(
                         new
@@ -732,7 +732,7 @@ namespace ProjectCardPark1.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("User");
+                    b.ToTable("User", (string)null);
 
                     b.HasData(
                         new

@@ -38,5 +38,7 @@ namespace ProjectCardPark1.Domain
         public string? CategoryName { get; set; }
 
         public Boolean? Sold { get; set; }
+
+        public Rating? Rating { get; set; } //Nav Prop
     }
 }

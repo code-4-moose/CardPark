@@ -3,13 +3,12 @@
 @rendermode @(new InteractiveServerRenderMode(false))
 @using Microsoft.EntityFrameworkCore
 @using ProjectCardPark1.Domain
-@inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
 @inject NavigationManager NavigationManager
 @using ProjectCardPark1.Data
-@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject UserManager<ProjectCardPark1User> UserManager
 @inject ProjectCardPark1.Components.Account.IdentityUserAccessor UserAccessor
 @inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
+@inject AuthenticationStateProvider authenticationStateProvider
 
 @attribute [Authorize(Roles = "User")]
 
@@ -127,7 +126,8 @@
 
     [SupplyParameterFromForm]
     private User User { get; set; }
-    @inject AuthenticationStateProvider authenticationStateProvider
+
+    
 
     string? categoryName;
     protected override async void OnInitialized()
