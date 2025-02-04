@@ -19,39 +19,15 @@
 else
 {
     <body>
-    <div class="container_1">
-        @if (Image == null)
-        {
-            <img src="./ProfilePic/download.png" class="css-shadow" />
-        }
-        else
-        {
-            <img src="@imgSrc" class="css-shadow" />
-        }
-
-        <h1 class="username">@name</h1>
-        @if (contact != 0)
-        {
-            <p class="number">Number : @contact</p>
-        }
-        else
-        {
-            <p class="number">No Number</p>
-        }
-        <p class="user_desc">From @address</p>
-        @if (No_ratings == 0)
-        {
-            <div class="user-rating-norating">
-                <h3>No Ratings</h3>
-            </div>
-        }
-        else
-        {
-            <div class="user-rating">
-                <h3>@ratingMSG ⭐</h3>
-                @* <i class="fa-solid fa-star star_css" style="font-size: 1.3em;"></i> *@
-            </div>
-        }
+    <div class="card">
+        <div class="card-content">
+            <h3>@listing.Name</h3>
+            <p><strong>Price:</strong> $@listing.Price</p>
+            <p><strong>Amount:</strong> @listing.Amount</p>
+            <p><strong>Description:</strong> @listing.Description</p>
+            <p><strong>Username:</strong><a href="/Account/OtherProfile?userid=@listing.CreatedBy"> @listing.UserName</a></p>
+            <p><strong>Category:</strong> @listing.CategoryName</p>
+        </div>
     </div>
     </body>
     <div class="row">
@@ -100,16 +76,6 @@ else
                     <InputText id="updatedby" @bind-Value="Rating.UpdatedBy" class="form-control" />
                     <ValidationMessage For="() => Rating.UpdatedBy" class="text-danger" />
                 </div>
-                <div class="mb-3" hidden>
-                    <label for="updatedby" class="form-label">ReviewerName:</label>
-                    <InputText id="updatedby" @bind-Value="Rating.ReviewerName" class="form-control" />
-                    <ValidationMessage For="() => Rating.ReviewerName" class="text-danger" />
-                </div>
-                <div class="mb-3" hidden>
-                    <label for="updatedby" class="form-label">ListingId:</label>
-                    <InputNumber id="updatedby" @bind-Value="Rating.ListingId" class="form-control" />
-                    <ValidationMessage For="() => Rating.ListingId" class="text-danger" />
-                </div>
                 <button type="submit" class="btn btn-primary">Save</button>
             </EditForm>
         </div>
@@ -130,15 +96,9 @@ else
     [SupplyParameterFromForm]
     private User? User { get; set; }
 
-    private int SellerId;
-    private string imgSrc = ""; // Base64 string for image preview
-    private string? name;
-    private string address;
-    private double rating;
-    private byte[] Image;
-    private int contact;
-    private string ratingMSG; //stars,, int to string
-    private int No_ratings;
+    [SupplyParameterFromForm]
+    private Listing? Listing { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         using var context = DbFactory.CreateDbContext();
@@ -146,18 +106,7 @@ else
 
         Rating ??= await context.Rating.FirstOrDefaultAsync(m => m.Id == Id);
 
-        SellerId = Rating.UserId;
 
-        User ??= await context.User.FirstOrDefaultAsync(u => u.Id == SellerId);
-
-        No_ratings = User.NoRatings.Value;
-        Image = User.ProfileImage;
-        imgSrc = User.ProfileImageUrl;
-        name = User.Name;
-        address = User.Address;
-        rating = (User.Stars / User.NoRatings.Value);
-        ratingMSG = rating.ToString("0.0");
-        contact = User.Contact;
 
         if (Rating is null)
         {
@@ -175,7 +124,6 @@ else
         try
         {
             Rating.DateUpdated = DateTime.Now;
-
             await context.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException)
@@ -190,7 +138,7 @@ else
             }
         }
 
-        NavigationManager.NavigateTo("/ratings/User");
+        NavigationManager.NavigateTo("/ratings");
     }
 
     private bool RatingExists(int id)

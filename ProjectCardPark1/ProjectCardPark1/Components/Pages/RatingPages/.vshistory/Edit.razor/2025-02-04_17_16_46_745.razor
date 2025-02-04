@@ -100,16 +100,6 @@ else
                     <InputText id="updatedby" @bind-Value="Rating.UpdatedBy" class="form-control" />
                     <ValidationMessage For="() => Rating.UpdatedBy" class="text-danger" />
                 </div>
-                <div class="mb-3" hidden>
-                    <label for="updatedby" class="form-label">ReviewerName:</label>
-                    <InputText id="updatedby" @bind-Value="Rating.ReviewerName" class="form-control" />
-                    <ValidationMessage For="() => Rating.ReviewerName" class="text-danger" />
-                </div>
-                <div class="mb-3" hidden>
-                    <label for="updatedby" class="form-label">ListingId:</label>
-                    <InputNumber id="updatedby" @bind-Value="Rating.ListingId" class="form-control" />
-                    <ValidationMessage For="() => Rating.ListingId" class="text-danger" />
-                </div>
                 <button type="submit" class="btn btn-primary">Save</button>
             </EditForm>
         </div>
@@ -175,7 +165,6 @@ else
         try
         {
             Rating.DateUpdated = DateTime.Now;
-
             await context.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException)
@@ -190,7 +179,7 @@ else
             }
         }
 
-        NavigationManager.NavigateTo("/ratings/User");
+        NavigationManager.NavigateTo("/ratings");
     }
 
     private bool RatingExists(int id)

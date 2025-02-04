@@ -121,7 +121,7 @@
     {
         using var context = DbFactory.CreateDbContext();
         context.Attach(User!).State = EntityState.Modified;
-
+        
         try
         {
             // Fetch the existing user from the database

@@ -118,7 +118,7 @@
 </style>
 <div class="whole_container">
     <h2>Successful Purchase!</h2>
-    <h4>How was the seller?</h4>
+    <h3>Rate the Seller</h3>
 
         <EditForm method="post" Model="Rating" OnValidSubmit="AddRating" FormName="create" Enhance>
             <DataAnnotationsValidator />
@@ -226,9 +226,6 @@
     [SupplyParameterFromQuery(Name = "userId")]
     public string seller_userid { get; set; }
 
-    [SupplyParameterFromQuery(Name = "listingId")]
-    public int seller_ListingId { get; set; }
-
     string Buyer_userId;
     private int SelectedRating = 0;
     private int SetStars;
@@ -256,7 +253,6 @@
         Rating.DateUpdated = DateTime.Now;
         Rating.UpdatedBy = Buyer_User.UserId;
         Rating.CreatedBy = Buyer_User.UserId;
-        Rating.ListingId = seller_ListingId;
     }
     // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
     private async Task AddRating()

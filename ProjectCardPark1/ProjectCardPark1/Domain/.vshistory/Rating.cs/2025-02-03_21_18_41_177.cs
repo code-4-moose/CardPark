@@ -10,7 +10,5 @@
 
         public string? ReviewerName { get; set; }
 
-        public int ListingId { get; set; }
-
     }
 }

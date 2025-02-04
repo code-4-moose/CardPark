@@ -3,11 +3,107 @@
 @using ProjectCardPark1.Domain
 @inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
 
 @attribute [Authorize(Roles = "Administrator, User")]
 
 <PageTitle>Edit</PageTitle>
+<style>
+    .card {
+        position: relative;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        overflow: hidden;
+        padding: 16px;
+        background-color: white;
+        transition: background-color 0.3s ease;
+        display: flex;
+        flex-direction: column; /* Ensure consistent vertical layout */
+        height: 380px; /* Fixed minimum height for the card */
+        height: 100%;
+        width:20%;
+        left:30%;
+    }
 
+    .card-image {
+        position: relative;
+        text-align: center;
+        margin-bottom: 16px;
+    }
+
+    .image-wrapper {
+        position: relative;
+        display: inline-block;
+    }
+
+        .image-wrapper:hover .card-img {
+            transform: scale(1.05); /* Slight zoom-in effect */
+        }
+
+        .image-wrapper:hover .hover-overlay {
+            opacity: 1;
+        }
+
+
+    .card-img {
+        display: block;
+        width: auto;
+        max-width: 100%;
+        max-height: 100%;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .hover-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+        transform: scale(1.05);
+        border-radius: 5px;
+        pointer-events: none; /* Ensure hover events only trigger on the wrapper */
+    }
+
+        .hover-overlay i {
+            color: white;
+            font-size: 24px;
+        }
+
+    .card-content {
+    padding: 16px;
+    flex-grow: 1; /* Ensures the content takes up available space */
+    }
+
+        .card-content h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .card-content p {
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+
+        .card-content strong {
+            font-weight: bold;
+        }
+    .Input_Container{
+        background-color:yellow;
+        width:50%;
+        position: relative;
+        left:50%;
+
+    }
+    .desc{
+        height:300%;
+    }
+</style>
 <h1>Edit</h1>
 
 <h2>Rating</h2>
@@ -19,43 +115,32 @@
 else
 {
     <body>
-    <div class="container_1">
-        @if (Image == null)
-        {
-            <img src="./ProfilePic/download.png" class="css-shadow" />
-        }
-        else
-        {
-            <img src="@imgSrc" class="css-shadow" />
-        }
 
-        <h1 class="username">@name</h1>
-        @if (contact != 0)
-        {
-            <p class="number">Number : @contact</p>
-        }
-        else
-        {
-            <p class="number">No Number</p>
-        }
-        <p class="user_desc">From @address</p>
-        @if (No_ratings == 0)
-        {
-            <div class="user-rating-norating">
-                <h3>No Ratings</h3>
-            </div>
-        }
-        else
-        {
-            <div class="user-rating">
-                <h3>@ratingMSG ⭐</h3>
-                @* <i class="fa-solid fa-star star_css" style="font-size: 1.3em;"></i> *@
-            </div>
-        }
+    <div class="card">
+            @if (listing.ListingImageUrl != null)
+            {
+                    <img src="@listing.ListingImageUrl" alt="@listing.Name" class="card-img" style="height: 150px; width: 150px;" />
+                    <div class="hover-overlay">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+            }
+            else
+            {
+                <img src="./no-image.jpg" style="width: 150px; height: 150px;" />
+            }
+        <div class="card-content">
+            <h3>@listing.Name</h3>
+            <p><strong>Price:</strong> $@listing.Price</p>
+            <p><strong>Amount:</strong> @listing.Amount</p>
+            <p><strong>Description:</strong> @listing.Description</p>
+            <p><strong>Username:</strong><a href="/Account/OtherProfile?userid=@listing.CreatedBy"> @listing.UserName</a></p>
+            <p><strong>Category:</strong> @listing.CategoryName</p>
+        </div>
     </div>
+
     </body>
-    <div class="row">
-        <div class="col-md-4">
+    <div class="Input_Container">
+        <div class="col-md-10">
             <EditForm method="post" Model="Rating" OnValidSubmit="UpdateRating" FormName="edit" Enhance>
                 <DataAnnotationsValidator />
                 <ValidationSummary role="alert"/>
@@ -66,7 +151,7 @@ else
                     <ValidationMessage For="() => Rating.RatingId" class="text-danger" />
                 </div>
                 <div class="mb-3">
-                    <label for="description" class="form-label">Description:</label>
+                    <label for="description" class="desc">Description:</label>
                     <InputText id="description" @bind-Value="Rating.Description" class="form-control" />
                     <ValidationMessage For="() => Rating.Description" class="text-danger" />
                 </div>
@@ -100,25 +185,36 @@ else
                     <InputText id="updatedby" @bind-Value="Rating.UpdatedBy" class="form-control" />
                     <ValidationMessage For="() => Rating.UpdatedBy" class="text-danger" />
                 </div>
-                <div class="mb-3" hidden>
-                    <label for="updatedby" class="form-label">ReviewerName:</label>
-                    <InputText id="updatedby" @bind-Value="Rating.ReviewerName" class="form-control" />
-                    <ValidationMessage For="() => Rating.ReviewerName" class="text-danger" />
-                </div>
-                <div class="mb-3" hidden>
-                    <label for="updatedby" class="form-label">ListingId:</label>
-                    <InputNumber id="updatedby" @bind-Value="Rating.ListingId" class="form-control" />
-                    <ValidationMessage For="() => Rating.ListingId" class="text-danger" />
-                </div>
                 <button type="submit" class="btn btn-primary">Save</button>
             </EditForm>
+            <div>
+                <a class="btn-custom btn-delete mx-1" href="/ratings/User">Back to List</a>
+            </div>
         </div>
     </div>
+    <p>@listing.Id</p>
+    <p>@listing.Name</p>
 }
 
-<div>
-    <a class="btn-custom btn-delete mx-1" href="/ratings/User">Back to List</a>
-</div>
+
+
+<script>
+    // Show image in popup
+    function showImagePopup(imageUrl) {
+        const popup = document.getElementById("popupRef");
+        const popupImg = document.getElementById("popupImage");
+
+        // Display the popup and set the image source
+        popup.style.display = 'flex';
+        popupImg.src = imageUrl;
+    }
+
+    // Close the popup
+    function closeImagePopup() {
+        const popup = document.getElementById("popupRef");
+        popup.style.display = 'none';
+    }
+</script>
 
 @code {
     [SupplyParameterFromQuery]
@@ -130,34 +226,20 @@ else
     [SupplyParameterFromForm]
     private User? User { get; set; }
 
-    private int SellerId;
-    private string imgSrc = ""; // Base64 string for image preview
-    private string? name;
-    private string address;
-    private double rating;
-    private byte[] Image;
-    private int contact;
-    private string ratingMSG; //stars,, int to string
-    private int No_ratings;
+    // [SupplyParameterFromForm]
+    // private Listing? listing { get; set; }
+
+    private int ListingId;
+
+    private Listing? listing;
+
     protected override async Task OnInitializedAsync()
     {
         using var context = DbFactory.CreateDbContext();
 
-
         Rating ??= await context.Rating.FirstOrDefaultAsync(m => m.Id == Id);
 
-        SellerId = Rating.UserId;
-
-        User ??= await context.User.FirstOrDefaultAsync(u => u.Id == SellerId);
-
-        No_ratings = User.NoRatings.Value;
-        Image = User.ProfileImage;
-        imgSrc = User.ProfileImageUrl;
-        name = User.Name;
-        address = User.Address;
-        rating = (User.Stars / User.NoRatings.Value);
-        ratingMSG = rating.ToString("0.0");
-        contact = User.Contact;
+        listing ??= await context.Listing.FirstOrDefaultAsync(m => m.Id == Rating.ListingId);
 
         if (Rating is null)
         {
@@ -171,11 +253,9 @@ else
     {
         using var context = DbFactory.CreateDbContext();
         context.Attach(Rating!).State = EntityState.Modified;
-
         try
         {
             Rating.DateUpdated = DateTime.Now;
-
             await context.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException)
@@ -190,12 +270,16 @@ else
             }
         }
 
-        NavigationManager.NavigateTo("/ratings/User");
+        NavigationManager.NavigateTo("/ratings");
     }
 
     private bool RatingExists(int id)
     {
         using var context = DbFactory.CreateDbContext();
         return context.Rating.Any(e => e.Id == id);
+    }
+    private async Task ShowImage(string imageUrl)
+    {
+        await JSRuntime.InvokeVoidAsync("showImagePopup", imageUrl);
     }
 }

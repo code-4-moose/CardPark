@@ -1,20 +1,14 @@
 ﻿@page "/Account/Manage/DeletePersonalData"
 
 @using System.ComponentModel.DataAnnotations
-@using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Identity
 @using ProjectCardPark1.Data
-@using ProjectCardPark1.Domain
-@inject ProjectCardPark1.Service.SharedService SharedService
 
 @inject UserManager<ProjectCardPark1User> UserManager
 @inject SignInManager<ProjectCardPark1User> SignInManager
 @inject IdentityUserAccessor UserAccessor
 @inject IdentityRedirectManager RedirectManager
 @inject ILogger<DeletePersonalData> Logger
-@inject AuthenticationStateProvider AuthenticationStateProvider
-
-@inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
 
 <PageTitle>Delete Personal Data</PageTitle>
 
@@ -55,59 +49,20 @@
     [SupplyParameterFromForm]
     private InputModel Input { get; set; } = new();
 
-    private User User;
-
-    private string UserId;
-
-    private List<Listing> Listings = new List<Listing>();
-
-    private List<Rating> Ratings = new List<Rating>();
-
     protected override async Task OnInitializedAsync()
     {
-        using var context = DbFactory.CreateDbContext();
-
         Input ??= new();
         user = await UserAccessor.GetRequiredUserAsync(HttpContext);
         requirePassword = await UserManager.HasPasswordAsync(user);
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var claimsPrincipal = authState.User;
-        user = await UserManager.GetUserAsync(claimsPrincipal);
-
-        UserId = UserManager.GetUserId(claimsPrincipal);
-
-        User = await context.User.FirstOrDefaultAsync(m => m.UserId == UserId);
-
-        Listings = await context.Listing.ToListAsync();
-
-        Ratings = await context.Rating.ToListAsync();
     }
 
     private async Task OnValidSubmitAsync()
     {
-
-        using var context = DbFactory.CreateDbContext();
-
         if (requirePassword && !await UserManager.CheckPasswordAsync(user, Input.Password))
         {
             message = "Error: Incorrect password.";
             return;
         }
-        foreach (var i in Listings){
-            if (i.CreatedBy == UserId)
-            {
-                context.Listing.Remove(i);
-            }
-        }
-        foreach (var i in Ratings)
-        {
-            if (i.CreatedBy == UserId)
-            {
-                context.Rating.Remove(i);
-            }
-        }
-
-        context.User.Remove(User!);
 
         var result = await UserManager.DeleteAsync(user);
         if (!result.Succeeded)
@@ -119,8 +74,6 @@
 
         var userId = await UserManager.GetUserIdAsync(user);
         Logger.LogInformation("User with ID '{UserId}' deleted themselves.", userId);
-
-        await context.SaveChangesAsync();
 
         RedirectManager.RedirectToCurrentPage();
     }
