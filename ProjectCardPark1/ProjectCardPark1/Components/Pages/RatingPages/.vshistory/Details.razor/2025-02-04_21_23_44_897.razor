@@ -1,0 +1,97 @@
+﻿@page "/ratings/details"
+@using Microsoft.EntityFrameworkCore
+@using ProjectCardPark1.Domain
+@inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
+@inject NavigationManager NavigationManager
+
+@attribute [Authorize(Roles = "Administrator")]
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>Rating</h2>
+    <hr />
+    @if (rating is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <div class="card">
+            <div class="card-header text-white bg-primary">
+                <h3 class="text-center">Rated Listing</h3>
+            </div>
+            <div class="card-image">
+                @if (!string.IsNullOrEmpty(listing.ListingImageUrl))
+                {
+                    <div class="image-wrapper">
+                        <img src="@listing.ListingImageUrl" alt="@listing.Name" class="card-img" style="height: 150px; width: 150px;" />
+                        <div class="hover-overlay">
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <img src="./no-image.jpg" style="width: 150px; height: 150px;" />
+                }
+            </div>
+            <div class="card-content">
+                <h3>@listing.Name</h3>
+                <p><strong>Price:</strong> @listing.Price</p>
+                <p><strong>Amount:</strong> @listing.Amount</p>
+                <p><strong>Description:</strong> @listing.Description</p>
+                <p><strong>Username: </strong><a href="/Account/OtherProfile?userid=@listing.CreatedBy" target="_blank" rel="noopener noreferrer"> @listing.UserName</a></p>
+                <p><strong>Category:</strong> @listing.CategoryName</p>
+            </div>
+            @if (listing.Sold != true)
+            {
+                <button onclick="location.href='/listings/edit?id=@listing.Id';" class="w-100 btn btn-lg btn-primary">Change Listing Information</button>
+            }
+        </div>
+        <dl class="row">
+            <dt class="col-sm-2">Reviewer Name</dt>
+            <dd class="col-sm-10">@rating.ReviewerName</dd>
+            <dt class="col-sm-2">Description</dt>
+            <dd class="col-sm-10">@rating.Description</dd>
+            <dt class="col-sm-2">Stars</dt>
+            <dd class="col-sm-10">@rating.Stars</dd>
+            <dt class="col-sm-2">UserId</dt>
+            <dd class="col-sm-10">@rating.DateCreated</dd>
+            <dt class="col-sm-2">DateUpdated</dt>
+            <dd class="col-sm-10">@rating.DateUpdated</dd>
+            <dt class="col-sm-2">CreatedBy</dt>
+            <dd class="col-sm-10">@rating.CreatedBy</dd>
+            <dt class="col-sm-2">UpdatedBy</dt>
+            <dd class="col-sm-10">@rating.UpdatedBy</dd>
+        </dl>
+        <div>
+            <a href="@($"/ratings")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private Rating? rating;
+
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    [SupplyParameterFromForm]
+    private Listing? listing { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        rating ??= await context.Rating.FirstOrDefaultAsync(m => m.Id == Id);
+
+        var ListingId = rating.ListingId;
+
+        listing ??= await context.Listing.FirstOrDefaultAsync(u => u.Id == ListingId);
+
+        if (rating is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

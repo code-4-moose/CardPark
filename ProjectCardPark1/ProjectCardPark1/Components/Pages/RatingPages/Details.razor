@@ -1,4 +1,7 @@
 ﻿@page "/ratings/details"
+
+@rendermode InteractiveServer
+
 @using Microsoft.EntityFrameworkCore
 @using ProjectCardPark1.Domain
 @inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
@@ -8,36 +11,154 @@
 
 <PageTitle>Details</PageTitle>
 
-<h1>Details</h1>
+<style>
+    .card {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: transform 0.3s ease;
+        width: 25%;
+        position: relative;
+        left: 40%;
+        padding: 10px;
+    }
 
+    .card-image {
+        text-align: center;
+        padding: 16px;
+    }
+
+    .hover-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+        transform: scale(1.05);
+        border-radius: 5px;
+        pointer-events: none; /* Ensure hover events only trigger on the wrapper */
+    }
+
+    .review-card {
+        background: #f9f9f9;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.08);
+        width:40%;
+        position:relative;
+        left:33%;
+        margin-top:5px;
+    }
+
+    .review-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+
+    .reviewer-name {
+        font-size: 1.2em;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .review-rating {
+        font-size: 1.3em;
+        color: #ff9800;
+    }
+
+    .review-text {
+        font-size: 1em;
+        color: #555;
+        margin-bottom: 8px;
+    }
+
+    .review-date {
+        font-size: 0.9em;
+        color: #888;
+    }
+
+    .back-btn-position {
+        position: relative;
+        left: 0%;
+        top: 0%;
+    }
+
+    .btn-custom {
+        padding: 8px 14px;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: bold;
+        text-transform: uppercase;
+        text-decoration: none;
+        display: inline-block;
+        background-color: lightslategrey;
+        color: white;
+    }
+
+        .btn-custom:hover {
+            transform: translateY(-1px); /* Slight lift effect */
+            color: white;
+        }
+</style>
 <div>
-    <h2>Rating</h2>
-    <hr />
+    <a class="btn-custom back-btn-position" href="/ratings/Admin">Back to List</a>
     @if (rating is null)
     {
         <p><em>Loading...</em></p>
     }
     else {
-        <dl class="row">
-            <dt class="col-sm-2">RatingId</dt>
-            <dd class="col-sm-10">@rating.RatingId</dd>
-            <dt class="col-sm-2">Description</dt>
-            <dd class="col-sm-10">@rating.Description</dd>
-            <dt class="col-sm-2">Stars</dt>
-            <dd class="col-sm-10">@rating.Stars</dd>
-            <dt class="col-sm-2">UserId</dt>
-            <dd class="col-sm-10">@rating.UserId</dd>
-            <dt class="col-sm-2">DateCreated</dt>
-            <dd class="col-sm-10">@rating.DateCreated</dd>
-            <dt class="col-sm-2">DateUpdated</dt>
-            <dd class="col-sm-10">@rating.DateUpdated</dd>
-            <dt class="col-sm-2">CreatedBy</dt>
-            <dd class="col-sm-10">@rating.CreatedBy</dd>
-            <dt class="col-sm-2">UpdatedBy</dt>
-            <dd class="col-sm-10">@rating.UpdatedBy</dd>
-        </dl>
-        <div>
-            <a href="@($"/ratings")">Back to List</a>
+
+        <div class="card">
+            <div class="card-header text-white bg-primary">
+                <h3 class="text-center">Rated Listing</h3>
+            </div>
+            <div class="card-image">
+                @if (!string.IsNullOrEmpty(listing.ListingImageUrl))
+                {
+                    <div class="image-wrapper">
+                        <img src="@listing.ListingImageUrl" alt="@listing.Name" class="card-img" style="height: 150px; width: 150px;" />
+                        <div class="hover-overlay">
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <img src="./no-image.jpg" style="width: 150px; height: 150px;" />
+                }
+            </div>
+            <div class="card-content">
+                <h3>@listing.Name</h3>
+                <p><strong>Price:</strong> @listing.Price</p>
+                <p><strong>Amount:</strong> @listing.Amount</p>
+                <p><strong>Description:</strong> @listing.Description</p>
+                <p><strong>Username: </strong><a href="/Account/OtherProfile?userid=@listing.CreatedBy" target="_blank" rel="noopener noreferrer"> @listing.UserName</a></p>
+                <p><strong>Category:</strong> @listing.CategoryName</p>
+            </div>
+            @if (listing.Sold != true)
+            {
+                <button onclick="location.href='/listings/edit?id=@listing.Id';" class="w-100 btn btn-lg btn-primary">Change Listing Information</button>
+            }
+        </div>
+
+        <div class="review-card">
+            <div class="review-header">
+                <h4 class="reviewer-name">@rating.ReviewerName</h4>
+                <span class="review-rating">
+                    @rating.Stars ⭐
+                </span>
+            </div>
+            <p class="review-text">@rating.Description</p>
+            <small class="review-date">@rating.DateCreated.ToString("MMMM dd, yyyy")</small>
         </div>
     }
 </div>
@@ -48,10 +169,17 @@
     [SupplyParameterFromQuery]
     private int Id { get; set; }
 
+    [SupplyParameterFromForm]
+    private Listing? listing { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         using var context = DbFactory.CreateDbContext();
-        rating = await context.Rating.FirstOrDefaultAsync(m => m.Id == Id);
+        rating ??= await context.Rating.FirstOrDefaultAsync(m => m.Id == Id);
+
+        var ListingId = rating.ListingId;
+
+        listing ??= await context.Listing.FirstOrDefaultAsync(u => u.Id == ListingId);
 
         if (rating is null)
         {

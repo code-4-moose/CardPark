@@ -127,13 +127,12 @@
     [SupplyParameterFromForm]
     private User User { get; set; }
 
-    
-
     string? categoryName;
     protected override async void OnInitialized()
     {
         var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
         var claimsPrincipal = authState.User;
+
         using var context = DbFactory.CreateDbContext();
         // Get the userId claim
         Categories = context.Category.ToList();
@@ -155,6 +154,7 @@
     private async Task AddListing()
     {
         Listing.CategoryName = GetCategoryName(Listing.CategoryId);
+
         Listing.CreatedBy = userId;
         Listing.UpdatedBy = userId;
         Listing.DateCreated = DateTime.Now;
