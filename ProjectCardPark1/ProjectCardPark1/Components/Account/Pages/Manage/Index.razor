@@ -55,8 +55,6 @@
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var claimsPrincipal = authState.User;
-
-
         user = await UserManager.GetUserAsync(claimsPrincipal);
 
         user = await UserAccessor.GetRequiredUserAsync(HttpContext);
@@ -70,10 +68,6 @@
         // localStorage.SetItem("userId", userId);
 
         Input.PhoneNumber ??= phoneNumber;
-    }
-    private async Task updatePF()
-    {
-        NavigationManager.NavigateTo($"/UpdateImage");
     }
 
     private async Task OnValidSubmitAsync()

@@ -2,8 +2,11 @@
 @rendermode @(new InteractiveServerRenderMode(false))
 @using Microsoft.EntityFrameworkCore
 @using ProjectCardPark1.Domain
+
 @inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
+
 @inject ProjectCardPark1.Service.SharedService SharedService
+
 @using ProjectCardPark1.Data
 @inject NavigationManager Navigation
 @inject IJSRuntime JSRuntime
@@ -118,7 +121,7 @@
     {
         using var context = DbFactory.CreateDbContext();
         context.Attach(User!).State = EntityState.Modified;
-        
+
         try
         {
             // Fetch the existing user from the database
@@ -151,6 +154,7 @@
 
         if (isConfirmed)
         {
+            await JSRuntime.InvokeVoidAsync("showAlert", "Go to Profile");
             // Navigate to the desired page
             Navigation.NavigateTo("/Account/Profile");
         }

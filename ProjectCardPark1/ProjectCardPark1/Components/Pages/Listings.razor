@@ -71,9 +71,8 @@
                 <p><strong>Price:</strong> $@listing.Price</p>
                 <p><strong>Amount:</strong> @listing.Amount</p>
                 <p><strong>Description:</strong> @listing.Description</p>
-                <p><strong>Username:</strong><a href="/Account/OtherProfile?userid=@listing.CreatedBy"> @listing.UserName</a></p>
+                <p><strong>Username:</strong><a href="/Account/OtherProfile?userid=@listing.CreatedBy" target="_blank" rel="noopener noreferrer"> @listing.UserName</a></p>
                 <p><strong>Category:</strong> @listing.CategoryName</p>
-                
             </div>
 
             @if (listing.Sold != true)
@@ -164,7 +163,7 @@
             URL_userId = listing.CreatedBy;
             listing.Sold = true;
             await context.SaveChangesAsync();
-            NavigationManager.NavigateTo($"/ratings/create?userId={URL_userId}");
+            NavigationManager.NavigateTo($"/ratings/create?userId={URL_userId}&listingId={listing.Id}");
         }
     }
 

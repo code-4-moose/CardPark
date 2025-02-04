@@ -1,0 +1,25 @@
+﻿
+.btn-custom {
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background 0.3s ease-in-out, transform 0.2s;
+    display: inline-block;
+}
+
+.btn-details {
+    background-color: green;
+    color: white !important;
+    border: none;
+    margin: 5px;
+    position: relative;
+    left: 83%;
+}
+
+    .btn-details:hover {
+        background-color: green;
+        transform: scale(1.05);
+    }

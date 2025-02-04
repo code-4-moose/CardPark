@@ -113,7 +113,7 @@
                         @if (listing.Sold != true){
                         <button onclick="location.href='/listings/edit?id=@listing.Id';" class="w-100 btn btn-lg btn-primary">Change Listing Information</button>
                         }
-                        </div>
+                     </div>
                     }
                 }
             </div>
@@ -190,17 +190,17 @@
     [SupplyParameterFromForm]
     private User User { get; set; }
 
-    string imgSrc = ""; // Base64 string for image preview
-    string? name;
-    string message = "wdadawadadw";
-    string address;
-    double rating;
-    byte[] Image;
-    string? listingId;
-    string ratingMSG;
-    int N_userid;
-    int No_ratings;
-    int contact;
+    private string imgSrc = ""; // Base64 string for image preview
+    private string? name;
+    private string address;
+    private double rating;
+    private byte[] Image;
+    private string? listingId;
+    private string ratingMSG;
+    private int N_userid;
+    private int No_ratings;
+    private int contact;
+
     private ProjectCardPark1Context context = default!;
 
     protected override async Task OnInitializedAsync()

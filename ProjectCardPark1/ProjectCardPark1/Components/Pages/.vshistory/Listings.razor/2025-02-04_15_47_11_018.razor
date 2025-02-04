@@ -1,0 +1,203 @@
+﻿@page "/Card_Listings"
+@rendermode InteractiveServer
+@using Microsoft.EntityFrameworkCore
+@using ProjectCardPark1.Domain
+@using ProjectCardPark1.Data
+@using Microsoft.AspNetCore.Identity
+
+@implements IAsyncDisposable
+@inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserManager<ProjectCardPark1User> UserManager
+
+<PageTitle>Card Listings</PageTitle>
+
+<h1>Results for "@searchQuery"</h1>
+
+<div class="filter-search-container">
+    <!-- Search Bar -->
+    <div class="search-bar-container">
+        <form @onsubmit="HandleSubmit" class="search-bar">
+            <input type="text" placeholder="Search..." @bind="searchQuery" @oninput="FilterListings" />
+            <button type="submit" ><i class="fa-solid fa-magnifying-glass"></i></button>
+        </form>
+    </div>
+
+    <!-- Category Filter Dropdown -->
+    <div class="filter-container">
+        <select id="categoryFilter" @onchange="FilterByCategory">
+            <option value="">All Categories</option>
+            @if (Categories != null)
+            {
+                foreach (var category in Categories.Skip(3))
+                {
+                    <option value="@category.Name">@category.Name</option>
+                }
+            }
+        </select>
+    </div>
+</div>
+
+<!-- Listings Grid -->
+<div class="card-grid">
+    @foreach (var listing in filteredListings)
+    {
+        <div class="card @(listing.Sold == true ? "sold-card" : "")">
+            @if (listing.Sold == true)
+            {
+                <div class="bought-overlay">
+                    SOLD
+                </div>
+            }
+            <div class="card-image" @onclick="() => ShowImage(listing.ListingImageUrl)">
+                @if (!string.IsNullOrEmpty(listing.ListingImageUrl))
+                {
+                    <div class="image-wrapper">
+                        <img src="@listing.ListingImageUrl" alt="@listing.Name" class="card-img" style="height: 150px; width: 150px;" />
+                        <div class="hover-overlay">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <img src="./no-image.jpg" style="width: 150px; height: 150px;" />
+                }
+            </div>
+            <div class="card-content">
+                <h3>@listing.Name</h3>
+                <p><strong>Price:</strong> $@listing.Price</p>
+                <p><strong>Amount:</strong> @listing.Amount</p>
+                <p><strong>Description:</strong> @listing.Description</p>
+                <p><strong>Username:</strong><a href="/Account/OtherProfile?userid=@listing.CreatedBy"> @listing.UserName</a></p>
+                <p><strong>Category:</strong> @listing.CategoryName</p>
+            </div>
+
+            @if (listing.Sold != true)
+            {
+                @if (userid == null)
+                {
+                    <div class="card-actions">
+                        <a href="/Account/Login">Login to purchase</a>
+                    </div>
+                }
+                else if (userid == "3781efa7-66dc-47f0-860f-e506d04102e4")
+                {
+                    <div class="card-actions">
+                        your the admin LOL
+                    </div>
+                }
+                else if (listing.CreatedBy != userid)
+                {
+                    <div class="card-actions">
+                        <button class="buy-now" @onclick="() => ConfirmPurchase(listing)">Buy Now</button>
+                    </div>
+                }
+                else
+                {
+                    <div class="YouOwnThis">
+                        <p>You own this</p>
+                    </div>
+                }
+            }
+        </div>
+    }
+</div>
+
+<!-- Popup for Enlarged Image -->
+<div class="popup-image" style="display:none;" id="popupRef">
+    <span class="close-btn" @onclick="ClosePopup">×</span>
+    <img src="" alt="Enlarged Image" id="popupImage" />
+</div>
+
+<script>
+    // Show image in popup
+    function showImagePopup(imageUrl) {
+        const popup = document.getElementById("popupRef");
+        const popupImg = document.getElementById("popupImage");
+
+        // Display the popup and set the image source
+        popup.style.display = 'flex';
+        popupImg.src = imageUrl;
+    }
+
+    // Close the popup
+    function closeImagePopup() {
+        const popup = document.getElementById("popupRef");
+        popup.style.display = 'none';
+    }
+</script>
+
+@code {
+    private ProjectCardPark1Context context = default!;
+    private string searchQuery = string.Empty;
+    private string selectedCategory = string.Empty;  // Track selected category
+    private List<Listing> filteredListings = new List<Listing>();
+    private IList<Category> Categories;
+
+    string? URL_userId;
+    string? userid;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var claimsPrincipal = authState.User;
+        userid = UserManager.GetUserId(claimsPrincipal);
+
+        context = DbFactory.CreateDbContext();
+
+        // Load all listings and categories
+        var allListings = await context.Listing.ToListAsync();
+        Categories = context.Category.ToList();
+
+        filteredListings = allListings;
+    }
+
+    private async Task ConfirmPurchase(Listing listing)
+    {
+        var confirmed = await JSRuntime.InvokeAsync<bool?>("confirm", $"Are you sure you want to buy {listing.Name}?");
+        if (confirmed == true)
+        {
+            URL_userId = listing.CreatedBy;
+            listing.Sold = true;
+            await context.SaveChangesAsync();
+            NavigationManager.NavigateTo($"/ratings/create?userId={URL_userId}&listingId={listing.Id}");
+        }
+    }
+
+    private void FilterListings()
+    {
+        filteredListings = context.Listing
+            .AsEnumerable()
+            .Where(l =>
+                (string.IsNullOrEmpty(searchQuery) || l.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase)) &&
+                (string.IsNullOrEmpty(selectedCategory) || l.CategoryName == selectedCategory)
+            )
+            .ToList();
+    }
+
+    private void FilterByCategory(ChangeEventArgs e)
+    {
+        selectedCategory = e.Value.ToString();
+        FilterListings();  // Call FilterListings to apply both search and category filters
+    }
+
+    private async Task ShowImage(string imageUrl)
+    {
+        await JSRuntime.InvokeVoidAsync("showImagePopup", imageUrl);
+    }
+
+    private async Task ClosePopup()
+    {
+        await JSRuntime.InvokeVoidAsync("closeImagePopup");
+    }
+
+    private void HandleSubmit()
+    {
+        FilterListings();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}
