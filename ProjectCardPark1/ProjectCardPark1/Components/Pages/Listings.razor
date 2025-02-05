@@ -24,19 +24,23 @@
             <button type="submit" ><i class="fa-solid fa-magnifying-glass"></i></button>
         </form>
     </div>
-
+    
     <!-- Category Filter Dropdown -->
     <div class="filter-container">
         <select id="categoryFilter" @onchange="FilterByCategory">
             <option value="">All Categories</option>
             @if (Categories != null)
             {
-                foreach (var category in Categories.Skip(3))
+                foreach (var category in Categories)
                 {
                     <option value="@category.Name">@category.Name</option>
                 }
+                foreach (var category in Categories)
+                {
+                    <p value="@category.Name">@category.Name</p>
+                }
             }
-        </select>
+        </select>   
     </div>
 </div>
 
@@ -94,6 +98,8 @@
                     <div class="card-actions">
                         <button class="buy-now" @onclick="() => ConfirmPurchase(listing)">Buy Now</button>
                     </div>
+                    <button onclick="location.href='/reports/create?listingid=@listing.Id';" class="report-button">❗</button>
+
                 }
                 else
                 {

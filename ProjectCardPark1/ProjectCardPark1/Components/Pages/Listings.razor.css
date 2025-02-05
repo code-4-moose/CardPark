@@ -235,3 +235,24 @@
 .card.bought-card .card-actions {
     display: none; /* Hide the button when item is bought */
 }
+
+.report-button {
+    width: 30px; /* Adjust as needed */
+    height: 30px; /* Makes it a square */
+    border: 2px solid black; /* Adds a border */
+    background-color: transparent; /* No background */
+    color: black; /* Icon/Text color */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 5px; /* Optional: Slightly rounded corners */
+    position:relative;
+    top:-94%;
+    left:89%;
+}
+
+    .report-button:hover {
+        background-color: rgba(0, 0, 0, 0.1); /* Light hover effect */
+    }

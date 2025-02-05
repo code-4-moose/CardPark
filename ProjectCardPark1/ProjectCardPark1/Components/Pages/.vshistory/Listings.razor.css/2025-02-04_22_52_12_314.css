@@ -1,0 +1,237 @@
+﻿.filter-search-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    margin-bottom: 60px;
+}
+
+.search-bar {
+    height: 50px;
+    width: 100%;
+    width: 800px;
+    background: rgba(105, 104, 104, 0.2);
+    display: flex;
+    align-items: center;
+    border-radius: 60px;
+    padding: 10px 20px;
+}
+
+.filter-container select {
+    background: rgba(105, 104, 104, 0.2);
+    border: none; /* Remove the border */
+    outline: none; /* Remove any outline */
+    font-size: 20px;
+    color: #332d2d;
+    padding: 10px 20px;
+    border-radius: 60px;
+    margin-left: 20px; 
+    width: auto; 
+    flex-shrink: 0; 
+    height: 50px; 
+}
+
+.search-bar input {
+    background: transparent;
+    flex: 1;
+    border: 0;
+    outline: none;
+    font-size: 20px;
+    color: #332d2d;
+}
+
+::placeholder {
+    color: rgba(105, 104, 104, 0.4);
+}
+
+.search-bar button i {
+    width: 25px;
+}
+
+.search-bar button {
+    background: transparent;
+    border: 0;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 16px;
+    padding: 16px;
+}
+
+.image-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.card-img {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    max-height: 100%;
+    transition: transform 0.3s ease-in-out;
+}
+
+.image-wrapper:hover .card-img {
+    transform: scale(1.05); /* Slight zoom-in effect */
+}
+
+.hover-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    transform: scale(1.05);
+    border-radius: 5px;
+    pointer-events: none; /* Ensure hover events only trigger on the wrapper */
+}
+
+.hover-overlay i {
+    color: white;
+    font-size: 24px;
+}
+
+.image-wrapper:hover .hover-overlay {
+    opacity: 1;
+}
+
+.card-content h3 {
+    font-size: 18px;
+    margin-bottom: 8px;
+}
+
+.card-content p {
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+
+.card-content strong {
+    font-weight: bold;
+}
+
+.popup-image {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Ensure popup is on top */
+}
+
+.popup-image img {
+    max-width: 100%;
+    max-height: 100%;
+    user-select: none;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: white;
+    font-size: 30px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.card {
+    position: relative;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    padding: 16px;
+    background-color: white;
+    transition: background-color 0.3s ease;
+    display: flex;
+    flex-direction: column; /* Ensure consistent vertical layout */
+    height: 380px; /* Fixed minimum height for the card */
+    height: 100%;
+}
+
+.card-content {
+    padding: 16px;
+    flex-grow: 1; /* Ensures the content takes up available space */
+}
+
+.card-actions {
+    display: flex;
+    justify-content: center;
+    padding: 8px;
+    margin-top: auto; /* Ensures the Buy Now button is always at the bottom of the card */
+    min-height: 40px; /* Reserve space for the Buy Now button */
+}
+
+.buy-now {
+    background-color: #28a745;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.buy-now:hover {
+    background-color: #218838;
+}
+
+.card-image {
+    position: relative;
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.bought-card {
+    background-color: rgba(128, 128, 128, 0.2); /* Light gray background when bought */
+    pointer-events: none; /* Disable interactions */
+    z-index: 0; /* Ensure it is behind other elements */
+}
+
+.bought-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black */
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    z-index: 1; /* Ensure this is behind other card content but still above the card */
+    pointer-events: none; /* Ensure it's non-interactive */
+}
+
+.YouOwnThis {
+    position: relative;
+    left: 30%;
+}
+
+.card-image {
+    position: relative;
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.card.bought-card .card-actions {
+    display: none; /* Hide the button when item is bought */
+}

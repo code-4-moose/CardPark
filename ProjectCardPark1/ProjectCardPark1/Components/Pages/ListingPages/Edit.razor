@@ -78,11 +78,6 @@
                         }
                     </InputSelect>
                 </div>
-                <div class="mb-3" hidden>
-                    <label for="adminid" class="form-label">AdminId:</label>
-                    <InputNumber id="adminid" @bind-Value="Listing.AdminId" class="form-control" />
-                    <ValidationMessage For="() => Listing.AdminId" class="text-danger" />
-                </div>
                 <div class="mb-3">
                     <label for="description" class="form-label">Description:</label>
                     <InputText id="description" @bind-Value="Listing.Description" class="form-control" />

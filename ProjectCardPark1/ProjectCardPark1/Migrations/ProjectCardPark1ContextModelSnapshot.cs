@@ -251,7 +251,7 @@ namespace ProjectCardPark1.Migrations
                         {
                             Id = "3781efa7-66dc-47f0-860f-e506d04102e4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d073f7ab-cdb8-49a5-a4b6-6bb1221f8717",
+                            ConcurrencyStamp = "f37c16b9-9645-438e-9b71-d20bb7ea72a8",
                             Email = "admin@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -259,158 +259,11 @@ namespace ProjectCardPark1.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCALHOST.COM",
                             NormalizedUserName = "ADMIN@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAECbJO7ooTn5H5ThYEcRcjPSI9UNXOTC2EP75rF5z9V9Hps36PcLi3P6oARHiCrTVhQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDuL2YW8ubR8QkOfX8mkPAbXtckd4+ZLg2CAYhGcq/LoajdqPhc9paPSJMjerkWdQA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "e04d8cb9-559e-4acb-917a-43757fd94c26",
+                            SecurityStamp = "35cf0245-87a2-45eb-9259-68d78b1b0a2b",
                             TwoFactorEnabled = false,
                             UserName = "admin@localhost.com"
-                        });
-                });
-
-            modelBuilder.Entity("ProjectCardPark1.Domain.Admin", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AdminId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Contact")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DateUpdated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Admin");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            AdminId = 1,
-                            Contact = 12345678,
-                            CreatedBy = "System",
-                            DateCreated = new DateTime(2025, 2, 4, 15, 41, 25, 259, DateTimeKind.Local).AddTicks(1375),
-                            DateUpdated = new DateTime(2025, 2, 4, 15, 41, 25, 259, DateTimeKind.Local).AddTicks(1388),
-                            Name = "SuperBoss",
-                            UpdatedBy = "System"
-                        });
-                });
-
-            modelBuilder.Entity("ProjectCardPark1.Domain.Card", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CardId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Condition")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DateUpdated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ListingId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ListingId");
-
-                    b.ToTable("Card");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CardId = 1,
-                            Condition = "New",
-                            CreatedBy = "System",
-                            DateCreated = new DateTime(2025, 2, 4, 15, 41, 25, 259, DateTimeKind.Local).AddTicks(1721),
-                            DateUpdated = new DateTime(2025, 2, 4, 15, 41, 25, 259, DateTimeKind.Local).AddTicks(1722),
-                            ListingId = 1,
-                            Name = "Pokemon",
-                            UpdatedBy = "System"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CardId = 2,
-                            Condition = "Old",
-                            CreatedBy = "System",
-                            DateCreated = new DateTime(2025, 2, 4, 15, 41, 25, 259, DateTimeKind.Local).AddTicks(1724),
-                            DateUpdated = new DateTime(2025, 2, 4, 15, 41, 25, 259, DateTimeKind.Local).AddTicks(1725),
-                            ListingId = 1,
-                            Name = "Ultraman",
-                            UpdatedBy = "System"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CardId = 3,
-                            Condition = "Broken",
-                            CreatedBy = "System",
-                            DateCreated = new DateTime(2025, 2, 4, 15, 41, 25, 259, DateTimeKind.Local).AddTicks(1726),
-                            DateUpdated = new DateTime(2025, 2, 4, 15, 41, 25, 259, DateTimeKind.Local).AddTicks(1727),
-                            ListingId = 2,
-                            Name = "Wonderwoman",
-                            UpdatedBy = "System"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            CardId = 4,
-                            Condition = "New",
-                            CreatedBy = "System",
-                            DateCreated = new DateTime(2025, 2, 4, 15, 41, 25, 259, DateTimeKind.Local).AddTicks(1728),
-                            DateUpdated = new DateTime(2025, 2, 4, 15, 41, 25, 259, DateTimeKind.Local).AddTicks(1729),
-                            ListingId = 3,
-                            UpdatedBy = "System"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            CardId = 5,
-                            Condition = "Stolen",
-                            CreatedBy = "System",
-                            DateCreated = new DateTime(2025, 2, 4, 15, 41, 25, 259, DateTimeKind.Local).AddTicks(1730),
-                            DateUpdated = new DateTime(2025, 2, 4, 15, 41, 25, 259, DateTimeKind.Local).AddTicks(1731),
-                            ListingId = 3,
-                            Name = "Aquaman",
-                            UpdatedBy = "System"
                         });
                 });
 
@@ -421,9 +274,6 @@ namespace ProjectCardPark1.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AdminId")
-                        .HasColumnType("int");
 
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
@@ -448,44 +298,39 @@ namespace ProjectCardPark1.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AdminId");
-
                     b.ToTable("Category");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            AdminId = 1,
                             CategoryId = 1,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2025, 2, 4, 15, 41, 25, 259, DateTimeKind.Local).AddTicks(1852),
-                            DateUpdated = new DateTime(2025, 2, 4, 15, 41, 25, 259, DateTimeKind.Local).AddTicks(1852),
-                            Name = "PG",
+                            DateCreated = new DateTime(2025, 2, 5, 17, 16, 56, 452, DateTimeKind.Local).AddTicks(5290),
+                            DateUpdated = new DateTime(2025, 2, 5, 17, 16, 56, 452, DateTimeKind.Local).AddTicks(5301),
+                            Name = "Vanguard",
                             Type = "unknown",
                             UpdatedBy = "System"
                         },
                         new
                         {
                             Id = 2,
-                            AdminId = 1,
                             CategoryId = 2,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2025, 2, 4, 15, 41, 25, 259, DateTimeKind.Local).AddTicks(1854),
-                            DateUpdated = new DateTime(2025, 2, 4, 15, 41, 25, 259, DateTimeKind.Local).AddTicks(1855),
-                            Name = "PG",
+                            DateCreated = new DateTime(2025, 2, 5, 17, 16, 56, 452, DateTimeKind.Local).AddTicks(5305),
+                            DateUpdated = new DateTime(2025, 2, 5, 17, 16, 56, 452, DateTimeKind.Local).AddTicks(5305),
+                            Name = "Pokemon",
                             Type = "unknown",
                             UpdatedBy = "System"
                         },
                         new
                         {
                             Id = 3,
-                            AdminId = 1,
                             CategoryId = 3,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2025, 2, 4, 15, 41, 25, 259, DateTimeKind.Local).AddTicks(1856),
-                            DateUpdated = new DateTime(2025, 2, 4, 15, 41, 25, 259, DateTimeKind.Local).AddTicks(1857),
-                            Name = "R18",
+                            DateCreated = new DateTime(2025, 2, 5, 17, 16, 56, 452, DateTimeKind.Local).AddTicks(5307),
+                            DateUpdated = new DateTime(2025, 2, 5, 17, 16, 56, 452, DateTimeKind.Local).AddTicks(5308),
+                            Name = "Hololive",
                             Type = "WhoKnows",
                             UpdatedBy = "System"
                         });
@@ -498,9 +343,6 @@ namespace ProjectCardPark1.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AdminId")
-                        .HasColumnType("int");
 
                     b.Property<int>("Amount")
                         .HasColumnType("int");
@@ -555,8 +397,6 @@ namespace ProjectCardPark1.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AdminId");
-
                     b.HasIndex("CategoryId");
 
                     b.HasIndex("UserId");
@@ -607,6 +447,45 @@ namespace ProjectCardPark1.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Rating");
+                });
+
+            modelBuilder.Entity("ProjectCardPark1.Domain.Report", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateUpdated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ListingId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ListingId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Report");
                 });
 
             modelBuilder.Entity("ProjectCardPark1.Domain.User", b =>
@@ -731,36 +610,8 @@ namespace ProjectCardPark1.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ProjectCardPark1.Domain.Card", b =>
-                {
-                    b.HasOne("ProjectCardPark1.Domain.Listing", "Listing")
-                        .WithMany("Card")
-                        .HasForeignKey("ListingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Listing");
-                });
-
-            modelBuilder.Entity("ProjectCardPark1.Domain.Category", b =>
-                {
-                    b.HasOne("ProjectCardPark1.Domain.Admin", "Admin")
-                        .WithMany("Category")
-                        .HasForeignKey("AdminId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Admin");
-                });
-
             modelBuilder.Entity("ProjectCardPark1.Domain.Listing", b =>
                 {
-                    b.HasOne("ProjectCardPark1.Domain.Admin", "Admin")
-                        .WithMany("Listing")
-                        .HasForeignKey("AdminId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.HasOne("ProjectCardPark1.Domain.Category", "Category")
                         .WithMany("Listing")
                         .HasForeignKey("CategoryId")
@@ -772,8 +623,6 @@ namespace ProjectCardPark1.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Admin");
 
                     b.Navigation("Category");
 
@@ -791,11 +640,19 @@ namespace ProjectCardPark1.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ProjectCardPark1.Domain.Admin", b =>
+            modelBuilder.Entity("ProjectCardPark1.Domain.Report", b =>
                 {
-                    b.Navigation("Category");
+                    b.HasOne("ProjectCardPark1.Domain.Listing", "Listing")
+                        .WithMany("Report")
+                        .HasForeignKey("ListingId");
+
+                    b.HasOne("ProjectCardPark1.Domain.User", "User")
+                        .WithMany("Report")
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Listing");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ProjectCardPark1.Domain.Category", b =>
@@ -805,7 +662,7 @@ namespace ProjectCardPark1.Migrations
 
             modelBuilder.Entity("ProjectCardPark1.Domain.Listing", b =>
                 {
-                    b.Navigation("Card");
+                    b.Navigation("Report");
                 });
 
             modelBuilder.Entity("ProjectCardPark1.Domain.User", b =>
@@ -813,6 +670,8 @@ namespace ProjectCardPark1.Migrations
                     b.Navigation("Listing");
 
                     b.Navigation("Rating");
+
+                    b.Navigation("Report");
                 });
 #pragma warning restore 612, 618
         }

@@ -15,9 +15,8 @@ namespace ProjectCardPark1.Configurations.Entities
                 {
                     Id = 1,
                     CategoryId = 1,
-                    Name = "PG",
+                    Name = "Vanguard",
                     Type = "unknown",
-                    AdminId = 1,
                     DateCreated = DateTime.Now,
                     DateUpdated = DateTime.Now,
                     CreatedBy = "System",
@@ -26,9 +25,8 @@ namespace ProjectCardPark1.Configurations.Entities
                 new Category
                 {Id = 2,
                     CategoryId = 2,
-                    Name = "PG",
+                    Name = "Pokemon",
                     Type = "unknown",
-                    AdminId = 1,
                     DateCreated = DateTime.Now,
                     DateUpdated = DateTime.Now,
                     CreatedBy = "System",
@@ -37,9 +35,8 @@ namespace ProjectCardPark1.Configurations.Entities
                 new Category
                 {Id = 3,            
                     CategoryId = 3,
-                    Name = "R18",
+                    Name = "Hololive",
                     Type = "WhoKnows",
-                    AdminId = 1,
                     DateCreated = DateTime.Now,
                     DateUpdated = DateTime.Now,
                     CreatedBy = "System",

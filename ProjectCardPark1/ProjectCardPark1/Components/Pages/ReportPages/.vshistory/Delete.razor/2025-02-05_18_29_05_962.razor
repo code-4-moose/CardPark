@@ -1,0 +1,81 @@
+﻿@page "/reports/delete"
+@using Microsoft.EntityFrameworkCore
+@using ProjectCardPark1.Domain
+@inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
+@inject NavigationManager NavigationManager
+
+@attribute [Authorize(Roles = "Administrator")]
+
+
+<PageTitle>Delete</PageTitle>
+
+    @if (report is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Description</dt>
+            <dd class="col-sm-10">@report.Description</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">ListingId</dt>
+            <dd class="col-sm-10">@report.ListingId</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">UserId</dt>
+            <dd class="col-sm-10">@report.UserId</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">DateCreated</dt>
+            <dd class="col-sm-10">@report.DateCreated</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">DateUpdated</dt>
+            <dd class="col-sm-10">@report.DateUpdated</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">CreatedBy</dt>
+            <dd class="col-sm-10"><a href="/Account/OtherProfile?userid=@listing.CreatedBy">@report.CreatedBy</a></dd>
+        </dl>
+        <EditForm method="post" Model="report" OnValidSubmit="DeleteReport" FormName="delete" Enhance>
+            <button type="submit" class="btn btn-danger" disabled="@(report is null)">Delete</button> |
+            <a href="/reports">Back to List</a>
+        </EditForm>
+    }
+
+@code {
+    private Report? report;
+
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    [SupplyParameterFromForm]
+    private Listing? listing { get; set; }
+
+    [SupplyParameterFromForm]
+    private User? User { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        report = await context.Report.FirstOrDefaultAsync(m => m.Id == Id);
+
+        listing = await context.Listing.FirstOrDefaultAsync(l => l.Id == report.ListingId);
+
+        User = await context.User.FirstOrDefaultAsync(l => l.Id == report.UserId);
+
+        if (report is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    private async Task DeleteReport()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Report.Remove(report!);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/reports");
+    }
+}

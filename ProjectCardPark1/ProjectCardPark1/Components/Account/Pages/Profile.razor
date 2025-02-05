@@ -12,6 +12,7 @@
 @using ProjectCardPark1.Data
 @using ProjectCardPark1.Domain
 
+@inject IJSRuntime JSRuntime
 @implements IAsyncDisposable
 @inject IJSRuntime JSRuntime
 @inject SignInManager<ProjectCardPark1User> SignInManager
@@ -111,7 +112,8 @@
                             <p><strong>Category:</strong> @listing.CategoryName</p>
                         </div>
                         @if (listing.Sold != true){
-                        <button onclick="location.href='/listings/edit?id=@listing.Id';" class="w-100 btn btn-lg btn-primary">Change Listing Information</button>
+                            <button onclick="location.href='/listings/edit?id=@listing.Id';" class="w-100 btn btn-lg btn-primary">Change Listing Information</button>
+                                <button @onclick="async () => await DeleteListing(listing.Id)" class="w-100 btn btn-lg btn-danger">Delete</button>
                         }
                      </div>
                     }
@@ -267,6 +269,20 @@
         FilterListings();
     }
 
+    private async Task DeleteListing(int listingid)
+    {
+        var isConfirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure to delete Listing?");
+
+        if (isConfirmed)
+        {
+            using var context = DbFactory.CreateDbContext();
+            var Listing = await context.Listing.FindAsync(listingid);
+            context.Listing.Remove(Listing!);
+            await context.SaveChangesAsync();
+            NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+        }
+        
+    }
     public async ValueTask DisposeAsync() => await context.DisposeAsync();
 
 }
