@@ -112,33 +112,15 @@
                             </div>
                             @if (listing.Sold != true)
                             {
-                                @if (OwnerUserid == null)
+                                @if (userid == OwnerUserid)
                                 {
-                                    <div class="card-actions">
-                                        <a href="/Account/Login">Login to purchase</a>
-                                    </div>
+                                    <button onclick="location.href='/listings/edit?id=@listing.Id';" class="w-100 btn btn-lg btn-primary">Change Listing Information</button>
                                 }
-                                else if (OwnerUserid == "3781efa7-66dc-47f0-860f-e506d04102e4")
-                                {
-                                    <div class="card-actions">
-                                        your the admin LOL
-                                    </div>
-                                }
-                                else if (listing.CreatedBy != OwnerUserid)
+                                else
                                 {
                                     <div class="card-actions">
                                         <button class="buy-now" @onclick="() => ConfirmPurchase(listing)">Buy Now</button>
                                     </div>
-                                    <button onclick="location.href='/reports/create?listingid=@listing.Id';" class="report-button">❗</button>
-
-                                }
-                                else
-                                {
-                                    @if (listing.Sold != true)
-                                    {
-                                        <button onclick="location.href='/listings/edit?id=@listing.Id';" class="w-100 btn btn-lg btn-primary">Change Listing Information</button>
-                                        <button @onclick="async () => await DeleteListing(listing.Id)" class="w-100 btn btn-lg btn-danger">Delete</button>
-                                    }
                                 }
                             }
 
@@ -312,20 +294,6 @@
             await context.SaveChangesAsync();
             NavigationManager.NavigateTo($"/ratings/create?userId={URL_userId}");
         }
-    }
-    private async Task DeleteListing(int listingid)
-    {
-        var isConfirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure to delete Listing?");
-
-        if (isConfirmed)
-        {
-            using var context = DbFactory.CreateDbContext();
-            var Listing = await context.Listing.FindAsync(listingid);
-            context.Listing.Remove(Listing!);
-            await context.SaveChangesAsync();
-            NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
-        }
-
     }
     public async ValueTask DisposeAsync() => await context.DisposeAsync();
 
