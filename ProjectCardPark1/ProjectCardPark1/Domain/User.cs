@@ -15,6 +15,8 @@
         public byte[]? ProfileImage { get; set; }
         public string? ProfileImageUrl { get; set; }
         public int? NoRatings { get; set; }
+
+        public List<Report>? Report { get; set; } // Nav Prop 
     }
 
 }

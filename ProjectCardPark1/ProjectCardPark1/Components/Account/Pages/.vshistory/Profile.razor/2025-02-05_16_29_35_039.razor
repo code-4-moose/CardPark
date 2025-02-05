@@ -1,0 +1,288 @@
+﻿@page "/Account/Profile"
+
+@rendermode InteractiveServer
+@using Microsoft.AspNetCore.Mvc.RazorPages;
+@using Microsoft.EntityFrameworkCore;
+@using System.ComponentModel.DataAnnotations
+@using System.Security.Claims
+@using System.Text
+@using System.Text.Encodings.Web
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.WebUtilities
+@using ProjectCardPark1.Data
+@using ProjectCardPark1.Domain
+
+@inject IJSRuntime JSRuntime
+@implements IAsyncDisposable
+@inject IJSRuntime JSRuntime
+@inject SignInManager<ProjectCardPark1User> SignInManager
+@inject UserManager<ProjectCardPark1User> UserManager
+@inject IUserStore<ProjectCardPark1User> UserStore
+@inject IEmailSender<ProjectCardPark1User> EmailSender
+@inject NavigationManager NavigationManager
+@inject IdentityRedirectManager RedirectManager
+@inject ILogger<ExternalLogin> Logger
+@inject UserManager<ProjectCardPark1User> UserManager
+@inject IEmailSender<ProjectCardPark1User> EmailSender
+@inject IdentityUserAccessor UserAccessor
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
+
+
+<body>
+    <div class="container_1">
+        @if (Image == null)
+        {
+            <img src="./ProfilePic/download.png" class="css-shadow" />
+        }
+        else
+        {
+            <img src="@imgSrc" class="css-shadow" />
+        }
+
+        <h1 class="username">@name</h1>
+        @if (contact != 0)
+        {
+            <p class="number">Number : @contact</p>
+        }
+        else
+        {
+            <p class="number">No Number</p>
+        }
+        <p class="user_desc">From @address</p>
+        @if (No_ratings == 0)
+        {
+            <div class="user-rating-norating">
+                <h3>No Ratings</h3>
+            </div>
+        }
+        else{
+            <div class="user-rating">
+                <h3>@ratingMSG ⭐</h3>
+            @* <i class="fa-solid fa-star star_css" style="font-size: 1.3em;"></i> *@
+            </div>
+        }
+    </div>
+    <hr />
+    <div class="container_2">
+        <br />
+        <div class="listings">
+            <h1>Results for "@searchQuery"</h1>
+
+            <div class="search-bar-container">
+                <form @onsubmit="HandleSubmit" class="search-bar">
+                    <input type="text" placeholder="Search..." @bind="searchQuery" @oninput="FilterListings" />
+                    <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </form>
+            </div>
+
+            <div class="card-grid">
+                @foreach (var listing in filteredListings)
+                {
+                    @if (listing.UserId == User.Id)
+                    {
+                    <div class="card @(listing.Sold == true ? "bought-card" : "")" >
+                        @if (listing.Sold == true)
+                            {
+                                <div class="bought-overlay">
+                                    SOLD
+                                </div>
+                            }
+                        <div class="card-image" @onclick="() => ShowImage(listing.ListingImageUrl)">
+                                @if (!string.IsNullOrEmpty(listing.ListingImageUrl))
+                                {
+                                    <div class="image-wrapper">
+                                        <img src="@listing.ListingImageUrl" alt="@listing.Name" class="card-img" style="height: 150px; width: 150px;" />
+                                        <div class="hover-overlay">
+                                            <i class="fa-solid fa-magnifying-glass"></i>
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <img src="./no-image.jpg" style="width: 150px; height: 150px;" />
+                                }
+                        </div>
+                        <div class="card-content">
+                            <h3>@listing.Name</h3>
+                            <p><strong>Price:</strong> @listing.Price</p>
+                            <p><strong>Amount:</strong> @listing.Amount</p>
+                            <p><strong>Description:</strong> @listing.Description</p>
+                            <p><strong>Username:</strong> @listing.UserName</p>
+                            <p><strong>Category:</strong> @listing.CategoryName</p>
+                        </div>
+                        @if (listing.Sold != true){
+                            <button onclick="location.href='/listings/edit?id=@listing.Id';" class="w-100 btn btn-lg btn-primary">Change Listing Information</button>
+                                <button @onclick="async () => await DeleteListing(listing.Id)" class="w-100 btn btn-lg btn-danger">Delete</button>
+                        }
+                     </div>
+                    }
+                }
+            </div>
+
+            <!-- Popup for Enlarged Image -->
+            <div class="popup-image" style="display:none;" id="popupRef">
+                <span class="close-btn" @onclick="ClosePopup">×</span>
+                <img src="" alt="Enlarged Image" id="popupImage" />
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="container_3">
+        <h2 class="reviews-title">User Reviews</h2>
+
+        @if (filteredRatings.Count == 0)
+        {
+            <p class="no-reviews">No reviews yet.</p>
+        }
+        else
+        {
+            <div class="reviews-list">
+                @foreach (var review in filteredRatings)
+                {
+                    <div class="review-card">
+                        <div class="review-header">
+                            <h4 class="reviewer-name">@review.ReviewerName</h4>
+                            <span class="review-rating">
+                                @review.Stars ⭐
+                            </span>
+                        </div>
+                        <p class="review-text">@review.Description</p>
+                        <small class="review-date">@review.DateCreated.ToString("MMMM dd, yyyy")</small>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</body>
+
+<script>
+            // Show image in popup
+        function showImagePopup(imageUrl) {
+            const popup = document.getElementById("popupRef");
+            const popupImg = document.getElementById("popupImage");
+
+            // Display the popup and set the image source
+            popup.style.display = 'flex';
+            popupImg.src = imageUrl;
+    }
+
+    // Close the popup
+    function closeImagePopup() {
+        const popup = document.getElementById("popupRef");
+        popup.style.display = 'none';
+    }
+
+</script>
+
+@code {
+    string? userid;
+
+    private string searchQuery = string.Empty;
+
+    private List<Listing> filteredListings = new List<Listing>();
+
+    private List<Rating> filteredRatings = new List<Rating>();
+
+    private ProjectCardPark1User user = default!;
+
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
+
+    [SupplyParameterFromForm]
+    private User User { get; set; }
+
+    private string imgSrc = ""; // Base64 string for image preview
+    private string? name;
+    private string address;
+    private double rating;
+    private byte[] Image;
+    private string? listingId;
+    private string ratingMSG;
+    private int N_userid;
+    private int No_ratings;
+    private int contact;
+
+    private ProjectCardPark1Context context = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var claimsPrincipal = authState.User;
+        userid = UserManager.GetUserId(claimsPrincipal);
+
+        context = DbFactory.CreateDbContext();
+        var allListings = await context.Listing.ToListAsync();
+        filteredListings = allListings;
+
+        User ??= await context.User.FirstOrDefaultAsync(m => m.UserId == userid);
+
+        N_userid = User.Id;
+        No_ratings = User.NoRatings.Value;
+        Image = User.ProfileImage;
+        imgSrc = User.ProfileImageUrl;
+        name = User.Name;
+        address = User.Address;
+        rating = (User.Stars/User.NoRatings.Value);
+        ratingMSG = rating.ToString("0.0");
+        contact = User.Contact;
+
+        filteredRatings = await context.Rating
+            .Where(r => r.UserId == N_userid)
+            .OrderByDescending(r => r.DateCreated)
+            .ToListAsync();
+    }
+    private void FilterListings()
+    {
+        if (string.IsNullOrWhiteSpace(searchQuery))
+        {
+            filteredListings = context.Listing.ToList();
+        }
+        else
+        {
+            filteredListings = context.Listing
+                .AsEnumerable()
+                .Where(l => !string.IsNullOrEmpty(l.Name) && l.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
+    }
+    private async Task ShowImage(string imageUrl)
+    {
+        // Use JSInterop to display the popup and set the image source
+        await JSRuntime.InvokeVoidAsync("showImagePopup", imageUrl);
+    }
+    private async Task ClosePopup()
+    {
+        // Use JSInterop to hide the popup
+        await JSRuntime.InvokeVoidAsync("closeImagePopup");
+    }
+    public async Task<string> GetUserPhotoAsync(int userId)
+    {
+        using var context = DbFactory.CreateDbContext();
+        // Assuming you have a DbContext or similar to interact with the database
+        var user = await context.User.FindAsync(userId);
+        imgSrc = user?.ProfileImageUrl;
+        return user?.ProfileImageUrl; // Assuming the photo is stored in a 'Photo' column as byte[]
+    }
+    private void HandleSubmit()
+    {
+        FilterListings();
+    }
+
+    private async Task DeleteListing(int listingid)
+    {
+        var isConfirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure to delete Listing?");
+
+        if (isConfirmed)
+        {
+            using var context = DbFactory.CreateDbContext();
+            var Listing = await context.Listing.FindAsync(listingid);
+            context.Listing.Remove(Listing!);
+            await context.SaveChangesAsync();
+            NavigationManager.NavigateTo("/listings");
+        }
+        
+    }
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+
+}

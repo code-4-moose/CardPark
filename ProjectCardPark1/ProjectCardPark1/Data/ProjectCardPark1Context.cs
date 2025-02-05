@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using ProjectCardPark1.Configurations.Entities;
 using ProjectCardPark1.Data;
 using ProjectCardPark1.Domain;
+using System.Reflection.Emit;
 
 namespace ProjectCardPark1.Data
 {
@@ -12,7 +13,7 @@ namespace ProjectCardPark1.Data
         public DbSet<ProjectCardPark1.Domain.Listing> Listing { get; set; } = default!;
         public DbSet<ProjectCardPark1.Domain.Rating> Rating { get; set; } = default!;
         public DbSet<ProjectCardPark1.Domain.User> User { get; set; } = default!;
-
+        public DbSet<ProjectCardPark1.Domain.Report> Report { get; set; } = default!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -32,7 +33,6 @@ namespace ProjectCardPark1.Data
             base.OnModelCreating(builder);
 
             builder.ApplyConfiguration(new CategorySeed());
-            //builder.ApplyConfiguration(new RatingSeed());
             builder.ApplyConfiguration(new RoleSeed());
             builder.ApplyConfiguration(new UserSeed());
             builder.ApplyConfiguration(new UserLoginSeed());

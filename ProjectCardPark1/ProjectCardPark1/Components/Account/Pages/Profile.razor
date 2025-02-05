@@ -12,6 +12,7 @@
 @using ProjectCardPark1.Data
 @using ProjectCardPark1.Domain
 
+@inject IJSRuntime JSRuntime
 @implements IAsyncDisposable
 @inject IJSRuntime JSRuntime
 @inject SignInManager<ProjectCardPark1User> SignInManager
@@ -270,11 +271,17 @@
 
     private async Task DeleteListing(int listingid)
     {
-        using var context = DbFactory.CreateDbContext();
-        var Listing = await context.Listing.FindAsync(listingid);
-        context.Listing.Remove(Listing!);
-        await context.SaveChangesAsync();
-        NavigationManager.NavigateTo("/listings");
+        var isConfirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure to delete Listing?");
+
+        if (isConfirmed)
+        {
+            using var context = DbFactory.CreateDbContext();
+            var Listing = await context.Listing.FindAsync(listingid);
+            context.Listing.Remove(Listing!);
+            await context.SaveChangesAsync();
+            NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+        }
+        
     }
     public async ValueTask DisposeAsync() => await context.DisposeAsync();
 
