@@ -16,6 +16,12 @@ namespace ProjectCardPark1.Domain
         [DeleteBehavior(DeleteBehavior.NoAction)]  // Meaning when parent deleted, this child will not be auto-deleted
 
         public Category? Category { get; set; } // Nav Prop
+        public int AdminId { get; set; } // FK
+        [DeleteBehavior(DeleteBehavior.NoAction)]  // Meaning when parent deleted, this child will not be auto-deleted
+
+        public Admin? Admin{ get; set; } // Nav Prop
+
+        public ICollection<Card>? Card { get; set; } // Nav Prop  1..Many
 
         public byte[]? ListingImage { get; set; }
 

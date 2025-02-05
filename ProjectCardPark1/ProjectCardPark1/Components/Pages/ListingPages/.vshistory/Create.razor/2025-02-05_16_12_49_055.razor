@@ -71,7 +71,12 @@
                             }
                         }
                     </InputSelect>
-                </div>            
+                </div>        
+                <div class="mb-3" hidden>
+                    <label for="adminid" class="form-label">AdminId:</label> 
+                    <InputNumber id="adminid" @bind-Value="Listing.AdminId" class="form-control" /> 
+                    <ValidationMessage For="() => Listing.AdminId" class="text-danger" /> 
+                </div>       
                 <div class="mb-3">
                     <label for="price" class="form-label">Description:</label>
                     <InputText id="description" @bind-Value="Listing.Description" class="form-control" />
@@ -136,6 +141,7 @@
         User ??= await context.User.FirstOrDefaultAsync(m => m.UserId == userId);
 
         Listing.UserId = User.Id;
+        Listing.AdminId = 1;
         Listing.UserName = User.Name;
     }
     private string GetCategoryName(int categoryId)

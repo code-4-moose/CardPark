@@ -136,6 +136,7 @@
         User ??= await context.User.FirstOrDefaultAsync(m => m.UserId == userId);
 
         Listing.UserId = User.Id;
+        Listing.AdminId = 1;
         Listing.UserName = User.Name;
     }
     private string GetCategoryName(int categoryId)

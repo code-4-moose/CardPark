@@ -31,7 +31,12 @@
                 <label for="type" class="form-label">Type:</label> 
                 <InputText id="type" @bind-Value="Category.Type" class="form-control" /> 
                 <ValidationMessage For="() => Category.Type" class="text-danger" /> 
-            </div>       
+            </div>        
+            <div class="mb-3">
+                <label for="adminid" class="form-label">AdminId:</label> 
+                <InputNumber id="adminid" @bind-Value="Category.AdminId" class="form-control" /> 
+                <ValidationMessage For="() => Category.AdminId" class="text-danger" /> 
+            </div>        
             <div class="mb-3">
                 <label for="datecreated" class="form-label">DateCreated:</label> 
                 <InputDate id="datecreated" @bind-Value="Category.DateCreated" class="form-control" /> 

@@ -8,6 +8,8 @@ namespace ProjectCardPark1.Data
 {
     public class ProjectCardPark1Context(DbContextOptions<ProjectCardPark1Context> options) : IdentityDbContext<ProjectCardPark1User>(options)
     {
+        public DbSet<ProjectCardPark1.Domain.Admin> Admin { get; set; } = default!;
+        public DbSet<ProjectCardPark1.Domain.Card> Card { get; set; } = default!;
         public DbSet<ProjectCardPark1.Domain.Category> Category { get; set; } = default!;
         public DbSet<ProjectCardPark1.Domain.Listing> Listing { get; set; } = default!;
         public DbSet<ProjectCardPark1.Domain.Rating> Rating { get; set; } = default!;
@@ -31,6 +33,8 @@ namespace ProjectCardPark1.Data
         {
             base.OnModelCreating(builder);
 
+            builder.ApplyConfiguration(new AdminSeed());
+            builder.ApplyConfiguration(new CardSeed());
             builder.ApplyConfiguration(new CategorySeed());
             //builder.ApplyConfiguration(new RatingSeed());
             builder.ApplyConfiguration(new RoleSeed());

@@ -111,8 +111,7 @@
                             <p><strong>Category:</strong> @listing.CategoryName</p>
                         </div>
                         @if (listing.Sold != true){
-                            <button onclick="location.href='/listings/edit?id=@listing.Id';" class="w-100 btn btn-lg btn-primary">Change Listing Information</button>
-                                <button @onclick="async () => await DeleteListing(listing.Id)" class="w-100 btn btn-lg btn-danger">Delete</button>
+                        <button onclick="location.href='/listings/edit?id=@listing.Id';" class="w-100 btn btn-lg btn-primary">Change Listing Information</button>
                         }
                      </div>
                     }
@@ -268,14 +267,6 @@
         FilterListings();
     }
 
-    private async Task DeleteListing(int listingid)
-    {
-        using var context = DbFactory.CreateDbContext();
-        var Listing = await context.Listing.FindAsync(listingid);
-        context.Listing.Remove(Listing!);
-        await context.SaveChangesAsync();
-        NavigationManager.NavigateTo("/listings");
-    }
     public async ValueTask DisposeAsync() => await context.DisposeAsync();
 
 }
