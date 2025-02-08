@@ -1,0 +1,82 @@
+﻿@page "/payments/create"
+@using Microsoft.EntityFrameworkCore
+@using ProjectCardPark1.Domain
+@inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
+@inject NavigationManager NavigationManager
+@using Microsoft.AspNetCore.Identity
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserManager<ProjectCardPark1User> UserManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>Payment</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Payment" OnValidSubmit="AddPayment" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert"/>           
+            <div class="mb-3">
+                <label for="paymenttype" class="form-label">PaymentType:</label> 
+                <InputText id="paymenttype" @bind-Value="Payment.PaymentType" class="form-control" /> 
+                <ValidationMessage For="() => Payment.PaymentType" class="text-danger" /> 
+            </div>                         
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/payments">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private Payment Payment { get; set; } = new();
+
+    [SupplyParameterFromForm]
+    private Listing Listing { get; set; }
+
+    [SupplyParameterFromQuery(Name = "userId")]
+    public string seller_userid { get; set; }
+
+    [SupplyParameterFromQuery(Name = "listingId")]
+    public int seller_ListingId { get; set; }
+
+    string Buyer_userId;
+    int seller_Id;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var claimsPrincipal = authState.User;
+        Buyer_userId = UserManager.GetUserId(claimsPrincipal);
+
+        var context = DbFactory.CreateDbContext();
+
+        Listing ??= await context.Listing.FirstOrDefaultAsync(a => a.CreatedBy == seller_userid);
+        seller_Id = Listing.UserId;
+
+
+    }
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddPayment()
+    {
+        using var context = DbFactory.CreateDbContext();
+        Payment.BuyerId = Buyer_userId;
+        Payment.ListingId = seller_ListingId;
+        Payment.UserId = seller_Id;
+        Payment.CreatedBy = seller_userid;
+        Payment.UpdatedBy = seller_userid;
+        Payment.DateCreated = DateTime.Now;
+        Payment.DateUpdated = DateTime.Now;
+        context.Attach(Listing!).State = EntityState.Modified;
+        Listing.Sold = true;
+        context.Payment.Add(Payment);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo($"/ratings/create?userId={seller_userid}&listingId={seller_ListingId}");
+    }
+}
