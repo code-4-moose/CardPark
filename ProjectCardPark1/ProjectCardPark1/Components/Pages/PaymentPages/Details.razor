@@ -8,38 +8,51 @@
 
 <h1>Details</h1>
 
-<div>
-    <h2>Payment</h2>
-    <hr />
+<div class="container">
+    <h1>Payment Details</h1>
+
     @if (payment is null)
     {
-        <p><em>Loading...</em></p>
-    }
-    else {
-        <dl class="row">
-            <dt class="col-sm-2">ListingId</dt>
-            <dd class="col-sm-10">@payment.ListingId</dd>
-            <dt class="col-sm-2">UserId</dt>
-            <dd class="col-sm-10">@payment.UserId</dd>
-            <dt class="col-sm-2">BuyerId</dt>
-            <dd class="col-sm-10">@payment.BuyerId</dd>
-            <dt class="col-sm-2">PaymentType</dt>
-            <dd class="col-sm-10">@payment.PaymentType</dd>
-            <dt class="col-sm-2">DateCreated</dt>
-            <dd class="col-sm-10">@payment.DateCreated</dd>
-            <dt class="col-sm-2">DateUpdated</dt>
-            <dd class="col-sm-10">@payment.DateUpdated</dd>
-            <dt class="col-sm-2">CreatedBy</dt>
-            <dd class="col-sm-10">@payment.CreatedBy</dd>
-            <dt class="col-sm-2">UpdatedBy</dt>
-            <dd class="col-sm-10">@payment.UpdatedBy</dd>
-        </dl>
-        <div>
-            <a href="@($"/payments/edit?id={payment.Id}")">Edit</a> |
-            <a href="@($"/payments")">Back to List</a>
+        <div class="loader">
+            <p><em>Loading...</em></p>
         </div>
     }
+    else
+    {
+        <h2>Payment Information</h2>
+        <hr />
+        <dl>
+            <dt>ListingId</dt>
+            <dd>@payment.ListingId</dd>
+
+            <dt>UserId</dt>
+            <dd>@payment.UserId</dd>
+
+            <dt>BuyerId</dt>
+            <dd>@payment.BuyerId</dd>
+
+            <dt>PaymentType</dt>
+            <dd>@payment.PaymentType</dd>
+
+            <dt>DateCreated</dt>
+            <dd>@payment.DateCreated</dd>
+
+            <dt>DateUpdated</dt>
+            <dd>@payment.DateUpdated</dd>
+
+            <dt>CreatedBy</dt>
+            <dd>@payment.CreatedBy</dd>
+
+            <dt>UpdatedBy</dt>
+            <dd>@payment.UpdatedBy</dd>
+        </dl>
+
+        <footer>
+            <a href="@($"/payments")">Back to List</a>
+        </footer>
+    }
 </div>
+
 
 @code {
     private Payment? payment;

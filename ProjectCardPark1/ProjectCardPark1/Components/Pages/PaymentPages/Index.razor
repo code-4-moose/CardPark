@@ -8,11 +8,10 @@
 
 <PageTitle>Index</PageTitle>
 
+<a href="/dashboard" class="btn-back">⬅ Back to Dashboard</a>
+
 <h1>Index</h1>
 
-<p>
-    <a href="payments/create">Create New</a>
-</p>
 
 <QuickGrid Class="table" Items="context.Payment">
     <PropertyColumn Property="payment => payment.ListingId" />
@@ -25,7 +24,8 @@
     <PropertyColumn Property="payment => payment.UpdatedBy" />
 
     <TemplateColumn Context="payment">
-        <a href="@($"payments/details?id={payment.Id}")">Details</a>
+        <a href="@($"payments/details?id={payment.Id}")">Details</a> 
+        @* <a href="@($"payments/delete?id={payment.Id}")">Delete</a> *@
     </TemplateColumn>
 </QuickGrid>
 
