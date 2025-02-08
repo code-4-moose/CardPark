@@ -3,13 +3,12 @@
 @rendermode @(new InteractiveServerRenderMode(false))
 @using Microsoft.EntityFrameworkCore
 @using ProjectCardPark1.Domain
-@inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
 @inject NavigationManager NavigationManager
 @using ProjectCardPark1.Data
-@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject UserManager<ProjectCardPark1User> UserManager
 @inject ProjectCardPark1.Components.Account.IdentityUserAccessor UserAccessor
 @inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
+@inject AuthenticationStateProvider authenticationStateProvider
 
 @attribute [Authorize(Roles = "User")]
 
@@ -72,12 +71,7 @@
                             }
                         }
                     </InputSelect>
-                </div>        
-                <div class="mb-3" hidden>
-                    <label for="adminid" class="form-label">AdminId:</label> 
-                    <InputNumber id="adminid" @bind-Value="Listing.AdminId" class="form-control" /> 
-                    <ValidationMessage For="() => Listing.AdminId" class="text-danger" /> 
-                </div>       
+                </div>            
                 <div class="mb-3">
                     <label for="price" class="form-label">Description:</label>
                     <InputText id="description" @bind-Value="Listing.Description" class="form-control" />
@@ -127,13 +121,13 @@
 
     [SupplyParameterFromForm]
     private User User { get; set; }
-    @inject AuthenticationStateProvider authenticationStateProvider
 
     string? categoryName;
     protected override async void OnInitialized()
     {
         var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
         var claimsPrincipal = authState.User;
+
         using var context = DbFactory.CreateDbContext();
         // Get the userId claim
         Categories = context.Category.ToList();
@@ -142,7 +136,6 @@
         User ??= await context.User.FirstOrDefaultAsync(m => m.UserId == userId);
 
         Listing.UserId = User.Id;
-        Listing.AdminId = 1;
         Listing.UserName = User.Name;
     }
     private string GetCategoryName(int categoryId)
@@ -155,10 +148,13 @@
     private async Task AddListing()
     {
         Listing.CategoryName = GetCategoryName(Listing.CategoryId);
+
         Listing.CreatedBy = userId;
         Listing.UpdatedBy = userId;
         Listing.DateCreated = DateTime.Now;
         Listing.DateUpdated = DateTime.Now;
+
+        //CHANGES
 
         using var context = DbFactory.CreateDbContext();
         context.Listing.Add(Listing);

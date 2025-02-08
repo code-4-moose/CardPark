@@ -1,0 +1,61 @@
+﻿@page "/reports/details"
+@using Microsoft.EntityFrameworkCore
+@using ProjectCardPark1.Domain
+@inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
+@inject NavigationManager NavigationManager
+
+@attribute [Authorize(Roles = "Administrator")]
+
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>Report</h2>
+    <hr />
+    @if (report is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Description</dt>
+            <dd class="col-sm-10">@report.Description</dd>
+            <dt class="col-sm-2">ListingId</dt>
+            <dd class="col-sm-10">@report.ListingId</dd>
+            <dt class="col-sm-2">UserId</dt>
+            <dd class="col-sm-10">@report.UserId</dd>
+            <dt class="col-sm-2">DateCreated</dt>
+            <dd class="col-sm-10">@report.DateCreated</dd>
+            <dt class="col-sm-2">DateUpdated</dt>
+            <dd class="col-sm-10">@report.DateUpdated</dd>
+            <dt class="col-sm-2">CreatedBy</dt>
+            <dd class="col-sm-10">@report.CreatedBy</dd>
+            <dt class="col-sm-2">UpdatedBy</dt>
+            <dd class="col-sm-10">@report.UpdatedBy</dd>
+        </dl>
+        <div>
+            <a href="@($"/reports/edit?id={report.Id}")">Edit</a> |
+            <a href="@($"/reports")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private Report? report;
+
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        report = await context.Report.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (report is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

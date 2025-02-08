@@ -1,0 +1,76 @@
+﻿@page "/reports/create"
+
+@rendermode InteractiveServer
+
+@using Microsoft.EntityFrameworkCore
+@using ProjectCardPark1.Domain
+@using Microsoft.AspNetCore.Identity
+
+@inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IJSRuntime JSRuntime
+@inject UserManager<ProjectCardPark1User> UserManager
+<body>
+    <p>@Listing.ListingId</p>
+
+<EditForm method="post" Model="Report" OnValidSubmit="AddReport" FormName="create" Enhance>
+    <DataAnnotationsValidator />
+    <ValidationSummary class="text-danger" role="alert"/>
+    <div class="mb-3">
+        <label for="description" class="form-label">Reason:</label> 
+        <InputText id="description" @bind-Value="Report.Description" class="form-control" /> 
+        <ValidationMessage For="() => Report.Description" class="text-danger" /> 
+    </div>        
+    <button type="submit" class="btn btn-primary">Create</button>
+</EditForm>
+
+<div>
+    <a href="/reports">Back to List</a>
+</div>
+</body>
+@code {
+    [SupplyParameterFromForm]
+    private Report Report { get; set; } = new();
+
+    [SupplyParameterFromQuery(Name = "listingid")]
+    private int listingId { get; set; }
+
+    [SupplyParameterFromForm]
+    private User User { get; set; }
+
+    private Listing Listing;
+
+    private string? userid;
+
+    private ProjectCardPark1Context context = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var claimsPrincipal = authState.User;
+        userid = UserManager.GetUserId(claimsPrincipal);
+
+        context = DbFactory.CreateDbContext();
+
+        User ??= await context.User.FirstOrDefaultAsync(m => m.UserId == userid);
+
+        Listing ??= await context.Listing.FirstOrDefaultAsync(m => m.Id == listingId);
+
+    }
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddReport()
+    {
+        using var context = DbFactory.CreateDbContext();
+        Report.DateCreated = DateTime.Now;
+        Report.DateUpdated = DateTime.Now;
+        Report.CreatedBy = User.Name;
+        Report.UpdatedBy = User.Name;
+        Report.UserId = User.Id;
+        Report.ListingId = listingId;
+        context.Report.Add(Report);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/reports");
+    }
+}

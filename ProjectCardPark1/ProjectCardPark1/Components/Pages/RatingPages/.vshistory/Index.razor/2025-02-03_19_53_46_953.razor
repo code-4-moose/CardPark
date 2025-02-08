@@ -1,0 +1,123 @@
+﻿@page "/ratings"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using ProjectCardPark1.Domain
+@using ProjectCardPark1.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
+@inject NavigationManager NavigationManager
+
+@attribute [Authorize(Roles = "Administrator")]
+
+<PageTitle>Index</PageTitle>
+<h1>Index</h1>
+<style>
+
+    .reviews-list {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .reviews-title {
+        font-size: 1.8em;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 15px;
+        color: #333;
+    }
+
+    .review-card {
+        background: #f9f9f9;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.08);
+    }
+
+    .review-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+
+    .reviewer-name {
+        font-size: 1.2em;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .review-rating {
+        font-size: 1.3em;
+        color: #ff9800;
+    }
+
+    .review-text {
+        font-size: 1em;
+        color: #555;
+        margin-bottom: 8px;
+    }
+
+    .review-date {
+        font-size: 0.9em;
+        color: #888;
+    }
+
+    .delete-button {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 0.9em;
+        transition: background 0.3s ease;
+        position:relative;
+        left:80%;
+    }
+
+        .delete-button:hover {
+            background-color: #c82333;
+        }
+</style>
+
+<div class="reviews-list">
+    @foreach (var rating in ListRatings)
+    {
+        <div class="review-card">
+            <div class="review-header">
+                <h4 class="reviewer-name">@rating.ReviewerName</h4>
+                <span class="review-rating">
+                    @rating.Stars ⭐
+                </span>
+            
+            </div>
+            <p class="review-text">@rating.Description</p>
+            <small class="review-date">@rating.DateCreated.ToString("MMMM dd, yyyy")</small>
+            <button onclick="location.href='/ratings/delete?id=@rating.Id';" class="delete-button">Delete</button>
+        </div>
+    }
+</div>
+
+@code {
+    private ProjectCardPark1Context context = default!;
+
+    private List<Rating> ListRatings = new List<Rating>();
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        context = DbFactory.CreateDbContext();
+
+        var AllRatings = await context.Rating.ToListAsync();
+        ListRatings = AllRatings;
+
+        ListRatings = await context.Rating
+            .OrderByDescending(r => r.DateCreated)
+            .ToListAsync();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+
+}

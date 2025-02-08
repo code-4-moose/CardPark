@@ -12,6 +12,7 @@
 @using ProjectCardPark1.Data
 @using ProjectCardPark1.Domain
 
+@inject IJSRuntime JSRuntime
 @implements IAsyncDisposable
 @inject IJSRuntime JSRuntime
 @inject SignInManager<ProjectCardPark1User> SignInManager
@@ -40,16 +41,25 @@
         }
 
         <h1 class="username">@name</h1>
+        @if (contact != 0)
+        {
+            <p class="number">Number : @contact</p>
+        }
+        else
+        {
+            <p class="number">No Number</p>
+        }
         <p class="user_desc">From @address</p>
-        @if (rating == 0) {
+        @if (No_ratings == 0)
+        {
             <div class="user-rating-norating">
                 <h3>No Ratings</h3>
             </div>
         }
         else{
             <div class="user-rating">
-            <h3>@ratingMSG</h3>
-            <i class="fa-solid fa-star star_css" style="font-size: 1.2em;"></i>
+                <h3>@ratingMSG ⭐</h3>
+            @* <i class="fa-solid fa-star star_css" style="font-size: 1.3em;"></i> *@
             </div>
         }
     </div>
@@ -79,14 +89,19 @@
                                 </div>
                             }
                         <div class="card-image" @onclick="() => ShowImage(listing.ListingImageUrl)">
-                            @if (!string.IsNullOrEmpty(listing.ListingImageUrl))
-                            {
-                                <img src="@listing.ListingImageUrl" alt="@listing.Name" class="card-img" style="width: 150px; height: 150px;" />
-                            }
-                            else
-                            {
-                                <span>No Image</span>
-                            }
+                                @if (!string.IsNullOrEmpty(listing.ListingImageUrl))
+                                {
+                                    <div class="image-wrapper">
+                                        <img src="@listing.ListingImageUrl" alt="@listing.Name" class="card-img" style="height: 150px; width: 150px;" />
+                                        <div class="hover-overlay">
+                                            <i class="fa-solid fa-magnifying-glass"></i>
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <img src="./no-image.jpg" style="width: 150px; height: 150px;" />
+                                }
                         </div>
                         <div class="card-content">
                             <h3>@listing.Name</h3>
@@ -97,9 +112,10 @@
                             <p><strong>Category:</strong> @listing.CategoryName</p>
                         </div>
                         @if (listing.Sold != true){
-                        <button onclick="location.href='/listings/edit?id=@listing.Id';" class="w-100 btn btn-lg btn-primary">Change Listing Information</button>
+                            <button onclick="location.href='/listings/edit?id=@listing.Id';" class="w-100 btn btn-lg btn-primary">Change Listing Information</button>
+                                <button @onclick="async () => await DeleteListing(listing.Id)" class="w-100 btn btn-lg btn-danger">Delete</button>
                         }
-                        </div>
+                     </div>
                     }
                 }
             </div>
@@ -110,6 +126,33 @@
                 <img src="" alt="Enlarged Image" id="popupImage" />
             </div>
         </div>
+    </div>
+    <hr />
+    <div class="container_3">
+        <h2 class="reviews-title">User Reviews</h2>
+
+        @if (filteredRatings.Count == 0)
+        {
+            <p class="no-reviews">No reviews yet.</p>
+        }
+        else
+        {
+            <div class="reviews-list">
+                @foreach (var review in filteredRatings)
+                {
+                    <div class="review-card">
+                        <div class="review-header">
+                            <h4 class="reviewer-name">@review.ReviewerName</h4>
+                            <span class="review-rating">
+                                @review.Stars ⭐
+                            </span>
+                        </div>
+                        <p class="review-text">@review.Description</p>
+                        <small class="review-date">@review.DateCreated.ToString("MMMM dd, yyyy")</small>
+                    </div>
+                }
+            </div>
+        }
     </div>
 </body>
 
@@ -139,6 +182,7 @@
 
     private List<Listing> filteredListings = new List<Listing>();
 
+    private List<Rating> filteredRatings = new List<Rating>();
 
     private ProjectCardPark1User user = default!;
 
@@ -148,14 +192,17 @@
     [SupplyParameterFromForm]
     private User User { get; set; }
 
-    string imgSrc = ""; // Base64 string for image preview
-    string? name;
-    string message = "wdadawadadw";
-    string address;
-    double rating;
-    byte[] Image;
-    string? listingId;
-    string ratingMSG;
+    private string imgSrc = ""; // Base64 string for image preview
+    private string? name;
+    private string address;
+    private double rating;
+    private byte[] Image;
+    private string? listingId;
+    private string ratingMSG;
+    private int N_userid;
+    private int No_ratings;
+    private int contact;
+
     private ProjectCardPark1Context context = default!;
 
     protected override async Task OnInitializedAsync()
@@ -169,12 +216,21 @@
         filteredListings = allListings;
 
         User ??= await context.User.FirstOrDefaultAsync(m => m.UserId == userid);
+
+        N_userid = User.Id;
+        No_ratings = User.NoRatings.Value;
         Image = User.ProfileImage;
         imgSrc = User.ProfileImageUrl;
         name = User.Name;
         address = User.Address;
         rating = (User.Stars/User.NoRatings.Value);
         ratingMSG = rating.ToString("0.0");
+        contact = User.Contact;
+
+        filteredRatings = await context.Rating
+            .Where(r => r.UserId == N_userid)
+            .OrderByDescending(r => r.DateCreated)
+            .ToListAsync();
     }
     private void FilterListings()
     {
@@ -213,6 +269,20 @@
         FilterListings();
     }
 
+    private async Task DeleteListing(int listingid)
+    {
+        var isConfirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure to delete Listing?");
+
+        if (isConfirmed)
+        {
+            using var context = DbFactory.CreateDbContext();
+            var Listing = await context.Listing.FindAsync(listingid);
+            context.Listing.Remove(Listing!);
+            await context.SaveChangesAsync();
+            NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+        }
+        
+    }
     public async ValueTask DisposeAsync() => await context.DisposeAsync();
 
 }

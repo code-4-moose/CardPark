@@ -1,0 +1,193 @@
+﻿@page "/listings/edit"
+@using Microsoft.EntityFrameworkCore
+@using ProjectCardPark1.Domain
+@inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
+@inject NavigationManager NavigationManager
+
+@attribute [Authorize(Roles = "User")]
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h2>Listing</h2>
+<hr />
+@if (Listing is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="Listing" OnValidSubmit="UpdateListing" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary role="alert"/>
+                <input type="hidden" name="Listing.Id" value="@Listing.Id" />
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name:</label>
+                    <InputText id="name" @bind-Value="Listing.Name" class="form-control" />
+                    <ValidationMessage For="() => Listing.Name" class="text-danger" />
+                </div>
+                <div class="mb-3" hidden>
+                    <label for="listingid" class="form-label">ListingId:</label>
+                    <InputNumber id="listingid" @bind-Value="Listing.ListingId" class="form-control" />
+                    <ValidationMessage For="() => Listing.ListingId" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="price" class="form-label">Price:</label>
+                    <InputNumber id="price" @bind-Value="Listing.Price" class="form-control" />
+                    <ValidationMessage For="() => Listing.Price" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="amount" class="form-label">Amount:</label>
+                    <InputNumber id="amount" @bind-Value="Listing.Amount" class="form-control" />
+                    <ValidationMessage For="() => Listing.Amount" class="text-danger" />
+                </div>
+                <div class="mb-3" hidden>
+                    <label for="userid" class="form-label">UserId:</label>
+                    <InputNumber id="userid" @bind-Value="Listing.UserId" class="form-control" />
+                    <ValidationMessage For="() => Listing.UserId" class="text-danger" />
+                </div>
+                <div class="mb-3" hidden>
+                    <label for="categoryid" class="form-label">CategoryId:</label>
+                    <InputNumber id="categoryid" @bind-Value="Listing.CategoryId" class="form-control" />
+                    <ValidationMessage For="() => Listing.CategoryId" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="categoryid" class="form-label">Category:</label>
+                    <InputSelect id="categoryid" @bind-Value="Listing.CategoryId" class="form-control">
+                        @if (Categories != null)
+                        {
+                            foreach (var category in Categories.Skip(3))
+                            {
+                                <option value="@category.Id">@category.Name</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+                <div class="mb-3" hidden>
+                    <label for="adminid" class="form-label">AdminId:</label>
+                    <InputNumber id="adminid" @bind-Value="Listing.AdminId" class="form-control" />
+                    <ValidationMessage For="() => Listing.AdminId" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description:</label>
+                    <InputText id="description" @bind-Value="Listing.Description" class="form-control" />
+                    <ValidationMessage For="() => Listing.Description" class="text-danger" />
+                </div>
+                <div class="mb-3" hidden>
+                    <label for="datecreated" class="form-label">DateCreated:</label>
+                    <InputDate name="Listing.datecreated" @bind-Value=Listing.DateCreated /> 
+                </div>
+                <div class="mb-3" hidden>
+                    <label for="dateupdated" class="form-label">DateUpdated:</label>
+                    <InputDate id="dateupdated" @bind-Value="Listing.DateUpdated" class="form-control" />
+                    <ValidationMessage For="() => Listing.DateUpdated" class="text-danger" />
+                </div>
+                <div class="mb-3" hidden>
+                    <label for="createdby" class="form-label">CreatedBy:</label>
+                    <InputText id="createdby" @bind-Value="Listing.CreatedBy" class="form-control" />
+                    <ValidationMessage For="() => Listing.CreatedBy" class="text-danger" />
+                </div>
+                <div class="mb-3" hidden>
+                    <label for="updatedby" class="form-label">UpdatedBy:</label>
+                    <InputText id="updatedby" @bind-Value="Listing.UpdatedBy" class="form-control" />
+                    <ValidationMessage For="() => Listing.UpdatedBy" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/listings">Back to List</a>
+</div>
+
+@code {
+
+    private IList<Category> Categories;
+
+    private string userId = "System";
+
+    @inject AuthenticationStateProvider authenticationStateProvider
+
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    [SupplyParameterFromForm]
+    private Listing? Listing { get; set; }
+
+    [SupplyParameterFromForm]
+    private Category Category { get; set; } = new();
+
+
+    private string GetCategoryName(int categoryId)
+    {
+        var selectedCategory = Categories.FirstOrDefault(c => c.Id == categoryId);
+        return selectedCategory?.Name ?? string.Empty; // Return the category name or an empty string if not found
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        using var context = DbFactory.CreateDbContext();
+        
+        Categories = context.Category.ToList();
+
+        var userIdClaim = user.FindFirst("userId");
+        if (userIdClaim != null)
+        {
+            userId = userIdClaim.Value;
+        }
+
+        
+        Listing ??= await context.Listing.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (Listing is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task UpdateListing()
+    {
+        if (Listing != null)
+        {
+            using var context = DbFactory.CreateDbContext();
+            context.Attach(Listing!).State = EntityState.Modified;
+
+            Listing.UpdatedBy = userId;
+            Listing.DateUpdated = DateTime.Now;
+            Listing.CategoryName = GetCategoryName(Listing.CategoryId);
+
+            try
+            {
+                await context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ListingExists(Listing!.Id))
+                {
+                    NavigationManager.NavigateTo("notfound");
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            NavigationManager.NavigateTo("/Account/Profile");
+        }
+    }
+
+        private bool ListingExists(int id)
+        {
+            using var context = DbFactory.CreateDbContext();
+            return context.Listing.Any(e => e.Id == id);
+        }
+}

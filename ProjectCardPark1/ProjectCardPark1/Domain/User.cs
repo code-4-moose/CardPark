@@ -11,10 +11,12 @@
         public ICollection<Rating>? Rating { get; set; } // Nav Prop  0..Many
 
         public int ListingId { get; set; } // FK
-        public ICollection<Listing>? Listing { get; set; } // Nav Prop
+        public List<Listing>? Listing { get; set; } // Nav Prop
         public byte[]? ProfileImage { get; set; }
         public string? ProfileImageUrl { get; set; }
         public int? NoRatings { get; set; }
+
+        public List<Report>? Report { get; set; } // Nav Prop 
     }
 
 }

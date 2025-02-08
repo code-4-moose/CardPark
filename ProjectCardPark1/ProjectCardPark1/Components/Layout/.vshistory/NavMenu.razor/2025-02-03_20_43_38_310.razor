@@ -1,0 +1,138 @@
+﻿@implements IDisposable
+
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@using ProjectCardPark1.Domain
+
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider authenticationStateProvider
+@inject UserManager<ProjectCardPark1User> UserManager
+@inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
+
+<div class="sidebar">
+    <ul>
+        <li>
+            <a href="/" class="logo">
+                <span class="icon"><i class="fa-solid fa-diamond"></i></span>
+                <span class="text">CardPark</span>
+            </a>
+        </li>
+        <AuthorizeView Roles="User">
+                <li>
+                    <div class="add_listing">
+                        <a href="listings/create">
+                            <span class="icon"><i class="fa-solid fa-plus"></i></span>
+                            <span class="text">Add Listing</span>
+                        </a>
+                    </div>
+                </li>
+        </AuthorizeView>
+        <li>
+            <a href="/Card_Listings">
+                <span class="icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+                <span class="text">Search</span>
+            </a>
+        </li>
+        <AuthorizeView Roles="Administrator">
+            <li>
+                <a href="/Dashboard">
+                    <span class="icon"><i class="fa-solid fa-list"></i></span>
+                    <span class="text">Dashboard</span>
+                </a>
+            </li>
+        </AuthorizeView>
+        <AuthorizeView Roles="User">
+            
+                <li>
+                    <a href="Account/Profile">
+                        <span class="icon"><i class="fa-solid fa-user"></i></span>
+                        <span class="text">Profile</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/rating/User{@userId}">
+                    <span class="icon"><i class=" fa-solid fa-star "></i></span>
+                        <span class="text">Ratings Given</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="Account/Manage">
+                        <span class="icon"><i class="fa-solid fa-gear"></i></span>
+                        <span class="text">Settings</span>
+                    </a>
+                </li>
+                
+        </AuthorizeView>
+        <AuthorizeView>
+            <Authorized>
+                <li>
+                    <form action="Account/Logout" method="post">
+                        <AntiforgeryToken />
+                        <input type="hidden" name="ReturnUrl" value="@currentUrl" />
+                        <button type="submit" class="button">
+                            <span class="icon"><i class="fa-solid fa-right-to-bracket"></i></span>
+                            <span class="text">Logout</span>
+                        </button>
+                    </form>
+                </li>
+            </Authorized>
+            <NotAuthorized>
+                <li>
+                    <a href="Account/Register">
+                        <span class="icon"><i class="fa-solid fa-user"></i></span>
+                        <span class="text">Register</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="Account/Login">
+                        <span class="icon"><i class="fa-solid fa-right-to-bracket"></i></span>
+                        <span class="text">Login</span>
+                    </a>
+                </li>
+            </NotAuthorized>
+        </AuthorizeView>
+    </ul>
+</div>
+
+@code {
+
+    private ProjectCardPark1Context context = default!;
+
+    private List<Rating> filteredRatings = new List<Rating>();
+
+    [SupplyParameterFromForm]
+    private Rating Rating { get; set; } = new();
+
+
+    private string userId;
+    private string? currentUrl;
+    protected override async Task OnInitializedAsync()
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        NavigationManager.LocationChanged += OnLocationChanged;
+
+        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+        var claimsPrincipal = authState.User;
+
+        context = DbFactory.CreateDbContext();
+
+        userId = UserManager.GetUserId(claimsPrincipal);
+
+        filteredRatings = await context.Rating
+        .OrderByDescending(r => r.DateCreated)
+        .ToListAsync();
+
+    }
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        NavigationManager.LocationChanged -= OnLocationChanged;
+    }
+
+}

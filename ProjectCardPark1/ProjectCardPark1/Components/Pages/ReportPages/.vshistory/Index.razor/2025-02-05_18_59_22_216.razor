@@ -1,0 +1,51 @@
+﻿@page "/reports"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using ProjectCardPark1.Domain
+@using ProjectCardPark1.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
+
+@attribute [Authorize(Roles = "Administrator")]
+
+
+<PageTitle>Index</PageTitle>
+
+<h3>Reports</h3>
+<QuickGrid Class="table" Items="context.Report">
+    <PropertyColumn Property="report => report.Description" />
+    <PropertyColumn Property="report => report.ListingId" />
+    <PropertyColumn Property="report => report.UserId" />
+    <PropertyColumn Property="report => report.DateCreated" />
+    <PropertyColumn Property="report => report.DateUpdated" />
+    <TemplateColumn Context="report">
+        <a href="@($"Account/OtherProfile?userid={FindUserIdAsync(report.UserId.Value)}")" target="_blank" rel="noopener noreferrer">
+            @report.CreatedBy
+        </a>
+    </TemplateColumn>
+
+    <TemplateColumn Context="report">
+        <a href="@($"reports/delete?id={report.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private ProjectCardPark1Context context = default!;
+    private User? User;
+
+    private int user_id;
+
+    private async Task<string?> FindUserIdAsync(int id)
+    {
+        var user = await context.User.FirstOrDefaultAsync(u => u.Id == id);
+        return user.UserId;
+    }
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+        
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}
