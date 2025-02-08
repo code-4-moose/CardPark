@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProjectCardPark1.Data;
 
@@ -11,9 +12,11 @@ using ProjectCardPark1.Data;
 namespace ProjectCardPark1.Migrations
 {
     [DbContext(typeof(ProjectCardPark1Context))]
-    partial class ProjectCardPark1ContextModelSnapshot : ModelSnapshot
+    [Migration("20250208092624_Payment")]
+    partial class Payment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -251,7 +254,7 @@ namespace ProjectCardPark1.Migrations
                         {
                             Id = "3781efa7-66dc-47f0-860f-e506d04102e4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "810cbfce-aed6-4f37-ab10-fa69f3b7c5f0",
+                            ConcurrencyStamp = "6f8f8775-c73d-471a-994c-28fc98752eb4",
                             Email = "admin@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -259,9 +262,9 @@ namespace ProjectCardPark1.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCALHOST.COM",
                             NormalizedUserName = "ADMIN@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEHMIVNPnUp+B+qK/W/N3kaNH/qG4vwdD5s4pU5Vj+0wM1vkbgF3pdXIwFsx/mkThpg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDRCtW/ejT59cUvNfXG3dqu7uigObOBDrnL1EkuywbWwp+HlqjCHCIH6rvI0HRiUrQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "a380c2ca-ff43-4d6b-b455-b109c061ea84",
+                            SecurityStamp = "64d494c0-c3cd-4462-99dc-42485f245d16",
                             TwoFactorEnabled = false,
                             UserName = "admin@localhost.com"
                         });
@@ -306,8 +309,8 @@ namespace ProjectCardPark1.Migrations
                             Id = 1,
                             CategoryId = 1,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2025, 2, 8, 18, 11, 19, 129, DateTimeKind.Local).AddTicks(3593),
-                            DateUpdated = new DateTime(2025, 2, 8, 18, 11, 19, 129, DateTimeKind.Local).AddTicks(3608),
+                            DateCreated = new DateTime(2025, 2, 8, 17, 26, 23, 700, DateTimeKind.Local).AddTicks(2083),
+                            DateUpdated = new DateTime(2025, 2, 8, 17, 26, 23, 700, DateTimeKind.Local).AddTicks(2096),
                             Name = "Vanguard",
                             Type = "unknown",
                             UpdatedBy = "System"
@@ -317,8 +320,8 @@ namespace ProjectCardPark1.Migrations
                             Id = 2,
                             CategoryId = 2,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2025, 2, 8, 18, 11, 19, 129, DateTimeKind.Local).AddTicks(3610),
-                            DateUpdated = new DateTime(2025, 2, 8, 18, 11, 19, 129, DateTimeKind.Local).AddTicks(3611),
+                            DateCreated = new DateTime(2025, 2, 8, 17, 26, 23, 700, DateTimeKind.Local).AddTicks(2099),
+                            DateUpdated = new DateTime(2025, 2, 8, 17, 26, 23, 700, DateTimeKind.Local).AddTicks(2099),
                             Name = "Pokemon",
                             Type = "unknown",
                             UpdatedBy = "System"
@@ -328,8 +331,8 @@ namespace ProjectCardPark1.Migrations
                             Id = 3,
                             CategoryId = 3,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2025, 2, 8, 18, 11, 19, 129, DateTimeKind.Local).AddTicks(3612),
-                            DateUpdated = new DateTime(2025, 2, 8, 18, 11, 19, 129, DateTimeKind.Local).AddTicks(3613),
+                            DateCreated = new DateTime(2025, 2, 8, 17, 26, 23, 700, DateTimeKind.Local).AddTicks(2101),
+                            DateUpdated = new DateTime(2025, 2, 8, 17, 26, 23, 700, DateTimeKind.Local).AddTicks(2101),
                             Name = "Hololive",
                             Type = "WhoKnows",
                             UpdatedBy = "System"
@@ -426,6 +429,9 @@ namespace ProjectCardPark1.Migrations
 
                     b.Property<int>("ListingId")
                         .HasColumnType("int");
+
+                    b.Property<string>("PaymentId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PaymentType")
                         .HasColumnType("nvarchar(max)");

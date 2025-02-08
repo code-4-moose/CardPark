@@ -33,6 +33,6 @@ namespace ProjectCardPark1.Domain
 
         public Boolean? Sold { get; set; }
 
-
+        public Payment? Payment { get; set; }
     }
 }

@@ -65,7 +65,7 @@
                     <InputSelect id="categoryid" @bind-Value="Listing.CategoryId" class="form-control"> 
                         @if (Categories != null)
                         {
-                            foreach  (var category in Categories.Skip(3))
+                            foreach  (var category in Categories)
                             {
                                 <option value="@category.Id">@category.Name</option>
                             }
