@@ -18,7 +18,9 @@
 
         public List<Report>? Report { get; set; } // Nav Prop 
         
-        public Payment? Payment { get; set; }
+        public List<Payment>? Payment { get; set; }
+
+        public string? Email { get; set; }
     }
 
 }

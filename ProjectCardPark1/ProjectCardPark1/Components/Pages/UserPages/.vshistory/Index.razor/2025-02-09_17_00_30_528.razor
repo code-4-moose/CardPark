@@ -1,0 +1,134 @@
+﻿@page "/users"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using ProjectCardPark1.Domain
+@using ProjectCardPark1.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<style>
+.btn-back {
+    display: inline-block;
+    background-color: #6c757d; /* Gray */
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background 0.3s ease, transform 0.2s;
+    margin-bottom: 15px;
+}
+
+    .btn-back:hover {
+        background-color: #5a6268; /* Slightly darker gray */
+        transform: scale(1.05);
+    }
+
+    .table {
+        width: 80%;
+        max-width: 1000px;
+        margin: auto;
+        border-collapse: collapse;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .card {
+        width: 100%;
+    }
+
+    .btn-back {
+        display: inline-block;
+        background-color: #6c757d; /* Gray */
+        color: white;
+        text-decoration: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-weight: bold;
+        transition: background 0.3s ease, transform 0.2s;
+        margin-bottom: 15px;
+    }
+
+        .btn-back:hover {
+            background-color: #5a6268; /* Slightly darker gray */
+            transform: scale(1.05);
+        }
+
+    .btn-custom {
+        padding: 8px 14px;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: bold;
+        text-transform: uppercase;
+        text-decoration: none;
+        transition: background 0.3s ease-in-out, transform 0.2s;
+        display: inline-block;
+    }
+
+
+    .btn-details {
+        background-color: #007bff;
+        color: white !important;
+        border: none;
+        margin: 5px;
+    }
+
+        .btn-details:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+    .btn-delete {
+        background-color: #dc3545;
+        color: white !important;
+        border: none;
+        margin: 5px;
+    }
+
+        .btn-delete:hover {
+            background-color: #b02a37;
+            transform: scale(1.05);
+        }
+
+</style>
+<a href="/dashboard" class="btn-back">⬅ Back to Dashboard</a>
+
+<div class="container">
+    <div class="card">
+         <div class="card-header text-white bg-primary">
+            <h2 class="text-center">Users</h2>
+        </div>
+    <div class="card-body">
+        <QuickGrid Class="table" Items="context.User">
+        <PropertyColumn Property="user => user.UserId" />
+        <PropertyColumn Property="user => user.Name" />
+        <PropertyColumn Property="user => user.Address" />
+        <PropertyColumn Property="user => user.Contact" />
+        <PropertyColumn Property="user => user.Stars" />
+        <PropertyColumn Property="user => user.RatingId" />
+        <PropertyColumn Property="user => user.ListingId" />
+        <PropertyColumn Property="user => user.DateCreated" />
+        <PropertyColumn Property="user => user.DateUpdated" />
+
+        <TemplateColumn Context="user">
+                    <a class="btn-custom btn-details mx-1" href="@($"Account/OtherProfile?userid={user.UserId}") " target="_blank" rel="noopener noreferrer">Details</a>
+        </TemplateColumn>
+        </QuickGrid>
+    </div>
+    </div>
+</div>
+
+@code {
+    private ProjectCardPark1Context context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}
