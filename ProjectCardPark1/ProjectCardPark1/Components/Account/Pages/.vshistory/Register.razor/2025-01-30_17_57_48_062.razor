@@ -59,11 +59,11 @@
                 <InputText id="address" @bind-Value="User.Address" class="form-control" placeholder = "Address" />
                 <ValidationMessage For="() => User.Address" class="text-danger" />
             </div>  
-             <div class="mb-3">
+@*             <div class="mb-3">
                 <label for="contact" class="form-label">Phone Number:</label>
                 <InputNumber id="contact" @bind-Value="User.Contact" class="form-control" placeholder ="Phone Number" />
                 <ValidationMessage For="() => User.Contact" class="text-danger" />
-            </div> 
+            </div> *@
             <button @onclick = "AddUser" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
         </EditForm>
         <EditForm method="post" Model="User" OnValidSubmit="AddUser" FormName="create" Enhance>
@@ -132,7 +132,6 @@
     {
         await AddUser();
     }
-
     public async Task RegisterUser(EditContext editContext)
     {
         var user = CreateUser();
@@ -170,7 +169,6 @@
         Logger.LogInformation("User created a new account with password.");
 
         userId = await UserManager.GetUserIdAsync(user);
-        var role = await UserManager.GetRolesAsync(user);
         await AddUser();
         var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));

@@ -154,6 +154,7 @@
             </div>
         }
     </div>
+    <p>@role</p>
 </body>
 
 <script>
@@ -203,6 +204,8 @@
     private int No_ratings;
     private int contact;
 
+    private IList<string> role;
+
     private ProjectCardPark1Context context = default!;
 
     protected override async Task OnInitializedAsync()
@@ -210,7 +213,8 @@
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var claimsPrincipal = authState.User;
         userid = UserManager.GetUserId(claimsPrincipal);
-        
+        role = await UserManager.GetRolesAsync(user);
+
 
         context = DbFactory.CreateDbContext();
         var allListings = await context.Listing.ToListAsync();

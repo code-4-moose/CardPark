@@ -1,6 +1,6 @@
 ﻿@page "/listings/create"
 @using Microsoft.AspNetCore.Identity
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(false))
 @using Microsoft.EntityFrameworkCore
 @using ProjectCardPark1.Domain
 @inject NavigationManager NavigationManager

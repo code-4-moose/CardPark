@@ -1,6 +1,6 @@
 ﻿@page "/listings/create"
 @using Microsoft.AspNetCore.Identity
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(false))
 @using Microsoft.EntityFrameworkCore
 @using ProjectCardPark1.Domain
 @inject NavigationManager NavigationManager
@@ -65,7 +65,7 @@
                     <InputSelect id="categoryid" @bind-Value="Listing.CategoryId" class="form-control"> 
                         @if (Categories != null)
                         {
-                            foreach  (var category in Categories)
+                            foreach  (var category in Categories.Skip(3))
                             {
                                 <option value="@category.Id">@category.Name</option>
                             }

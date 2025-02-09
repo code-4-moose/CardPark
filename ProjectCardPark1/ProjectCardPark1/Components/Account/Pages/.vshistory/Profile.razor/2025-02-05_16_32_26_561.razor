@@ -210,7 +210,6 @@
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var claimsPrincipal = authState.User;
         userid = UserManager.GetUserId(claimsPrincipal);
-        
 
         context = DbFactory.CreateDbContext();
         var allListings = await context.Listing.ToListAsync();
@@ -262,7 +261,6 @@
         using var context = DbFactory.CreateDbContext();
         // Assuming you have a DbContext or similar to interact with the database
         var user = await context.User.FindAsync(userId);
-
         imgSrc = user?.ProfileImageUrl;
         return user?.ProfileImageUrl; // Assuming the photo is stored in a 'Photo' column as byte[]
     }

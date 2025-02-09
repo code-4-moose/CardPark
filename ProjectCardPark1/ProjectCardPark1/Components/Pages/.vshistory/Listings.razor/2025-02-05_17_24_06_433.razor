@@ -155,10 +155,10 @@
         context = DbFactory.CreateDbContext();
 
         // Load all listings and categories
-        var allCategories = await context.Listing.ToListAsync();
+        var allListings = await context.Listing.ToListAsync();
         Categories = context.Category.ToList();
 
-        filteredListings = allCategories;
+        filteredListings = allListings;
     }
 
     private async Task ConfirmPurchase(Listing listing)
@@ -167,9 +167,9 @@
         if (confirmed == true)
         {
             URL_userId = listing.CreatedBy;
-            //listing.Sold = true;
+            listing.Sold = true;
             await context.SaveChangesAsync();
-            NavigationManager.NavigateTo($"/payments/create?userId={URL_userId}&listingId={listing.Id}");
+            NavigationManager.NavigateTo($"/ratings/create?userId={URL_userId}&listingId={listing.Id}");
         }
     }
 
