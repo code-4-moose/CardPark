@@ -35,7 +35,7 @@
 
             <div class="mb-3">
                 <label class="form-label">Credit Card :</label>
-                <input class="form-control" type="text" maxlength="16" pattern="\d{1,16}" />
+                <input class="form-control" type="text" maxlength="16" pattern="\d{1,16}" @bind="CreditCardNo" />
             </div>
         <div class="mb-3 input-group">
             <div>
@@ -76,6 +76,8 @@
     string Buyer_userId;
     int seller_Id;
 
+    private string CreditCardNo;
+
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
@@ -90,6 +92,7 @@
 
         var User = await context.User.FirstOrDefaultAsync(u => u.UserId == Buyer_userId);
 
+        CreditCardNo = User.CreditCardNo;
     }
 
     // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
@@ -107,8 +110,10 @@
         Payment.DateCreated = DateTime.Now;
         Payment.DateUpdated = DateTime.Now;
 
+        User.CreditCardNo = CreditCardNo;
         Listing.Sold = true;
 
+        context.Update(User);
         context.Update(Listing);
         context.Payment.Add(Payment);
         await context.SaveChangesAsync();

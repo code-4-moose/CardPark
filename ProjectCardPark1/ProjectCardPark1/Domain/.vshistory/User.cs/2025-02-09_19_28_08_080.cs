@@ -20,6 +20,8 @@
         
         public List<Payment>? Payment { get; set; }
 
+        public string? CreditCardNo { get; set; }
+
         public string? Email { get; set; }
     }
 

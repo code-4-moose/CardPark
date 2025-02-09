@@ -32,11 +32,11 @@
                 </InputRadioGroup>
                 <ValidationMessage For="@(() => Payment.PaymentType)" class="text-danger" />
             </div>
-
-            <div class="mb-3">
-                <label class="form-label">Credit Card :</label>
-                <input class="form-control" type="text" maxlength="16" pattern="\d{1,16}" />
-            </div>
+       
+        <div class="mb-3">
+            <label class="form-label">Credit Card :</label>
+            <input class="form-control" type="text" maxlength="16" pattern="\d{1,16}" />
+        </div>
         <div class="mb-3 input-group">
             <div>
                 <label class="form-label">Expiry Date :</label>
@@ -88,7 +88,6 @@
         seller_Id = Listing.UserId;
         TotalAmount = Listing.Amount * Listing.Price;
 
-        var User = await context.User.FirstOrDefaultAsync(u => u.UserId == Buyer_userId);
 
     }
 
@@ -97,8 +96,6 @@
     {
         using var context = DbFactory.CreateDbContext();
         var Listing = await context.Listing.FirstOrDefaultAsync(a => a.Id == seller_ListingId);
-        var User = await context.User.FirstOrDefaultAsync(u => u.UserId == Buyer_userId);
-
         Payment.BuyerId = Buyer_userId;
         Payment.ListingId = seller_ListingId;
         Payment.UserId = seller_Id;
@@ -106,10 +103,8 @@
         Payment.UpdatedBy = seller_userid;
         Payment.DateCreated = DateTime.Now;
         Payment.DateUpdated = DateTime.Now;
-
+        context.Attach(Listing!).State = EntityState.Modified;
         Listing.Sold = true;
-
-        context.Update(Listing);
         context.Payment.Add(Payment);
         await context.SaveChangesAsync();
         NavigationManager.NavigateTo($"/ratings/create?userId={seller_userid}&listingId={seller_ListingId}");
