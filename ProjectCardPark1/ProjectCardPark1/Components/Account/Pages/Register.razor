@@ -72,36 +72,12 @@
                 <InputText id="address" @bind-Value="User.Address" class="form-control" />
                 <ValidationMessage For="() => User.Address" class="text-danger" />
              </div>
-            @*<div class="mb-3 visually-hidden">
-                <label for="contact" class="form-label">Phone Number:</label>
-                <InputNumber id="contact" @bind-Value="User.Contact" class="form-control" />
-                <ValidationMessage For="() => User.Contact" class="text-danger" />
-            </div> *@
             <div class="mb-3 visually-hidden">
                 <label for="profileimage" class="form-label">Profile Image:</label>
                 <InputFile id="profileimage" OnChange="HandleFileSelection" accept="image/*" class="form-control" />
                 <ValidationMessage For="() => User.ProfileImage" class="text-danger" />
             </div>
         </EditForm>
-        @* <button @onclick = "AddUser" class="w-100 btn btn-lg btn-primary">Register</button> *@
-        @* <EditForm method="post" Model="User" OnValidSubmit="AddUser" FormName="create" Enhance>
-            <div class="mb-3">
-                <label for="address" class="form-label">Address:</label>
-                <InputText id="address" @bind-Value="User.Address" class="form-control" />
-                <ValidationMessage For="() => User.Address" class="text-danger" />
-            </div>
-            <div class="mb-3">
-                <label for="contact" class="form-label">Phone Number:</label>
-                <InputNumber id="contact" @bind-Value="User.Contact" class="form-control" />
-                <ValidationMessage For="() => User.Contact" class="text-danger" />
-            </div>
-            <div class="mb-3">
-                <label for="profileimage" class="form-label">Profile Image:</label>
-                <InputFile id="profileimage" OnChange="HandleFileSelection" accept="image/*" class="form-control" />
-                <ValidationMessage For="() => User.ProfileImage" class="text-danger" />
-            </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
-        </EditForm> *@
     </div>
 </div>
 </body>
@@ -128,6 +104,7 @@
     string? fullname;
     string? userAddress;
     int userContact;
+    string Email;
     private async Task HandleCombinedSubmit()
     {
         await AddUser();
@@ -147,6 +124,7 @@
         fullname = user.FirstName + " " + user.LastName;
         userAddress = User.Address;
         userContact = User.Contact;
+        Email = user.Email;
 
         var result = await UserManager.CreateAsync(user, Input.Password);
 
@@ -273,7 +251,8 @@
                     DateUpdated = DateTime.Now,
                     CreatedBy = "System",
                     UpdatedBy = "System",
-                    NoRatings = 0
+                    NoRatings = 0,
+                    Email = Email
                 };
 
             using var context = DbFactory.CreateDbContext();

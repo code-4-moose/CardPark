@@ -28,7 +28,12 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
 
-
+@if (User == null)
+{
+    <p>Your Account has been banned</p>
+}
+else
+{
 <body>
     <div class="container_1">
         @if (Image == null)
@@ -41,6 +46,7 @@
         }
 
         <h1 class="username">@name</h1>
+        <p class="email">@email</p>
         @if (contact != 0)
         {
             <p class="number">Number : @contact</p>
@@ -59,7 +65,6 @@
         else{
             <div class="user-rating">
                 <h3>@ratingMSG ⭐</h3>
-            @* <i class="fa-solid fa-star star_css" style="font-size: 1.3em;"></i> *@
             </div>
         }
     </div>
@@ -112,7 +117,15 @@
                             <p><strong>Category:</strong> @listing.CategoryName</p>
                         </div>
                         @if (listing.Sold != true){
-                            <button onclick="location.href='/listings/edit?id=@listing.Id';" class="w-100 btn btn-lg btn-primary">Change Listing Information</button>
+                                if (listing.Reserved == false)
+                                {
+                                    <button @onclick="async () => await MarkReserved(listing)" class="w-100 btn btn-lg btn-secondary">Mark as Reserved</button>
+                                }
+                                else
+                                {
+                                    <button @onclick="async () => await UnReserve(listing)" class="w-100 btn btn-lg btn-secondary">Unreserve</button>
+                                }
+                                <button onclick="location.href='/listings/edit?id=@listing.Id';" class="w-100 btn btn-lg btn-primary">Change Listing Information</button>
                                 <button @onclick="async () => await DeleteListing(listing.Id)" class="w-100 btn btn-lg btn-danger">Delete</button>
                         }
                      </div>
@@ -174,7 +187,7 @@
     }
 
 </script>
-
+}
 @code {
     string? userid;
 
@@ -192,6 +205,9 @@
     [SupplyParameterFromForm]
     private User User { get; set; }
 
+    [SupplyParameterFromForm]
+    private Listing Listing { get; set; }
+
     private string imgSrc = ""; // Base64 string for image preview
     private string? name;
     private string address;
@@ -202,15 +218,17 @@
     private int N_userid;
     private int No_ratings;
     private int contact;
-
+    private string email;
     private ProjectCardPark1Context context = default!;
 
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var claimsPrincipal = authState.User;
+        var user = await UserManager.GetUserAsync(claimsPrincipal);
+
         userid = UserManager.GetUserId(claimsPrincipal);
-        
+
 
         context = DbFactory.CreateDbContext();
         var allListings = await context.Listing.ToListAsync();
@@ -218,20 +236,35 @@
 
         User ??= await context.User.FirstOrDefaultAsync(m => m.UserId == userid);
 
-        N_userid = User.Id;
-        No_ratings = User.NoRatings.Value;
-        Image = User.ProfileImage;
-        imgSrc = User.ProfileImageUrl;
-        name = User.Name;
-        address = User.Address;
-        rating = (User.Stars/User.NoRatings.Value);
-        ratingMSG = rating.ToString("0.0");
-        contact = User.Contact;
+        if(User != null){
+            email = User.Email;
+            N_userid = User.Id;
+            No_ratings = User.NoRatings.Value;
+            Image = User.ProfileImage;
+            imgSrc = User.ProfileImageUrl;
+            name = User.Name;
+            address = User.Address;
+            rating = (User.Stars/User.NoRatings.Value);
+            ratingMSG = rating.ToString("0.0");
+            contact = User.Contact;
 
-        filteredRatings = await context.Rating
-            .Where(r => r.UserId == N_userid)
-            .OrderByDescending(r => r.DateCreated)
-            .ToListAsync();
+            filteredRatings = await context.Rating
+                .Where(r => r.UserId == N_userid)
+                .OrderByDescending(r => r.DateCreated)
+                .ToListAsync();
+        }
+    }
+    private async Task MarkReserved(Listing listing)
+    {
+        context.Attach(listing!).State = EntityState.Modified;
+        listing.Reserved = true;
+        await context.SaveChangesAsync();
+    }
+    private async Task UnReserve(Listing listing)
+    {
+        context.Attach(listing!).State = EntityState.Modified;
+        listing.Reserved = false;
+        await context.SaveChangesAsync();
     }
     private void FilterListings()
     {

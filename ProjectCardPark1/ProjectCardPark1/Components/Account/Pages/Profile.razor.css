@@ -48,20 +48,25 @@
 
 .username {
     position: relative;
-    top: -80%;
+    top: -90%;
     left: 18%;
 }
 
 .number {
     position: relative;
-    top: -80%;
+    top: -90%;
     left: 18%;
 }
 
 .user_desc {
     position: relative;
-    top: -80%;
+    top: -93%;
     left: 18%;
+}
+.email{
+    position:relative;
+    top:-87%;
+    left:18%;
 }
 
 .user_joined_date {

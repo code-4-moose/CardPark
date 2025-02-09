@@ -13,7 +13,8 @@
 @attribute [Authorize(Roles = "User")]
 
 <PageTitle>Create</PageTitle>
-
+@if (User != null)
+{
 <div class="listing">
     <h1>Add Listing</h1>
     <hr />
@@ -101,16 +102,20 @@
             </EditForm>
         </div>
     </div>
-</div>
+    </div>
+}
+else
+{
+    <p>Account has been banned</p>
+}
 
 <script src="_content/BlazorInputFile/BlazorInputFile.js"></script>
 
 @code {
     string imgSrc = ""; // Base64 string for image preview
     byte[] _fileBytes = null; // Byte array for the uploaded image
-    private ProjectCardPark1User users = default!;
     private string userId;
-    private ProjectCardPark1Context context = default!;
+    // private ProjectCardPark1Context context = default!;
     private IList<Category> Categories;
 
     [SupplyParameterFromForm]
@@ -120,10 +125,10 @@
     private Listing Listing { get; set; } = new();
 
     [SupplyParameterFromForm]
-    private User User { get; set; }
+    private User? User { get; set; }
 
     string? categoryName;
-    protected override async void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
         var claimsPrincipal = authState.User;
@@ -133,10 +138,14 @@
         Categories = context.Category.ToList();
 
         userId = UserManager.GetUserId(claimsPrincipal);
-        User ??= await context.User.FirstOrDefaultAsync(m => m.UserId == userId);
 
-        Listing.UserId = User.Id;
-        Listing.UserName = User.Name;
+        User = await context.User.FirstOrDefaultAsync(m => m.UserId == userId);
+
+        if (User != null)
+        {
+            Listing.UserId = User.Id;
+            Listing.UserName = User.Name;
+        }
     }
     private string GetCategoryName(int categoryId)
     {
@@ -153,10 +162,11 @@
         Listing.UpdatedBy = userId;
         Listing.DateCreated = DateTime.Now;
         Listing.DateUpdated = DateTime.Now;
-
+        Listing.Reserved = false;
         //CHANGES
 
         using var context = DbFactory.CreateDbContext();
+
         context.Listing.Add(Listing);
         await context.SaveChangesAsync();
         NavigationManager.NavigateTo("/listings/complete");

@@ -77,10 +77,6 @@
         UserId = UserManager.GetUserId(claimsPrincipal);
 
         User = await context.User.FirstOrDefaultAsync(m => m.UserId == UserId);
-
-        Listings = await context.Listing.ToListAsync();
-
-        Ratings = await context.Rating.ToListAsync();
     }
 
     private async Task OnValidSubmitAsync()
@@ -93,21 +89,52 @@
             message = "Error: Incorrect password.";
             return;
         }
-        foreach (var i in Listings){
-            if (i.CreatedBy == UserId)
+
+        var Listing = await context.Listing.ToListAsync();
+        var Rating = await context.Rating.ToListAsync();
+        var Report = await context.Report.ToListAsync();
+        if (Listing != null)
+        {
+            foreach (var list in Listing)
             {
-                context.Listing.Remove(i);
+                if (list.UserId == User.Id)
+                {
+                    context.Listing.Remove(list);
+                }
             }
         }
-        foreach (var i in Ratings)
+        if (Rating != null)
         {
-            if (i.CreatedBy == UserId)
+            foreach (var rate in Rating)
             {
-                context.Rating.Remove(i);
+                if (rate.UserId == User.Id)
+                {
+                    context.Rating.Remove(rate);
+                }
+                if (rate.CreatedBy == User.UserId)
+                {
+                    context.Rating.Remove(rate);
+                }
+            }
+        }
+        if (Report != null)
+        {
+
+            foreach (var rep in Report)
+            {
+                if (rep.UserId == User.Id)
+                {
+                    context.Report.Remove(rep);
+                }
             }
         }
 
-        context.User.Remove(User!);
+        if (User != null)
+        {
+            context.User.Remove(User!);
+        }
+
+        await context.SaveChangesAsync();
 
         var result = await UserManager.DeleteAsync(user);
         if (!result.Succeeded)
