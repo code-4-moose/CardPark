@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProjectCardPark1.Data;
 
@@ -11,9 +12,11 @@ using ProjectCardPark1.Data;
 namespace ProjectCardPark1.Migrations
 {
     [DbContext(typeof(ProjectCardPark1Context))]
-    partial class ProjectCardPark1ContextModelSnapshot : ModelSnapshot
+    [Migration("20250209113512_Listing2")]
+    partial class Listing2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -261,9 +264,7 @@ namespace ProjectCardPark1.Migrations
                         {
                             Id = "3781efa7-66dc-47f0-860f-e506d04102e4",
                             AccessFailedCount = 0,
-
-                            ConcurrencyStamp = "7fad71df-8c12-4159-855f-8d025287fc0b",
-
+                            ConcurrencyStamp = "4f5279bf-1d73-4957-abcc-7458e767046a",
                             Email = "admin@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -271,11 +272,9 @@ namespace ProjectCardPark1.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCALHOST.COM",
                             NormalizedUserName = "ADMIN@LOCALHOST.COM",
-
-                            PasswordHash = "AQAAAAIAAYagAAAAEN8KYWX7rLk6wfps4QE8eYHEk4T+sUtZEnlEAoJU0xEX0AXyk4Hwt83OpypzA5ytDQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKth3dbLZ1TExpDHYgueDRA/iT1ImNPqCsqXcrhhW7pKMgalI04rYe0TkE9HCvMgug==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "80d3b051-0321-46f1-8ffe-57c9b8c66045",
-
+                            SecurityStamp = "b7c4af8c-04ec-4f18-af79-49c84a09a8bb",
                             TwoFactorEnabled = false,
                             UserName = "admin@localhost.com"
                         },
@@ -283,7 +282,7 @@ namespace ProjectCardPark1.Migrations
                         {
                             Id = "4181efe7-66dc-47f0-860f-e506d04102e5",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "31b959e2-2be8-4f89-b147-8369d8a11350",
+                            ConcurrencyStamp = "29919457-16b4-4f09-b00e-bbe8d0f52838",
                             Email = "amostan@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Amos",
@@ -291,9 +290,9 @@ namespace ProjectCardPark1.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "AMOSTAN@GMAIL.COM",
                             NormalizedUserName = "AMOSTAN@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMsJ9DY/zqDo0ejLpFLNBfoc1PaHl5FGvq0MYj5KYfBKLH3N60Rn340Bi2kyNUI/8Q==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOE5I5PIu0urV1IZM/+IYMNSKgrcgzHJGh2ZWBaleCZGG48VEu6fqtLJ8HsNF63nDg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "a0f1ee35-04b1-4a0f-8598-658640a8e5cc",
+                            SecurityStamp = "d4734131-d78e-456c-8a90-e3a5dc3f3149",
                             TwoFactorEnabled = false,
                             UserName = "amostan@gmail.com"
                         },
@@ -301,7 +300,7 @@ namespace ProjectCardPark1.Migrations
                         {
                             Id = "5181efe8-31de-47f0-860f-e514d04102e5",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e1dde3c1-e4ee-4aab-a041-722c11b02aca",
+                            ConcurrencyStamp = "ab61c50c-2fae-409b-ab7a-0cf88b749f8b",
                             Email = "davidlee@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "David",
@@ -309,9 +308,9 @@ namespace ProjectCardPark1.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "DAVIDLEE@GMAIL.COM",
                             NormalizedUserName = "DAVIDLEE@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDQh06NWjDJdhMSsG9G7DRJ4l7Fz4ANYLQti93MxYGRwXijw/NVB63k/zLK2Qbh1/g==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJvSi52ax/bjp2hJBx+CRJbyftM0qNrvHfzRgAC0IQsI7pO4ocXI5opvu3TgwVnovw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "70b14be6-cdec-48d0-9a23-09cdd7d7ccb9",
+                            SecurityStamp = "dcf8a5a0-6dcb-42f4-98cc-591645fd3d13",
                             TwoFactorEnabled = false,
                             UserName = "davidlee@gmail.com"
                         });
@@ -348,7 +347,7 @@ namespace ProjectCardPark1.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category", (string)null);
+                    b.ToTable("Category");
 
                     b.HasData(
                         new
@@ -356,10 +355,8 @@ namespace ProjectCardPark1.Migrations
                             Id = 1,
                             CategoryId = 1,
                             CreatedBy = "System",
-
-                            DateCreated = new DateTime(2025, 2, 9, 18, 14, 41, 938, DateTimeKind.Local).AddTicks(2852),
-                            DateUpdated = new DateTime(2025, 2, 9, 18, 14, 41, 938, DateTimeKind.Local).AddTicks(2871),
-
+                            DateCreated = new DateTime(2025, 2, 9, 19, 35, 11, 657, DateTimeKind.Local).AddTicks(1751),
+                            DateUpdated = new DateTime(2025, 2, 9, 19, 35, 11, 657, DateTimeKind.Local).AddTicks(1768),
                             Name = "Vanguard",
                             Type = "unknown",
                             UpdatedBy = "System"
@@ -369,10 +366,8 @@ namespace ProjectCardPark1.Migrations
                             Id = 2,
                             CategoryId = 2,
                             CreatedBy = "System",
-
-                            DateCreated = new DateTime(2025, 2, 9, 18, 14, 41, 938, DateTimeKind.Local).AddTicks(2873),
-                            DateUpdated = new DateTime(2025, 2, 9, 18, 14, 41, 938, DateTimeKind.Local).AddTicks(2874),
-
+                            DateCreated = new DateTime(2025, 2, 9, 19, 35, 11, 657, DateTimeKind.Local).AddTicks(1769),
+                            DateUpdated = new DateTime(2025, 2, 9, 19, 35, 11, 657, DateTimeKind.Local).AddTicks(1770),
                             Name = "Pokemon",
                             Type = "unknown",
                             UpdatedBy = "System"
@@ -382,10 +377,8 @@ namespace ProjectCardPark1.Migrations
                             Id = 3,
                             CategoryId = 3,
                             CreatedBy = "System",
-
-                            DateCreated = new DateTime(2025, 2, 9, 18, 14, 41, 938, DateTimeKind.Local).AddTicks(2875),
-                            DateUpdated = new DateTime(2025, 2, 9, 18, 14, 41, 938, DateTimeKind.Local).AddTicks(2876),
-
+                            DateCreated = new DateTime(2025, 2, 9, 19, 35, 11, 657, DateTimeKind.Local).AddTicks(1771),
+                            DateUpdated = new DateTime(2025, 2, 9, 19, 35, 11, 657, DateTimeKind.Local).AddTicks(1772),
                             Name = "Hololive",
                             Type = "WhoKnows",
                             UpdatedBy = "System"
@@ -395,8 +388,8 @@ namespace ProjectCardPark1.Migrations
                             Id = 4,
                             CategoryId = 4,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2025, 2, 9, 19, 57, 54, 326, DateTimeKind.Local).AddTicks(9413),
-                            DateUpdated = new DateTime(2025, 2, 9, 19, 57, 54, 326, DateTimeKind.Local).AddTicks(9413),
+                            DateCreated = new DateTime(2025, 2, 9, 19, 35, 11, 657, DateTimeKind.Local).AddTicks(1773),
+                            DateUpdated = new DateTime(2025, 2, 9, 19, 35, 11, 657, DateTimeKind.Local).AddTicks(1774),
                             Name = "Others",
                             Type = "WhoKnows",
                             UpdatedBy = "System"
@@ -450,9 +443,6 @@ namespace ProjectCardPark1.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
-                    b.Property<bool?>("Reserved")
-                        .HasColumnType("bit");
-
                     b.Property<bool?>("Sold")
                         .HasColumnType("bit");
 
@@ -471,7 +461,6 @@ namespace ProjectCardPark1.Migrations
 
                     b.HasIndex("UserId");
 
-
                     b.ToTable("Listing");
 
                     b.HasData(
@@ -482,106 +471,16 @@ namespace ProjectCardPark1.Migrations
                             CategoryId = 3,
                             CategoryName = "Hololive",
                             CreatedBy = "5181efe8-31de-47f0-860f-e514d04102e5",
-                            DateCreated = new DateTime(2025, 2, 9, 19, 57, 54, 467, DateTimeKind.Local).AddTicks(7113),
-                            DateUpdated = new DateTime(2025, 2, 9, 19, 57, 54, 467, DateTimeKind.Local).AddTicks(7128),
+                            DateCreated = new DateTime(2025, 2, 9, 19, 35, 11, 800, DateTimeKind.Local).AddTicks(7888),
+                            DateUpdated = new DateTime(2025, 2, 9, 19, 35, 11, 800, DateTimeKind.Local).AddTicks(7909),
                             Description = "Suisei Oshi Card",
                             ListingId = 3,
-                            ListingImageUrl = "/Card_Images/Card_1.png",
+                            ListingImageUrl = ".\\wwwroot\\Card Images\\Card 1.png",
                             Name = "Suisei OSR",
                             Price = 3.0,
                             UpdatedBy = "5181efe8-31de-47f0-860f-e514d04102e5",
                             UserId = 3,
-                            UserName = "David"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Amount = 3,
-                            CategoryId = 3,
-                            CategoryName = "Hololive",
-                            CreatedBy = "5181efe8-31de-47f0-860f-e514d04102e5",
-                            DateCreated = new DateTime(2025, 2, 9, 19, 57, 54, 467, DateTimeKind.Local).AddTicks(7131),
-                            DateUpdated = new DateTime(2025, 2, 9, 19, 57, 54, 467, DateTimeKind.Local).AddTicks(7131),
-                            Description = "Ina Card WAH!",
-                            ListingId = 3,
-                            ListingImageUrl = "/Card_Images/Card_2.png",
-                            Name = "Ina Card",
-                            Price = 1.0,
-                            UpdatedBy = "5181efe8-31de-47f0-860f-e514d04102e5",
-                            UserId = 3,
-                            UserName = "David"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Amount = 1,
-                            CategoryId = 3,
-                            CategoryName = "Hololive",
-                            CreatedBy = "4181efe7-66dc-47f0-860f-e506d04102e5",
-                            DateCreated = new DateTime(2025, 2, 9, 19, 57, 54, 467, DateTimeKind.Local).AddTicks(7133),
-                            DateUpdated = new DateTime(2025, 2, 9, 19, 57, 54, 467, DateTimeKind.Local).AddTicks(7134),
-                            Description = "Kiara Rare Card!!!",
-                            ListingId = 3,
-                            ListingImageUrl = "/Card_Images/Card_3.png",
-                            Name = "Kiara Oshi Card",
-                            Price = 350.0,
-                            UpdatedBy = "4181efe7-66dc-47f0-860f-e506d04102e5",
-                            UserId = 2,
-                            UserName = "Amos"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Amount = 5,
-                            CategoryId = 2,
-                            CategoryName = "Pokemon",
-                            CreatedBy = "4181efe7-66dc-47f0-860f-e506d04102e5",
-                            DateCreated = new DateTime(2025, 2, 9, 19, 57, 54, 467, DateTimeKind.Local).AddTicks(7136),
-                            DateUpdated = new DateTime(2025, 2, 9, 19, 57, 54, 467, DateTimeKind.Local).AddTicks(7137),
-                            Description = "Its an Eevee",
-                            ListingId = 2,
-                            ListingImageUrl = "/Card_Images/Card_4.png",
-                            Name = "Eevee Card",
-                            Price = 10.0,
-                            UpdatedBy = "4181efe7-66dc-47f0-860f-e506d04102e5",
-                            UserId = 2,
-                            UserName = "Amos"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Amount = 1,
-                            CategoryId = 1,
-                            CategoryName = "Vanguard",
-                            CreatedBy = "5181efe8-31de-47f0-860f-e514d04102e5",
-                            DateCreated = new DateTime(2025, 2, 9, 19, 57, 54, 467, DateTimeKind.Local).AddTicks(7138),
-                            DateUpdated = new DateTime(2025, 2, 9, 19, 57, 54, 467, DateTimeKind.Local).AddTicks(7139),
-                            Description = "YOUTHBERK",
-                            ListingId = 5,
-                            ListingImageUrl = "/Card_Images/Card_5.png",
-                            Name = "YOUTHBERK",
-                            Price = 30.0,
-                            UpdatedBy = "5181efe8-31de-47f0-860f-e514d04102e5",
-                            UserId = 3,
-                            UserName = "David"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Amount = 2,
-                            CategoryId = 1,
-                            CategoryName = "Vanguard",
-                            CreatedBy = "4181efe7-66dc-47f0-860f-e506d04102e5",
-                            DateCreated = new DateTime(2025, 2, 9, 19, 57, 54, 467, DateTimeKind.Local).AddTicks(7141),
-                            DateUpdated = new DateTime(2025, 2, 9, 19, 57, 54, 467, DateTimeKind.Local).AddTicks(7141),
-                            Description = "Shojodoji dojo yo",
-                            ListingId = 6,
-                            ListingImageUrl = "/Card_Images/Card_6.png",
-                            Name = "Shojodoji",
-                            Price = 5.0,
-                            UpdatedBy = "4181efe7-66dc-47f0-860f-e506d04102e5",
-                            UserId = 2,
-                            UserName = "Amos"
+                            UserName = "David Lee"
                         });
                 });
 
@@ -622,9 +521,11 @@ namespace ProjectCardPark1.Migrations
                     b.HasIndex("ListingId")
                         .IsUnique();
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasFilter("[UserId] IS NOT NULL");
 
-                    b.ToTable("Payment", (string)null);
+                    b.ToTable("Payment");
                 });
 
             modelBuilder.Entity("ProjectCardPark1.Domain.Rating", b =>
@@ -669,7 +570,7 @@ namespace ProjectCardPark1.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Rating", (string)null);
+                    b.ToTable("Rating");
                 });
 
             modelBuilder.Entity("ProjectCardPark1.Domain.Report", b =>
@@ -708,7 +609,7 @@ namespace ProjectCardPark1.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Report", (string)null);
+                    b.ToTable("Report");
                 });
 
             modelBuilder.Entity("ProjectCardPark1.Domain.User", b =>
@@ -728,17 +629,11 @@ namespace ProjectCardPark1.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CreditCardNo")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("DateUpdated")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ListingId")
                         .HasColumnType("int");
@@ -769,7 +664,7 @@ namespace ProjectCardPark1.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("User", (string)null);
+                    b.ToTable("User");
 
                     b.HasData(
                         new
@@ -895,8 +790,8 @@ namespace ProjectCardPark1.Migrations
                         .IsRequired();
 
                     b.HasOne("ProjectCardPark1.Domain.User", "User")
-                        .WithMany("Payment")
-                        .HasForeignKey("UserId");
+                        .WithOne("Payment")
+                        .HasForeignKey("ProjectCardPark1.Domain.Payment", "UserId");
 
                     b.Navigation("Listing");
 
