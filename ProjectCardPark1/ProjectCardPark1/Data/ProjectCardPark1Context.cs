@@ -38,6 +38,7 @@ namespace ProjectCardPark1.Data
             builder.ApplyConfiguration(new UserSeed());
             builder.ApplyConfiguration(new UserLoginSeed());
             builder.ApplyConfiguration(new UserRoleSeed());
+            builder.ApplyConfiguration(new ListingSeed());
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
