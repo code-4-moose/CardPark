@@ -8,29 +8,33 @@
 
 @attribute [Authorize(Roles = "Administrator")]
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Categories</PageTitle>
 
-<h1>Index</h1>
+<a href="/dashboard" class="btn-back">⬅ Back to Dashboard</a>
 
-<p>
-    <a href="categories/create">Create New</a>
-</p>
+<div class="container">
+    <h1>Categories</h1>
 
-<QuickGrid Class="table" Items="context.Category">
-    <PropertyColumn Property="category => category.CategoryId" />
-    <PropertyColumn Property="category => category.Name" />
-    <PropertyColumn Property="category => category.Type" />
-    <PropertyColumn Property="category => category.DateCreated" />
-    <PropertyColumn Property="category => category.DateUpdated" />
-    <PropertyColumn Property="category => category.CreatedBy" />
-    <PropertyColumn Property="category => category.UpdatedBy" />
+    <div class="text-center mb-4">
+        <a href="categories/create" class="btn-custom btn-details">Create New Category</a>
+    </div>
 
-    <TemplateColumn Context="category">
-        <a href="@($"categories/edit?id={category.Id}")">Edit</a> |
-        <a href="@($"categories/details?id={category.Id}")">Details</a> |
-        <a href="@($"categories/delete?id={category.Id}")">Delete</a>
-    </TemplateColumn>
-</QuickGrid>
+    <QuickGrid Class="table" Items="context.Category">
+        <PropertyColumn Property="category => category.CategoryId" />
+        <PropertyColumn Property="category => category.Name" />
+        <PropertyColumn Property="category => category.Type" />
+        <PropertyColumn Property="category => category.DateCreated" />
+        <PropertyColumn Property="category => category.DateUpdated" />
+        <PropertyColumn Property="category => category.CreatedBy" />
+        <PropertyColumn Property="category => category.UpdatedBy" />
+
+        <TemplateColumn Context="category">
+            <a href="@($"categories/edit?id={category.Id}")" class="btn-custom btn-details">Edit</a> |
+            <a href="@($"categories/details?id={category.Id}")" class="btn-custom btn-details">Details</a> |
+            <a href="@($"categories/delete?id={category.Id}")" class="btn-custom btn-delete">Delete</a>
+        </TemplateColumn>
+    </QuickGrid>
+</div>
 
 @code {
     private ProjectCardPark1Context context = default!;

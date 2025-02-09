@@ -167,9 +167,9 @@
         if (confirmed == true)
         {
             URL_userId = listing.CreatedBy;
-            listing.Sold = true;
+            //listing.Sold = true;
             await context.SaveChangesAsync();
-            NavigationManager.NavigateTo($"/ratings/create?userId={URL_userId}&listingId={listing.Id}");
+            NavigationManager.NavigateTo($"/payments/create?userId={URL_userId}&listingId={listing.Id}");
         }
     }
 
