@@ -155,10 +155,10 @@
         context = DbFactory.CreateDbContext();
 
         // Load all listings and categories
-        var allCategories = await context.Listing.ToListAsync();
+        var allListings = await context.Listing.ToListAsync();
         Categories = context.Category.ToList();
 
-        filteredListings = allCategories;
+        filteredListings = allListings;
     }
 
     private async Task ConfirmPurchase(Listing listing)

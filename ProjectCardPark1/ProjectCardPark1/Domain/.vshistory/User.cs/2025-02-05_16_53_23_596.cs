@@ -17,8 +17,6 @@
         public int? NoRatings { get; set; }
 
         public List<Report>? Report { get; set; } // Nav Prop 
-
-        public int? CreditCardNo { get; set; }
     }
 
 }

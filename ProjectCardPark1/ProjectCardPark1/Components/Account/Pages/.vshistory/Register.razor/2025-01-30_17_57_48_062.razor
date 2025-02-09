@@ -132,7 +132,6 @@
     {
         await AddUser();
     }
-
     public async Task RegisterUser(EditContext editContext)
     {
         var user = CreateUser();
@@ -170,7 +169,6 @@
         Logger.LogInformation("User created a new account with password.");
 
         userId = await UserManager.GetUserIdAsync(user);
-        var role = await UserManager.GetRolesAsync(user);
         await AddUser();
         var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
