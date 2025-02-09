@@ -75,8 +75,12 @@
 @code {
     private Listing? listing;
 
+    private Report? Report;
+
     [SupplyParameterFromQuery]
     private int Id { get; set; }
+
+    private List<Report> ReportListings;
 
     protected override async Task OnInitializedAsync()
     {
@@ -92,6 +96,14 @@
     private async Task DeleteListing()
     {
         using var context = DbFactory.CreateDbContext();
+        ReportListings = await context.Report.ToListAsync();
+        foreach (var rep in ReportListings)
+        {
+            if (rep.ListingId == Id)
+            {
+                context.Report.Remove(rep);
+            }
+        }
         context.Listing.Remove(listing!);
         await context.SaveChangesAsync();
         NavigationManager.NavigateTo("/listings");

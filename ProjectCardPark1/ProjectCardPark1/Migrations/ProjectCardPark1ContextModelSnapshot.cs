@@ -261,7 +261,9 @@ namespace ProjectCardPark1.Migrations
                         {
                             Id = "3781efa7-66dc-47f0-860f-e506d04102e4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "60a24002-e042-4310-8490-e03a87e92195",
+
+                            ConcurrencyStamp = "7fad71df-8c12-4159-855f-8d025287fc0b",
+
                             Email = "admin@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -269,9 +271,11 @@ namespace ProjectCardPark1.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCALHOST.COM",
                             NormalizedUserName = "ADMIN@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEIJip9XNvAa5Ed/cbBRe3WhFhZDiCsfPN2Y0aNX+ooI8+1h68wBP67Lzsz77n3C19A==",
+
+                            PasswordHash = "AQAAAAIAAYagAAAAEN8KYWX7rLk6wfps4QE8eYHEk4T+sUtZEnlEAoJU0xEX0AXyk4Hwt83OpypzA5ytDQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "68ed50e7-6b23-447f-99b7-c9bcf8ca0032",
+                            SecurityStamp = "80d3b051-0321-46f1-8ffe-57c9b8c66045",
+
                             TwoFactorEnabled = false,
                             UserName = "admin@localhost.com"
                         },
@@ -344,7 +348,7 @@ namespace ProjectCardPark1.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category");
+                    b.ToTable("Category", (string)null);
 
                     b.HasData(
                         new
@@ -352,8 +356,10 @@ namespace ProjectCardPark1.Migrations
                             Id = 1,
                             CategoryId = 1,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2025, 2, 9, 19, 57, 54, 326, DateTimeKind.Local).AddTicks(9392),
-                            DateUpdated = new DateTime(2025, 2, 9, 19, 57, 54, 326, DateTimeKind.Local).AddTicks(9407),
+
+                            DateCreated = new DateTime(2025, 2, 9, 18, 14, 41, 938, DateTimeKind.Local).AddTicks(2852),
+                            DateUpdated = new DateTime(2025, 2, 9, 18, 14, 41, 938, DateTimeKind.Local).AddTicks(2871),
+
                             Name = "Vanguard",
                             Type = "unknown",
                             UpdatedBy = "System"
@@ -363,8 +369,10 @@ namespace ProjectCardPark1.Migrations
                             Id = 2,
                             CategoryId = 2,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2025, 2, 9, 19, 57, 54, 326, DateTimeKind.Local).AddTicks(9409),
-                            DateUpdated = new DateTime(2025, 2, 9, 19, 57, 54, 326, DateTimeKind.Local).AddTicks(9409),
+
+                            DateCreated = new DateTime(2025, 2, 9, 18, 14, 41, 938, DateTimeKind.Local).AddTicks(2873),
+                            DateUpdated = new DateTime(2025, 2, 9, 18, 14, 41, 938, DateTimeKind.Local).AddTicks(2874),
+
                             Name = "Pokemon",
                             Type = "unknown",
                             UpdatedBy = "System"
@@ -374,8 +382,10 @@ namespace ProjectCardPark1.Migrations
                             Id = 3,
                             CategoryId = 3,
                             CreatedBy = "System",
-                            DateCreated = new DateTime(2025, 2, 9, 19, 57, 54, 326, DateTimeKind.Local).AddTicks(9411),
-                            DateUpdated = new DateTime(2025, 2, 9, 19, 57, 54, 326, DateTimeKind.Local).AddTicks(9411),
+
+                            DateCreated = new DateTime(2025, 2, 9, 18, 14, 41, 938, DateTimeKind.Local).AddTicks(2875),
+                            DateUpdated = new DateTime(2025, 2, 9, 18, 14, 41, 938, DateTimeKind.Local).AddTicks(2876),
+
                             Name = "Hololive",
                             Type = "WhoKnows",
                             UpdatedBy = "System"
@@ -440,6 +450,9 @@ namespace ProjectCardPark1.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
+                    b.Property<bool?>("Reserved")
+                        .HasColumnType("bit");
+
                     b.Property<bool?>("Sold")
                         .HasColumnType("bit");
 
@@ -457,6 +470,7 @@ namespace ProjectCardPark1.Migrations
                     b.HasIndex("CategoryId");
 
                     b.HasIndex("UserId");
+
 
                     b.ToTable("Listing");
 
@@ -608,11 +622,9 @@ namespace ProjectCardPark1.Migrations
                     b.HasIndex("ListingId")
                         .IsUnique();
 
-                    b.HasIndex("UserId")
-                        .IsUnique()
-                        .HasFilter("[UserId] IS NOT NULL");
+                    b.HasIndex("UserId");
 
-                    b.ToTable("Payment");
+                    b.ToTable("Payment", (string)null);
                 });
 
             modelBuilder.Entity("ProjectCardPark1.Domain.Rating", b =>
@@ -657,7 +669,7 @@ namespace ProjectCardPark1.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Rating");
+                    b.ToTable("Rating", (string)null);
                 });
 
             modelBuilder.Entity("ProjectCardPark1.Domain.Report", b =>
@@ -696,7 +708,7 @@ namespace ProjectCardPark1.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Report");
+                    b.ToTable("Report", (string)null);
                 });
 
             modelBuilder.Entity("ProjectCardPark1.Domain.User", b =>
@@ -716,11 +728,17 @@ namespace ProjectCardPark1.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("CreditCardNo")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("DateUpdated")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ListingId")
                         .HasColumnType("int");
@@ -751,7 +769,7 @@ namespace ProjectCardPark1.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("User");
+                    b.ToTable("User", (string)null);
 
                     b.HasData(
                         new
@@ -877,8 +895,8 @@ namespace ProjectCardPark1.Migrations
                         .IsRequired();
 
                     b.HasOne("ProjectCardPark1.Domain.User", "User")
-                        .WithOne("Payment")
-                        .HasForeignKey("ProjectCardPark1.Domain.Payment", "UserId");
+                        .WithMany("Payment")
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Listing");
 

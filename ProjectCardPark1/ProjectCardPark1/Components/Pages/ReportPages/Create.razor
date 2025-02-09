@@ -136,6 +136,9 @@
     function showAlert() {
         alert("Please be more detailed");
     }
+    function thankAlert(){
+        alert("Thank you for keeping CardParc Safe!")
+    }
 </script>
 @code {
     [SupplyParameterFromForm]
@@ -182,7 +185,7 @@
             else
             {
             
-            using var context = DbFactory.CreateDbContext();
+                using var context = DbFactory.CreateDbContext();
                 Report.DateCreated = DateTime.Now;
                 Report.DateUpdated = DateTime.Now;
                 Report.CreatedBy = User.Name;
@@ -191,6 +194,8 @@
                 Report.ListingId = listingId;
                 context.Report.Add(Report);
                 await context.SaveChangesAsync();
+
+                await JSRuntime.InvokeVoidAsync("thankAlert", "Thank you for keeping CardParc Safe!");
 
                 NavigationManager.NavigateTo("/Card_Listings");
             }

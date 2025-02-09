@@ -13,7 +13,12 @@
 @inject UserManager<ProjectCardPark1User> UserManager
 
 <PageTitle>Card Listings</PageTitle>
-
+@if (User == null)
+{
+    <p>Your Account has been banned</p>
+}
+else
+{
 <h1>Results for "@searchQuery"</h1>
 
 <div class="filter-search-container">
@@ -93,30 +98,38 @@
                         your the admin LOL
                     </div>
                 }
+                else if (listing.CreatedBy == userid)
+                {
+                    <div class="YouOwnThis">
+                        <p>You own this</p>
+                    </div>
+                }
+                else if (listing.Reserved == true)
+                {
+                    <div class="card-actions">
+                        Reserved
+                    </div>
+                    <button onclick="location.href='/reports/create?listingid=@listing.Id';" class="report-button">❗</button>
+                }
                 else if (listing.CreatedBy != userid)
                 {
                     <div class="card-actions">
                         <button class="buy-now" @onclick="() => ConfirmPurchase(listing)">Buy Now</button>
                     </div>
                     <button onclick="location.href='/reports/create?listingid=@listing.Id';" class="report-button">❗</button>
-
-                }
-                else
-                {
-                    <div class="YouOwnThis">
-                        <p>You own this</p>
-                    </div>
                 }
             }
         </div>
     }
 </div>
 
+
 <!-- Popup for Enlarged Image -->
 <div class="popup-image" style="display:none;" id="popupRef">
     <span class="close-btn" @onclick="ClosePopup">×</span>
     <img src="" alt="Enlarged Image" id="popupImage" />
 </div>
+}
 
 <script>
     // Show image in popup
@@ -136,7 +149,7 @@
     }
 </script>
 
-@code {
+    @code {
     private ProjectCardPark1Context context = default!;
     private string searchQuery = string.Empty;
     private string selectedCategory = string.Empty;  // Track selected category
@@ -146,6 +159,7 @@
     string? URL_userId;
     string? userid;
 
+    private User User;
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
@@ -155,10 +169,12 @@
         context = DbFactory.CreateDbContext();
 
         // Load all listings and categories
-        var allListings = await context.Listing.ToListAsync();
+        var allCategories = await context.Listing.ToListAsync();
         Categories = context.Category.ToList();
 
-        filteredListings = allListings;
+        filteredListings = allCategories;
+
+        User = await context.User.FirstOrDefaultAsync(u => u.UserId == userid);
     }
 
     private async Task ConfirmPurchase(Listing listing)
