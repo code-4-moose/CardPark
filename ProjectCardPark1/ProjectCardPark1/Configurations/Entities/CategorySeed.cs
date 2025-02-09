@@ -41,6 +41,16 @@ namespace ProjectCardPark1.Configurations.Entities
                     DateUpdated = DateTime.Now,
                     CreatedBy = "System",
                     UpdatedBy = "System"
+                },
+                new Category
+                {Id = 4,            
+                    CategoryId = 4,
+                    Name = "Others",
+                    Type = "WhoKnows",
+                    DateCreated = DateTime.Now,
+                    DateUpdated = DateTime.Now,
+                    CreatedBy = "System",
+                    UpdatedBy = "System"
                 }
             );
         }
