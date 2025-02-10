@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProjectCardPark1.Data;
 
@@ -11,9 +12,11 @@ using ProjectCardPark1.Data;
 namespace ProjectCardPark1.Migrations
 {
     [DbContext(typeof(ProjectCardPark1Context))]
-    partial class ProjectCardPark1ContextModelSnapshot : ModelSnapshot
+    [Migration("20250209115755_listingss")]
+    partial class listingss
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -261,9 +264,7 @@ namespace ProjectCardPark1.Migrations
                         {
                             Id = "3781efa7-66dc-47f0-860f-e506d04102e4",
                             AccessFailedCount = 0,
-
-                            ConcurrencyStamp = "7fad71df-8c12-4159-855f-8d025287fc0b",
-
+                            ConcurrencyStamp = "60a24002-e042-4310-8490-e03a87e92195",
                             Email = "admin@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -271,11 +272,9 @@ namespace ProjectCardPark1.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCALHOST.COM",
                             NormalizedUserName = "ADMIN@LOCALHOST.COM",
-
-                            PasswordHash = "AQAAAAIAAYagAAAAEN8KYWX7rLk6wfps4QE8eYHEk4T+sUtZEnlEAoJU0xEX0AXyk4Hwt83OpypzA5ytDQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEIJip9XNvAa5Ed/cbBRe3WhFhZDiCsfPN2Y0aNX+ooI8+1h68wBP67Lzsz77n3C19A==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "80d3b051-0321-46f1-8ffe-57c9b8c66045",
-
+                            SecurityStamp = "68ed50e7-6b23-447f-99b7-c9bcf8ca0032",
                             TwoFactorEnabled = false,
                             UserName = "admin@localhost.com"
                         },
@@ -348,7 +347,7 @@ namespace ProjectCardPark1.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category", (string)null);
+                    b.ToTable("Category");
 
                     b.HasData(
                         new
@@ -356,10 +355,8 @@ namespace ProjectCardPark1.Migrations
                             Id = 1,
                             CategoryId = 1,
                             CreatedBy = "System",
-
-                            DateCreated = new DateTime(2025, 2, 9, 18, 14, 41, 938, DateTimeKind.Local).AddTicks(2852),
-                            DateUpdated = new DateTime(2025, 2, 9, 18, 14, 41, 938, DateTimeKind.Local).AddTicks(2871),
-
+                            DateCreated = new DateTime(2025, 2, 9, 19, 57, 54, 326, DateTimeKind.Local).AddTicks(9392),
+                            DateUpdated = new DateTime(2025, 2, 9, 19, 57, 54, 326, DateTimeKind.Local).AddTicks(9407),
                             Name = "Vanguard",
                             Type = "unknown",
                             UpdatedBy = "System"
@@ -369,10 +366,8 @@ namespace ProjectCardPark1.Migrations
                             Id = 2,
                             CategoryId = 2,
                             CreatedBy = "System",
-
-                            DateCreated = new DateTime(2025, 2, 9, 18, 14, 41, 938, DateTimeKind.Local).AddTicks(2873),
-                            DateUpdated = new DateTime(2025, 2, 9, 18, 14, 41, 938, DateTimeKind.Local).AddTicks(2874),
-
+                            DateCreated = new DateTime(2025, 2, 9, 19, 57, 54, 326, DateTimeKind.Local).AddTicks(9409),
+                            DateUpdated = new DateTime(2025, 2, 9, 19, 57, 54, 326, DateTimeKind.Local).AddTicks(9409),
                             Name = "Pokemon",
                             Type = "unknown",
                             UpdatedBy = "System"
@@ -382,10 +377,8 @@ namespace ProjectCardPark1.Migrations
                             Id = 3,
                             CategoryId = 3,
                             CreatedBy = "System",
-
-                            DateCreated = new DateTime(2025, 2, 9, 18, 14, 41, 938, DateTimeKind.Local).AddTicks(2875),
-                            DateUpdated = new DateTime(2025, 2, 9, 18, 14, 41, 938, DateTimeKind.Local).AddTicks(2876),
-
+                            DateCreated = new DateTime(2025, 2, 9, 19, 57, 54, 326, DateTimeKind.Local).AddTicks(9411),
+                            DateUpdated = new DateTime(2025, 2, 9, 19, 57, 54, 326, DateTimeKind.Local).AddTicks(9411),
                             Name = "Hololive",
                             Type = "WhoKnows",
                             UpdatedBy = "System"
@@ -450,9 +443,6 @@ namespace ProjectCardPark1.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
-                    b.Property<bool?>("Reserved")
-                        .HasColumnType("bit");
-
                     b.Property<bool?>("Sold")
                         .HasColumnType("bit");
 
@@ -470,7 +460,6 @@ namespace ProjectCardPark1.Migrations
                     b.HasIndex("CategoryId");
 
                     b.HasIndex("UserId");
-
 
                     b.ToTable("Listing");
 
@@ -622,9 +611,11 @@ namespace ProjectCardPark1.Migrations
                     b.HasIndex("ListingId")
                         .IsUnique();
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasFilter("[UserId] IS NOT NULL");
 
-                    b.ToTable("Payment", (string)null);
+                    b.ToTable("Payment");
                 });
 
             modelBuilder.Entity("ProjectCardPark1.Domain.Rating", b =>
@@ -669,7 +660,7 @@ namespace ProjectCardPark1.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Rating", (string)null);
+                    b.ToTable("Rating");
                 });
 
             modelBuilder.Entity("ProjectCardPark1.Domain.Report", b =>
@@ -708,7 +699,7 @@ namespace ProjectCardPark1.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Report", (string)null);
+                    b.ToTable("Report");
                 });
 
             modelBuilder.Entity("ProjectCardPark1.Domain.User", b =>
@@ -728,17 +719,11 @@ namespace ProjectCardPark1.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CreditCardNo")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("DateUpdated")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ListingId")
                         .HasColumnType("int");
@@ -769,7 +754,7 @@ namespace ProjectCardPark1.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("User", (string)null);
+                    b.ToTable("User");
 
                     b.HasData(
                         new
@@ -895,8 +880,8 @@ namespace ProjectCardPark1.Migrations
                         .IsRequired();
 
                     b.HasOne("ProjectCardPark1.Domain.User", "User")
-                        .WithMany("Payment")
-                        .HasForeignKey("UserId");
+                        .WithOne("Payment")
+                        .HasForeignKey("ProjectCardPark1.Domain.Payment", "UserId");
 
                     b.Navigation("Listing");
 
