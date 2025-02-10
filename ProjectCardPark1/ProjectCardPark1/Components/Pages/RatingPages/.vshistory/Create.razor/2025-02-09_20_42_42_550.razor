@@ -1,0 +1,269 @@
+﻿@page "/ratings/create"
+
+ @rendermode InteractiveServer 
+
+@using Microsoft.EntityFrameworkCore
+@using ProjectCardPark1.Domain
+@using ProjectCardPark1.Data
+@using Microsoft.AspNetCore.Identity
+
+@inject IJSRuntime JSRuntime
+@inject IDbContextFactory<ProjectCardPark1.Data.ProjectCardPark1Context> DbFactory
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserManager<ProjectCardPark1User> UserManager
+
+@attribute [Authorize(Roles = "Administrator, User")]
+
+<PageTitle>Review</PageTitle>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
+<style>
+        .star_container{
+            position:relative;
+            left:-33%;
+        }
+        .rating > input {
+            display: none;
+        }
+
+        .rating > label:before {
+            content: '\f005';
+            font-family: FontAwesome;
+            margin: 5px;
+            font-size: 1.5rem;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .rating > .half:before {
+            content: '\f089';
+            position: absolute;
+            cursor: pointer;
+        }
+
+
+        .rating > label {
+            color: #ddd;
+            float: right;
+            cursor: pointer;
+        }
+
+        .rating > input:checked ~ label,
+        .rating:not(:checked) > label:hover,
+        .rating:not(:checked) > label:hover ~ label {
+            color: orange;
+        }
+
+            .rating > input:checked + label:hover,
+            .rating > input:checked ~ label:hover,
+            .rating > label:hover ~ input:checked ~ label,
+            .rating > input:checked ~ label:hover ~ label {
+                color: orange;
+            }
+
+    .desc_container{
+        margin-bottom:10px;
+    }
+    .description-box {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+        transition: border-color 0.3s ease;
+    }
+
+        .description-box:focus {
+            border-color: #007bff; /* Highlight border on focus */
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+    /* Style for the character counter */
+    .text-muted {
+        font-size: 0.875rem;
+        color: #6c757d;
+    }
+    .whole_container{    
+    margin-left:400px;
+    width: 50%;
+    height:50%;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top:110px;
+    padding: 20px;
+    background-color:white;
+    }
+
+    .btn-clean {
+        background-color: #007bff; /* Primary color */
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+        .btn-clean:hover {
+            background-color: #0056b3; /* Darker shade on hover */
+            transform: scale(1.05); /* Slightly enlarge on hover */
+        }
+
+        .btn-clean:active {
+            transform: scale(0.95); /* Slightly shrink on click */
+        }
+</style>
+<div class="whole_container">
+    <h2>Successful Purchase!</h2>
+    <h4>How was the seller?</h4>
+
+        <EditForm method="post" Model="Rating" OnValidSubmit="AddRating" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert"/>
+            <div class="mb-3" hidden>
+                <label for="ratingid" class="form-label">RatingId:</label> 
+                <InputNumber id="ratingid" @bind-Value="Rating.RatingId" class="form-control" /> 
+                <ValidationMessage For="() => Rating.RatingId" class="text-danger" /> 
+            </div>
+        <div class="mb-3" hidden>
+            <label for="ratingid" class="form-label">RatingId:</label>
+            <InputNumber id="ratingid" @bind-Value="Rating.Stars" class="form-control" />
+            <ValidationMessage For="() => Rating.Stars" class="text-danger" />
+        </div>
+
+            <div class="star_container">
+                <div class="rating">
+                    <div class="stars">
+                        <div class="stars">
+                            <fieldset class="rating">
+                                <input type="radio" id="star5" name="rating" value="5" @onchange="(() => HandleRatingChange(5))" />
+                                <label for="star5" class="full" title="Awesome"></label>
+                                <input type="radio" id="star4" name="rating" value="4" @onchange="(() => HandleRatingChange(4))" />
+                                <label for="star4" class="full"></label>
+                                <input type="radio" id="star3" name="rating" value="3" @onchange="(() => HandleRatingChange(3))" />
+                                <label for="star3" class="full"></label>
+                                <input type="radio" id="star2" name="rating" value="2" @onchange="(() => HandleRatingChange(2))" />
+                                <label for="star2" class="full"></label>
+                                <input type="radio" id="star1" name="rating" value="1" @onchange="(() => HandleRatingChange(1))" />
+                                <label for="star1" class="full"></label>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="desc_container">
+                <textarea id="description"
+                          @bind="Rating.Description"
+                          class="form-control description-box"
+                          placeholder="Enter a detailed description..."
+                          rows="4"
+                          maxlength="500">
+                </textarea>
+                <ValidationMessage For="() => Rating.Description" class="text-danger" />
+            </div>
+
+          <button type="submit" class="btn-clean" >Rate</button>
+        </EditForm>
+</div>
+<script>
+    function showAlert() {
+        alert("Please select a number of stars.");
+    }
+</script>
+@code {
+    // HOW RATING WORK.
+    // 1. when listing is bought, pop up this rating page.
+    // 2. u need to get the userid of the listing seller.
+    // 3. den u process User?? with the userid of the seller.
+    // 4. den the rating would be on the seller.
+
+    private ProjectCardPark1User Buyer_user = default!;
+
+    [SupplyParameterFromForm]
+    private Rating Rating { get; set; } = new();
+
+    [SupplyParameterFromForm]
+    private User User { get; set; }
+
+    [SupplyParameterFromForm]
+    private User Buyer_User { get; set; }
+
+    [SupplyParameterFromQuery(Name = "userId")]
+    public string seller_userid { get; set; }
+
+    [SupplyParameterFromQuery(Name = "listingId")]
+    public int seller_ListingId { get; set; }
+
+    string Buyer_userId;
+    private int SelectedRating = 0;
+    private int SetStars;
+    private ProjectCardPark1Context context = default!;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var claimsPrincipal = authState.User;
+        Buyer_user = await UserManager.GetUserAsync(claimsPrincipal);
+        Buyer_userId = UserManager.GetUserId(claimsPrincipal);
+
+        context = DbFactory.CreateDbContext();
+
+        var allListings = await context.Listing.ToListAsync();
+
+        User ??= await context.User.FirstOrDefaultAsync(m => m.UserId == seller_userid);
+
+        Buyer_User ??= await context.User.FirstOrDefaultAsync(m => m.UserId == Buyer_userId);
+
+        Rating.ReviewerName = Buyer_User.Name;
+        Rating.UserId = User.Id;
+        Rating.DateCreated = DateTime.Now;
+        Rating.DateUpdated = DateTime.Now;
+        Rating.UpdatedBy = Buyer_User.UserId;
+        Rating.CreatedBy = Buyer_User.UserId;
+        Rating.ListingId = seller_ListingId;
+    }
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddRating()
+    {
+        using var context = DbFactory.CreateDbContext();
+        var isConfirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to submit your rating? (Ratings cannot be altered or deleted)");
+        if (SetStars != 0)
+        {
+            if (isConfirmed)
+            {
+                Rating.Stars = SetStars;
+                context.Rating.Add(Rating);
+
+                context.Attach(User!).State = EntityState.Modified;
+
+                User.Stars += Rating.Stars;
+                if (User.NoRatings == null)
+                {
+                    User.NoRatings = 1;
+                }
+                else
+                {
+                    User.NoRatings += 1;
+                }
+                await context.SaveChangesAsync();
+                NavigationManager.NavigateTo("/");
+            }
+        }
+        else
+        {
+            await JSRuntime.InvokeVoidAsync("showAlert", "Please select a number Stars");
+
+        }
+
+    }
+
+    private void HandleRatingChange(int rating)
+    {
+        SetStars = rating;
+    }
+}
