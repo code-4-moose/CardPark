@@ -13,9 +13,9 @@
 @inject UserManager<ProjectCardPark1User> UserManager
 
 <PageTitle>Card Listings</PageTitle>
-@if (User == null && userid != null)
+@if (User == null)
 {
-    <p>Your account has been banned</p>
+    <p>Your Account has been banned</p>
 }
 else
 {
@@ -122,7 +122,7 @@ else
         </div>
     }
 </div>
-}
+
 
 <!-- Popup for Enlarged Image -->
 <div class="popup-image" style="display:none;" id="popupRef">

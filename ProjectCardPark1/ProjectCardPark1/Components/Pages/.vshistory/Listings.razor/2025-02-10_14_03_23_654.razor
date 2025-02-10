@@ -13,11 +13,7 @@
 @inject UserManager<ProjectCardPark1User> UserManager
 
 <PageTitle>Card Listings</PageTitle>
-@if (User == null && userid != null)
-{
-    <p>Your account has been banned</p>
-}
-else
+@if (User != null && userid == null)
 {
 <h1>Results for "@searchQuery"</h1>
 
